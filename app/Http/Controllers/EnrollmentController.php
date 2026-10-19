@@ -953,4 +953,37 @@ class EnrollmentController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Handle enrollment submission for Academic Year 2026-2027 via API.
+     * POST /api/v1/enrollment/2026-2027
+     */
+    public function store2026(
+        \App\Http\Requests\EnrollmentRequest $request,
+        \App\Services\Enrollment\Enrollment2026Service $service
+    ): \Illuminate\Http\JsonResponse {
+        $enrollment = $service->enroll($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Enrollment for Academic Year 2026-2027 processed successfully.',
+            'data' => [
+                'id' => $enrollment->id,
+                'student_id' => $enrollment->student_id,
+                'student_number' => $enrollment->student->student_number,
+                'first_name' => $enrollment->student->first_name,
+                'last_name' => $enrollment->student->last_name,
+                'middle_name' => $enrollment->student->middle_name,
+                'email' => $enrollment->student->email,
+                'academic_year' => $enrollment->academic_year,
+                'student_type' => $enrollment->student_type,
+                'grade_level' => $enrollment->grade_level,
+                'status' => $enrollment->status,
+                'student' => $enrollment->student,
+                'created_at' => $enrollment->created_at,
+                'updated_at' => $enrollment->updated_at,
+            ],
+        ], 201);
+    }
 }
+

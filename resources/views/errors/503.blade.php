@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>System Maintenance - Al Munawwara Islamic School</title>
+    <title>System Maintenance • SY 2027–2028 Preparation - Al Munawwara Islamic School</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/AMIS_Logo.png') }}">
+    <link rel="icon" type="image/png" href="https://aes.amis.edu.ph/images/AMIS_Logo.png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +18,7 @@
         :root {
             --emerald-50: #ecfdf5;
             --emerald-100: #d1fae5;
+            --emerald-400: #34d399;
             --emerald-500: #10b981;
             --emerald-600: #059669;
             --emerald-700: #047857;
@@ -80,14 +81,14 @@
         }
 
         .card {
-            background: rgba(2, 44, 34, 0.45);
+            background: rgba(2, 44, 34, 0.55);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 24px;
-            padding: 48px 32px;
+            padding: 44px 32px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                        0 0 40px rgba(5, 150, 105, 0.08);
+                        0 0 40px rgba(5, 150, 105, 0.1);
             position: relative;
             overflow: hidden;
         }
@@ -106,7 +107,7 @@
 
         /* Logo styling & animation */
         .logo-wrapper {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             position: relative;
             display: inline-block;
         }
@@ -118,7 +119,7 @@
             transform: translate(-50%, -50%);
             width: 130px;
             height: 130px;
-            background: rgba(16, 185, 129, 0.2);
+            background: rgba(16, 185, 129, 0.25);
             border-radius: 50%;
             filter: blur(24px);
             z-index: -1;
@@ -126,8 +127,8 @@
         }
 
         .logo {
-            width: 110px;
-            height: 110px;
+            width: 105px;
+            height: 105px;
             object-fit: contain;
             animation: floatLogo 4s ease-in-out infinite alternate;
         }
@@ -135,7 +136,7 @@
         /* Typography */
         .arabic-school-name {
             font-family: 'Amiri', serif;
-            font-size: 2.2rem;
+            font-size: 2.1rem;
             font-weight: 700;
             color: #ffffff;
             margin-bottom: 4px;
@@ -146,19 +147,19 @@
 
         .english-school-name {
             font-family: 'Tajawal', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: var(--gold-400);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .divider {
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-            margin: 24px auto;
+            margin: 20px auto;
             width: 80%;
         }
 
@@ -166,14 +167,14 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid rgba(245, 158, 11, 0.2);
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.25);
             color: var(--gold-400);
             padding: 8px 16px;
             border-radius: 99px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
@@ -190,44 +191,87 @@
 
         .heading-ar {
             font-family: 'Tajawal', sans-serif;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             direction: rtl;
         }
 
         .heading-en {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
+            line-height: 1.35;
+        }
+
+        /* Announcement Highlight Card */
+        .reopen-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(245, 158, 11, 0.16) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin: 22px 0 24px;
+            text-align: center;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
+        }
+
+        .reopen-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gold-500);
+            color: #022c22;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 99px;
+            margin-bottom: 10px;
+        }
+
+        .reopen-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.2px;
+            margin-bottom: 6px;
+        }
+
+        .reopen-title-ar {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--gold-400);
+            direction: rtl;
         }
 
         .description-ar {
             font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
-            color: #9ca3af;
+            font-size: 0.96rem;
+            color: #cbd5e1;
             line-height: 1.8;
             margin-bottom: 12px;
             direction: rtl;
         }
 
         .description-en {
-            font-size: 0.95rem;
-            color: #9ca3af;
-            line-height: 1.6;
-            margin-bottom: 32px;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+            line-height: 1.65;
+            margin-bottom: 28px;
         }
 
         /* Decorative Animated Progress Bar */
         .progress-container {
             width: 100%;
             height: 6px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 99px;
             overflow: hidden;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .progress-bar {
@@ -245,9 +289,9 @@
             gap: 24px;
             flex-wrap: wrap;
             font-size: 0.85rem;
-            color: #6b7280;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 24px;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 22px;
         }
 
         .info-item {
@@ -263,13 +307,14 @@
         }
 
         .info-link {
-            color: #9ca3af;
+            color: #94a3b8;
             text-decoration: none;
             transition: color 0.2s;
+            font-weight: 500;
         }
 
         .info-link:hover {
-            color: var(--emerald-500);
+            color: var(--emerald-400);
         }
 
         /* Animations */
@@ -308,16 +353,22 @@
         /* Responsive adjustments */
         @media (max-width: 640px) {
             .card {
-                padding: 32px 20px;
+                padding: 32px 18px;
             }
             .arabic-school-name {
-                font-size: 1.8rem;
+                font-size: 1.75rem;
             }
             .heading-ar {
-                font-size: 1.3rem;
+                font-size: 1.25rem;
             }
             .heading-en {
-                font-size: 1.25rem;
+                font-size: 1.15rem;
+            }
+            .reopen-title {
+                font-size: 1.02rem;
+            }
+            .reopen-title-ar {
+                font-size: 0.98rem;
             }
             .footer-info {
                 flex-direction: column;
@@ -338,7 +389,7 @@
             <!-- Logo Section -->
             <div class="logo-wrapper">
                 <div class="logo-bg-glow"></div>
-                <img src="{{ asset('images/AMIS_Logo.png') }}" alt="AMIS Logo" class="logo">
+                <img src="https://aes.amis.edu.ph/images/AMIS_Logo.png" alt="AMIS Logo" class="logo" onerror="this.onerror=null; this.src='https://admin.amis.edu.ph/images/AMIS_Logo.svg';">
             </div>
 
             <!-- School Title Calligraphy and English -->
@@ -347,20 +398,27 @@
 
             <div class="maintenance-status">
                 <span class="status-dot"></span>
-                <span>System Upgrade / تحديث النظام</span>
+                <span>Scheduled Maintenance / أعمال الصيانة والتحديث</span>
             </div>
 
             <!-- Maintenance Messaging (Arabic & English) -->
-            <div class="heading-ar">التسجيل مغلق مؤقتاً لأعمال الصيانة</div>
-            <div class="heading-en">Enrollment Temporarily Offline for Maintenance</div>
+            <div class="heading-ar">بوابة التسجيل الإلكتروني مغلقة لأعمال الصيانة والتجهيز</div>
+            <div class="heading-en">Online Enrollment Closed for Scheduled Maintenance</div>
+
+            <!-- Highlight Reopening Announcement -->
+            <div class="reopen-banner">
+                <div class="reopen-badge">Notice • إعلان هام</div>
+                <div class="reopen-title">Reopening in December for New School Year 2027–2028</div>
+                <div class="reopen-title-ar">سيتم استئناف التسجيل في شهر ديسمبر للعام الدراسي الجديد 2027–2028</div>
+            </div>
 
             <div class="divider"></div>
 
             <p class="description-ar">
-                نحن نقوم حالياً بتحديث نظام التسجيل الإلكتروني لتقديم تجربة أفضل لكم. نعتذر عن هذا الانقطاع المؤقت وسنعاود الخدمة قريباً إن شاء الله.
+                تخضع بوابة التسجيل الإلكتروني لمدرسة المنورة الإسلامية حالياً لأعمال صيانة وتحديثات شاملة استعداداً لبدء القبول والتسجيل للعام الدراسي الجديد 2027-2028. نتطلع لخدمة طلابنا وأولياء الأمور الكرام فور إعادة فتح التسجيل في شهر ديسمبر إن شاء الله. شكراً لحسن تعاونكم وصبركم.
             </p>
             <p class="description-en">
-                We are currently upgrading our online enrollment portal to bring you an improved experience. We apologize for any inconvenience and will be back online shortly. Thank you for your patience.
+                The AMIS Online Enrollment Portal is temporarily offline as our team prepares the system for the upcoming School Year 2027–2028 admissions. Online applications will reopen this December. We look forward to welcoming new and returning learners. Thank you for your patience and understanding.
             </p>
 
             <!-- Premium Progress Bar -->

@@ -169,11 +169,13 @@
                                 @endif
                             </div>
                         </div>
-                        <a href="{{ $activeApplicant ? route('enrollment.form.child', $activeApplicant) : route('enrollment.form', ['fresh' => 1]) }}"
-                           style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:white;color:#1d4ed8;border-radius:8px;font-size:0.875rem;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;">
-                            {{ $activeApplicant && $activeApplicant->status === 'draft' ? 'Continue' : 'Start Now' }}
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                        </a>
+                        @if ($activeApplicant && $activeApplicant->status === 'draft')
+                            <a href="{{ route('enrollment.form.child', $activeApplicant) }}"
+                               style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.625rem 1.25rem;background:white;color:#1d4ed8;border-radius:8px;font-size:0.875rem;font-weight:700;text-decoration:none;white-space:nowrap;flex-shrink:0;">
+                                Continue
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                            </a>
+                        @endif
                     </div>
 
                 @elseif ($bannerType === 'rejected')
@@ -482,7 +484,7 @@
                                 </svg>
                             </div>
                             <div class="card-content">
-                                <h3>New Enrollment</h3>
+                                <h3>Enroll Now!</h3>
                                 <p>Submit a new student enrollment application</p>
                             </div>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="card-arrow">

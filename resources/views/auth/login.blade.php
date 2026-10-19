@@ -35,24 +35,117 @@
             </p>
         </div>
 
-        {{-- Video Guide Preview Card (Disabled non-interactive state) --}}
-        <div class="video-guide-preview-card" style="margin-top: 0.85rem; background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 18px; padding: 1.35rem 1.25rem; text-align: center; backdrop-filter: blur(12px); position: relative; overflow: hidden; max-width: 580px; box-shadow: 0 12px 32px rgba(0,0,0,0.18);">
-            <div style="position: absolute; top: 12px; right: 12px; background: rgba(245, 158, 11, 0.25); border: 1px solid rgba(245, 158, 11, 0.5); color: #fef08a; font-size: 0.68rem; font-weight: 800; padding: 0.25rem 0.65rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em;">
-                COMING SOON
-            </div>
-            
-            <div style="width: 46px; height: 46px; margin: 0 auto 0.75rem; border-radius: 50%; background: rgba(255, 255, 255, 0.12); border: 2px solid rgba(255, 255, 255, 0.3); color: rgba(255, 255, 255, 0.6); display: flex; align-items: center; justify-content: center; pointer-events: none;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 3px;">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
+        {{-- Video Guide Preview Card with Interactive Modal Player --}}
+        <div x-data="{
+            showVideoModal: false,
+            openVideo() {
+                this.showVideoModal = true;
+                this.$nextTick(() => {
+                    const video = this.$refs.enrollmentVideo;
+                    if (video) {
+                        video.currentTime = 0;
+                        video.play().catch(() => {});
+                    }
+                });
+            },
+            closeVideo() {
+                const video = this.$refs.enrollmentVideo;
+                if (video) {
+                    video.pause();
+                }
+                this.showVideoModal = false;
+            }
+        }">
+            <div @click="openVideo()" 
+                 class="video-guide-preview-card" 
+                 style="margin-top: 0.85rem; background: rgba(15, 23, 42, 0.45); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 18px; padding: 1.35rem 1.25rem; text-align: center; backdrop-filter: blur(14px); position: relative; overflow: hidden; max-width: 580px; box-shadow: 0 12px 32px rgba(0,0,0,0.22); cursor: pointer; transition: all 0.25s ease;"
+                 onmouseover="this.style.background='rgba(15, 23, 42, 0.65)'; this.style.borderColor='rgba(52, 211, 153, 0.6)'; this.style.transform='translateY(-2px)';"
+                 onmouseout="this.style.background='rgba(15, 23, 42, 0.45)'; this.style.borderColor='rgba(255, 255, 255, 0.22)'; this.style.transform='translateY(0)';"
+                 title="Click to watch tutorial video">
+                
+                <div style="position: absolute; top: 12px; right: 12px; background: rgba(16, 185, 129, 0.25); border: 1px solid rgba(52, 211, 153, 0.5); color: #6ee7b7; font-size: 0.68rem; font-weight: 800; padding: 0.25rem 0.65rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.06em; display: flex; align-items: center; gap: 0.35rem;">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #34d399; display: inline-block;"></span>
+                    WATCH TUTORIAL
+                </div>
+                
+                <div style="width: 50px; height: 50px; margin: 0 auto 0.75rem; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border: 2px solid rgba(255, 255, 255, 0.35); color: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.35); transition: transform 0.2s ease;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 3px;">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                </div>
+
+                <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #ffffff; letter-spacing: 0.03em;">
+                    ENROLLMENT VIDEO GUIDE
+                </h3>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: rgba(255, 255, 255, 0.85); font-weight: 500;">
+                    Watch our step-by-step video guide for Academic Year 2026–2027 (35s walkthrough).
+                </p>
             </div>
 
-            <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.03em;">
-                ENROLLMENT VIDEO GUIDE
-            </h3>
-            <p style="margin: 0.25rem 0 0 0; font-size: 0.78rem; color: rgba(255, 255, 255, 0.7); font-weight: 500;">
-                Video walkthrough is currently being prepared for SY 2026–2027.
-            </p>
+            <!-- Video Modal Popup -->
+            <div x-show="showVideoModal" 
+                 x-cloak 
+                 class="confirm-overlay" 
+                 style="z-index: 999999; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(8px); position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 1rem;" 
+                 @keydown.escape.window="closeVideo()">
+                
+                <div class="confirm-dialog" 
+                     style="max-width: 900px; width: 100%; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); background: #0f172a; border: 1px solid rgba(255, 255, 255, 0.15); overflow: hidden; display: flex; flex-direction: column;" 
+                     @click.outside="closeVideo()">
+                    
+                    <!-- Modal Header -->
+                    <div style="padding: 1rem 1.25rem; background: rgba(30, 41, 59, 0.85); border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 0.65rem;">
+                            <div style="width: 32px; height: 32px; border-radius: 8px; background: #059669; color: #ffffff; display: flex; align-items: center; justify-content: center;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.05rem; font-weight: 800; color: #ffffff;">AMIS Online Enrollment Tutorial</h3>
+                                <p style="margin: 2px 0 0; font-size: 0.75rem; color: #94a3b8; font-weight: 500;">Academic Year 2026–2027 Walkthrough &bull; aes.amis.edu.ph</p>
+                            </div>
+                        </div>
+                        <button type="button" 
+                                @click="closeVideo()" 
+                                aria-label="Close video player" 
+                                style="background: rgba(255, 255, 255, 0.1); border: none; color: #e2e8f0; width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s ease;" 
+                                onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'; this.style.color='#fca5a5';" 
+                                onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.color='#e2e8f0';">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Video Container -->
+                    <div style="position: relative; padding-top: 56.25%; width: 100%; background: #000000;">
+                        <video x-ref="enrollmentVideo" 
+                               controls 
+                               playsinline 
+                               preload="metadata"
+                               poster="{{ asset('videos/poster.png') }}"
+                               style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain;">
+                            <source src="{{ asset('videos/amis-enrollment-demo.mp4') }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <!-- Video Controls / Caption Bar -->
+                    <div style="padding: 0.75rem 1.25rem; background: rgba(30, 41, 59, 0.6); display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: #94a3b8; flex-wrap: wrap; gap: 0.5rem;">
+                        <span>Step 1: Application Form &rarr; Step 2: Admin Approval &rarr; Step 3: Instant Student ID</span>
+                        <a href="{{ asset('videos/amis-enrollment-demo.mp4') }}" download style="color: #34d399; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.35rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download Video (MP4)
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{-- Enrollment FAQs Component --}}
@@ -213,7 +306,7 @@
                     <span class="auth-entry-kicker">AMIS ENROLLMENT SYSTEM</span>
                     <h2 x-show="step === 'email'">Log in or sign up</h2>
                     <h2 x-show="step === 'otp'">Verify email</h2>
-                    <p x-show="step === 'email'">Choose Google or Microsoft to open your pre-enrollment dashboard.</p>
+                    <p x-show="step === 'email'">Choose an option below to open your pre-enrollment dashboard.</p>
                     <p x-show="step === 'otp'">We sent a 4-digit verification code to <strong x-text="email" style="color:#0f172a; word-break:break-all;"></strong>. Enter the code to continue.</p>
                 </div>
 
@@ -223,37 +316,25 @@
 
                 <!-- Step 1: Login Providers Options -->
                 <div x-show="step === 'providers'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
-                    <!-- Google Sign In -->
-                    <a href="{{ route('auth.google') }}" class="auth-provider-button google-auth-button" style="margin-bottom: 0.75rem; width: 100%; min-height: 50px; border-radius: 9999px; border: 1.5px solid #e2e8f0; background: #ffffff; padding: 0.6rem 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.65rem; text-decoration: none; font-weight: 600; color: #1e293b;">
-                        <svg class="auth-google-logo" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="flex-shrink: 0;">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-                        </svg>
-                        <span>Sign in with Google</span>
-                    </a>
-
-                    <!-- Microsoft Sign In -->
-                    <a href="{{ route('auth.microsoft') }}" class="auth-provider-button microsoft-auth-button" style="margin-bottom: 0.75rem; width: 100%; min-height: 50px; border-radius: 9999px; border: 1.5px solid #e2e8f0; background: #ffffff; padding: 0.6rem 1.25rem; display: flex; align-items: center; justify-content: center; gap: 0.65rem; text-decoration: none; font-weight: 600; color: #1e293b;">
-                        <svg class="auth-microsoft-logo" width="18" height="18" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;">
-                            <rect width="10.5" height="10.5" fill="#F25022"/>
-                            <rect x="12.5" width="10.5" height="10.5" fill="#7FBA00"/>
-                            <rect y="12.5" width="10.5" height="10.5" fill="#00A4EF"/>
-                            <rect x="12.5" y="12.5" width="10.5" height="10.5" fill="#FFB900"/>
-                        </svg>
-                        <span>Sign in with Microsoft</span>
-                    </a>
-
-                    <!-- WhatsApp Sign In (Coming Soon) -->
-                    <div class="auth-coming-soon-option" style="margin-bottom: 0.75rem; min-height: 50px; border-radius: 9999px; border: 1.5px dashed #cbd5e1; background: #f8fafc; padding: 0.6rem 1.25rem; display: flex; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; align-items: center; gap: 0.65rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366" style="flex-shrink: 0;">
-                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                            </svg>
-                            <span style="font-size: 0.9rem; font-weight: 600; color: #64748b;">Sign in with WhatsApp</span>
+                    <!-- Google Sign In (Google Identity Services to bypass ModSecurity) -->
+                    <script src="https://accounts.google.com/gsi/client" async defer></script>
+                    <div id="g_id_onload"
+                         data-client_id="{{ config('services.google.client_id') }}"
+                         data-context="signin"
+                         data-ux_mode="redirect"
+                         data-login_uri="{{ route('auth.google.callback') }}"
+                         data-auto_prompt="{{ request('prompt_google') ? 'true' : 'false' }}">
+                    </div>
+                    <div class="google-gis-container" style="margin-bottom: 0.75rem; width: 100%; display: flex; justify-content: center;">
+                        <div class="g_id_signin"
+                             data-type="standard"
+                             data-shape="pill"
+                             data-theme="outline"
+                             data-text="signin_with"
+                             data-size="large"
+                             data-logo_alignment="left"
+                             data-width="360">
                         </div>
-                        <span style="background: #fef3c7; color: #92400e; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 999px; text-transform: uppercase;">COMING SOON</span>
                     </div>
 
                     <!-- Active Email Sign In Button (Transitions to Step 2 Card) -->

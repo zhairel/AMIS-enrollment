@@ -28,17 +28,8 @@ class GoogleAuthController extends Controller
             return redirect()->route('auth.unsupported-browser');
         }
 
-        try {
-            $redirectResponse = Socialite::driver('google')
-                ->scopes(['openid', 'email'])
-                ->with(['response_mode' => 'form_post'])
-                ->redirect();
-            $targetUrl = $redirectResponse->getTargetUrl();
-
-            return response("<html><head><script>window.location.href = '" . addslashes($targetUrl) . "';</script></head><body>Redirecting to Google...</body></html>");
-        } catch (Exception $e) {
-            return redirect()->route('login')->withErrors(['email' => 'Failed to initialize Google redirect: ' . $e->getMessage()]);
-        }
+        // Redirect to login page where Google Identity Services handles sign-in cleanly without ModSecurity blocks
+        return redirect()->route('login', ['prompt_google' => 1]);
     }
 
     public function unsupportedBrowser(Request $request)

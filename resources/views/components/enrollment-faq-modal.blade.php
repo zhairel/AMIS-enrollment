@@ -111,7 +111,7 @@
                     <h4 style="margin: 0 0 1rem 0; font-size: 1.1rem; font-weight: 800; color: #0f172a;">How do I enroll online?</h4>
 
                     <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.88rem; color: #334155; line-height: 1.8; font-weight: 400;">
-                        <li>Sign in using your Google or Microsoft account.</li>
+                        <li>Sign in using your Google or Email account.</li>
                         <li>Start a new enrollment application.</li>
                         <li>Complete the required student and parent information.</li>
                         <li>Upload the required documents.</li>
@@ -222,7 +222,7 @@
 
                     <ul style="margin: 0.5rem 0 0 0; padding-left: 1.25rem; font-size: 0.88rem; color: #334155; line-height: 1.7; font-weight: 400;">
                         <li>During this period, no additional application is required.</li>
-                        <li>You can sign in again using the same Google or Microsoft account to check your status.</li>
+                        <li>You can sign in again using the same Google or Email account to check your status.</li>
                         <li>Do not create another duplicate application while your existing application is under review.</li>
                     </ul>
                 </div>
