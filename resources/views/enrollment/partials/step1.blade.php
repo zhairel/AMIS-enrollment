@@ -32,34 +32,44 @@
     </section>
 
     <section class="setup-section" x-show="form.student_type === 'Old'" x-cloak>
-        <div class="form-divider">OLD Student Record</div>
-        <div class="search-student-card p-6 bg-slate-50 border border-slate-200/80 rounded-3xl space-y-4">
-            <h4 class="text-sm font-bold text-slate-800">Search and Auto-fill Student Profile</h4>
-            <p class="text-xs text-slate-500">Provide your child's Student ID (e.g. 260001) or LRN and Date of Birth to search and auto-populate all form fields.</p>
+        <div class="form-divider" style="font-size: 0.95rem; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 1rem 0;">OLD Student Record</div>
+        <div class="search-student-card" style="padding: 1.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Search and Auto-fill Student Profile</h4>
+                <p style="font-size: 0.92rem; color: #475569; font-weight: 500; margin: 0.35rem 0 0 0; line-height: 1.5;">
+                    Provide your child's Student ID (e.g. 260001) or LRN and Date of Birth to search and auto-populate all form fields.
+                </p>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Student ID or LRN</label>
+                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">Student ID or LRN</label>
                     <input type="text" x-model="searchStudentNumber" placeholder="e.g. 260001 or LRN" 
-                           class="w-full px-4 py-2.5 text-sm uppercase bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 transition"
+                           style="width: 100%; padding: 0.9rem 1.2rem; min-height: 50px; font-size: 1.05rem; font-weight: 600; text-transform: uppercase; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; outline: none; transition: all 0.2s;"
+                           onfocus="this.style.borderColor='#059669'; this.style.boxShadow='0 0 0 4px rgba(5,150,105,0.12)';"
+                           onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';"
                            :disabled="searchingStudent">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1.5">Date of Birth</label>
+                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">Date of Birth</label>
                     <input type="date" x-model="searchDOB" 
-                           class="w-full px-4 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 transition"
+                           style="width: 100%; padding: 0.9rem 1.2rem; min-height: 50px; font-size: 1.05rem; font-weight: 600; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; outline: none; transition: all 0.2s;"
+                           onfocus="this.style.borderColor='#059669'; this.style.boxShadow='0 0 0 4px rgba(5,150,105,0.12)';"
+                           onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';"
                            :disabled="searchingStudent">
                 </div>
             </div>
             
-            <div class="flex items-center justify-between pt-2">
-                <div class="text-xs font-semibold">
-                    <span x-show="searchError" x-text="searchError" class="text-rose-600" x-cloak></span>
-                    <span x-show="searchSuccess" x-text="searchSuccess" class="text-emerald-700" x-cloak></span>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 0.35rem;">
+                <div style="font-size: 0.95rem; font-weight: 700;">
+                    <span x-show="searchError" x-text="searchError" style="color: #dc2626;" x-cloak></span>
+                    <span x-show="searchSuccess" x-text="searchSuccess" style="color: #047857;" x-cloak></span>
                 </div>
                 <button type="button" @click="searchAndAutofillStudent()" :disabled="searchingStudent || !searchStudentNumber || !searchDOB"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-xs transition">
-                    <svg x-show="searchingStudent" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" x-cloak>
+                        style="display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.85rem 1.85rem; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);"
+                        onmouseover="this.style.boxShadow='0 6px 18px rgba(5, 150, 105, 0.4)';"
+                        onmouseout="this.style.boxShadow='0 4px 12px rgba(5, 150, 105, 0.3)';">
+                    <svg x-show="searchingStudent" style="width: 18px; height: 18px; animation: spin 0.8s linear infinite;" fill="none" viewBox="0 0 24 24" x-cloak>
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                     </svg>

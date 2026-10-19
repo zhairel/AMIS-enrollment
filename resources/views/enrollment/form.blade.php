@@ -72,7 +72,7 @@
         .enrollment-steps-bar {
             background: #ffffff !important;
             border-bottom: 1.5px solid #e2e8f0 !important;
-            padding: 1.15rem clamp(1rem, 3vw, 2.5rem) 1.25rem !important;
+            padding: 1.25rem clamp(1rem, 3vw, 2.5rem) 1.35rem !important;
             box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03) !important;
             position: sticky;
             top: 0;
@@ -85,18 +85,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin: 0 auto 0.75rem !important;
+            margin: 0 auto 0.85rem !important;
         }
 
         .enrollment-progress-summary span {
             display: inline-flex;
             align-items: center;
-            padding: 0.25rem 0.75rem;
+            padding: 0.35rem 0.95rem;
             border-radius: 999px;
             background: #ecfdf5;
             border: 1px solid #a7f3d0;
             color: #047857;
-            font-size: 0.74rem;
+            font-size: 0.85rem !important;
             font-weight: 800;
             letter-spacing: 0.05em;
             text-transform: uppercase;
@@ -104,16 +104,16 @@
 
         .enrollment-progress-summary strong {
             color: #0f172a !important;
-            font-size: 0.95rem !important;
+            font-size: 1.15rem !important;
             font-weight: 800 !important;
         }
 
         .enrollment-progress-track {
             max-width: 960px !important;
-            height: 6px !important;
+            height: 7px !important;
             background: #e2e8f0 !important;
             border-radius: 999px !important;
-            margin: 0 auto 1.1rem !important;
+            margin: 0 auto 1.25rem !important;
             overflow: hidden;
         }
 
@@ -126,41 +126,53 @@
         .enrollment-steps-container {
             max-width: 960px !important;
             margin: 0 auto !important;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 0.85rem !important;
+            overflow-x: auto !important;
+            scrollbar-width: none !important;
+            -webkit-overflow-scrolling: touch !important;
+            flex-wrap: nowrap !important;
+            padding-bottom: 4px !important;
+        }
+
+        .enrollment-steps-container::-webkit-scrollbar {
+            display: none;
         }
 
         .enrollment-step-item {
-            display: flex;
-            align-items: center;
-            gap: 0.55rem;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.65rem !important;
+            flex-shrink: 0 !important;
             opacity: 1 !important;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .enrollment-step-circle {
-            width: 32px !important;
-            height: 32px !important;
+            width: 38px !important;
+            height: 38px !important;
             border-radius: 50% !important;
             background: #f8fafc !important;
             border: 1.5px solid #cbd5e1 !important;
             color: #64748b !important;
-            font-size: 0.82rem !important;
+            font-size: 0.95rem !important;
             font-weight: 800 !important;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
             transition: all 0.2s ease;
         }
 
         .enrollment-step-label {
-            font-size: 0.82rem !important;
-            font-weight: 600 !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
             color: #64748b !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
             transition: all 0.2s ease;
         }
 
@@ -188,6 +200,17 @@
 
         .enrollment-step-item.done:not(.active) .enrollment-step-label {
             color: #047857 !important;
+            font-weight: 700 !important;
+        }
+
+        .enrollment-step-item.warning .enrollment-step-circle {
+            background: #fef3c7 !important;
+            border-color: #f59e0b !important;
+            color: #b45309 !important;
+        }
+
+        .enrollment-step-item.warning .enrollment-step-label {
+            color: #b45309 !important;
             font-weight: 700 !important;
         }
 
@@ -220,19 +243,19 @@
 
         /* Choice Cards */
         .choice-card-grid {
-            gap: 1rem !important;
+            gap: 1.15rem !important;
         }
 
         .choice-card {
-            min-height: 88px !important;
-            padding: 1.15rem 1.25rem !important;
+            min-height: 94px !important;
+            padding: 1.25rem 1.4rem !important;
             background: #ffffff !important;
             border: 1.5px solid #e2e8f0 !important;
             border-radius: 16px !important;
             opacity: 1 !important;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            display: flex !important;
+            align-items: center !important;
+            gap: 1.15rem !important;
             cursor: pointer;
             transition: all 0.2s ease;
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
@@ -253,9 +276,9 @@
         }
 
         .choice-card-icon {
-            width: 44px !important;
-            height: 44px !important;
-            border-radius: 12px !important;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 14px !important;
             background: #f1f5f9 !important;
             color: #475569 !important;
             border: 1px solid #e2e8f0 !important;
@@ -274,114 +297,198 @@
         }
 
         .choice-card-copy strong {
-            font-size: 0.95rem !important;
+            font-size: 1.1rem !important;
             font-weight: 800 !important;
             color: #0f172a !important;
-            line-height: 1.25;
+            line-height: 1.3 !important;
             letter-spacing: -0.01em;
+            display: block !important;
         }
 
         .choice-card-copy small {
-            font-size: 0.82rem !important;
-            color: #64748b !important;
+            font-size: 0.92rem !important;
+            color: #475569 !important;
             font-weight: 500 !important;
-            line-height: 1.4;
-            margin-top: 0.15rem;
+            line-height: 1.45 !important;
+            margin-top: 0.25rem !important;
+            display: block !important;
         }
 
         .choice-card-radio {
-            margin-left: auto;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 2px solid #cbd5e1;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            margin-left: auto !important;
+            width: 24px !important;
+            height: 24px !important;
+            border-radius: 50% !important;
+            border: 2px solid #cbd5e1 !important;
+            background: #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
             color: transparent;
             transition: all 0.2s ease;
         }
 
         .choice-card.is-selected .choice-card-radio {
-            border-color: #059669;
-            background: #059669;
-            color: #ffffff;
-            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.4);
+            border-color: #059669 !important;
+            background: #059669 !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.4) !important;
         }
 
         /* Form Labels & Fields */
         .setup-section {
-            padding-top: 1.75rem !important;
+            padding-top: 2rem !important;
             border-top: 1.5px solid #f1f5f9 !important;
             margin-top: 0 !important;
         }
 
-        .field-label {
-            font-size: 0.8rem !important;
+        .field-label,
+        .form-group label {
+            font-size: 1rem !important;
             font-weight: 800 !important;
             color: #0f172a !important;
-            letter-spacing: 0.04em !important;
+            letter-spacing: 0.035em !important;
             text-transform: uppercase !important;
             margin-bottom: 0.75rem !important;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.45rem !important;
         }
 
-        .field-label .required {
-            color: #ef4444;
-            font-weight: 800;
+        .field-label .required,
+        .form-group label .required {
+            color: #ef4444 !important;
+            font-size: 1.15rem !important;
+            font-weight: 900 !important;
+            margin-left: 2px !important;
         }
 
-        .select-input {
+        .field-optional-badge {
+            font-size: 0.78rem !important;
+            padding: 0.2rem 0.65rem !important;
+            font-weight: 700 !important;
+            border-radius: 999px !important;
+            background: #e0f2fe !important;
+            color: #0369a1 !important;
+            text-transform: none !important;
+            letter-spacing: normal !important;
+        }
+
+        .field-hint {
+            font-size: 0.9rem !important;
+            color: #64748b !important;
+            line-height: 1.5 !important;
+            margin-top: 0.45rem !important;
+            display: block !important;
+        }
+
+        .plain-input,
+        .select-input,
+        .textarea-input,
+        .date-input {
             width: 100% !important;
-            padding: 0.85rem 1.15rem !important;
+            padding: 0.9rem 1.2rem !important;
             border: 1.5px solid #cbd5e1 !important;
             border-radius: 14px !important;
-            font-size: 0.95rem !important;
-            font-weight: 700 !important;
+            font-size: 1.05rem !important;
+            font-weight: 600 !important;
             color: #0f172a !important;
             background: #ffffff !important;
-            cursor: pointer;
+            min-height: 52px !important;
             transition: all 0.2s ease !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: right 1rem center !important;
-            padding-right: 2.75rem !important;
+            outline: none !important;
+            line-height: 1.4 !important;
         }
 
-        .select-input:hover {
+        .plain-input:hover,
+        .select-input:hover,
+        .textarea-input:hover,
+        .date-input:hover {
             border-color: #94a3b8 !important;
         }
 
-        .select-input:focus {
+        .plain-input:focus,
+        .select-input:focus,
+        .textarea-input:focus,
+        .date-input:focus {
             border-color: #059669 !important;
             box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12) !important;
+        }
+
+        .plain-input::placeholder,
+        .textarea-input::placeholder {
+            color: #94a3b8 !important;
+            font-weight: 400 !important;
+        }
+
+        .select-input {
+            cursor: pointer !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 1.15rem center !important;
+            padding-right: 3rem !important;
+        }
+
+        /* Shift Cards and Location in Step 1 */
+        .location-button {
+            padding: 0.85rem 1.25rem !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            border-radius: 14px !important;
+        }
+
+        .shift-card {
+            padding: 1.15rem 1.25rem !important;
+            border-radius: 16px !important;
+        }
+
+        .shift-card-title {
+            font-size: 1.1rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+        }
+
+        .shift-slot-badge {
+            font-size: 0.82rem !important;
+            font-weight: 700 !important;
+        }
+
+        .shift-slot-copy {
+            font-size: 0.9rem !important;
+        }
+
+        .shift-card-primary-time {
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+        }
+
+        .shift-card-local-time {
+            font-size: 0.92rem !important;
         }
 
         /* Action Buttons */
         .form-actions-row {
             border-top: 1.5px solid #f1f5f9 !important;
-            padding-top: 1.75rem !important;
-            margin-top: 2rem !important;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
+            padding-top: 2rem !important;
+            margin-top: 2.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 1rem !important;
+            flex-wrap: wrap !important;
         }
 
         .form-actions-row .btn-secondary {
-            padding: 0.75rem 1.35rem !important;
+            padding: 0.85rem 1.65rem !important;
             border: 1.5px solid #cbd5e1 !important;
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             background: #ffffff !important;
-            color: #475569 !important;
-            font-size: 0.88rem !important;
+            color: #334155 !important;
+            font-size: 1rem !important;
             font-weight: 700 !important;
             transition: all 0.2s ease !important;
+            cursor: pointer !important;
         }
 
         .form-actions-row .btn-secondary:hover {
@@ -391,18 +498,19 @@
         }
 
         .form-actions-row .btn-primary {
-            padding: 0.8rem 1.85rem !important;
+            padding: 0.9rem 2.25rem !important;
             background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
             border: none !important;
-            border-radius: 12px !important;
+            border-radius: 14px !important;
             color: #ffffff !important;
-            font-size: 0.92rem !important;
+            font-size: 1.05rem !important;
             font-weight: 800 !important;
             box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
             transition: all 0.2s ease !important;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.6rem !important;
+            cursor: pointer !important;
         }
 
         .form-actions-row .btn-primary:hover {
