@@ -58,6 +58,357 @@
             animation: indeterminate-bar 1.5s ease-in-out infinite;
             transform-origin: left;
         }
+
+        /* ── Modern Enrollment Theme Enhancements ── */
+        .enrollment-page {
+            background: #f8fafc !important;
+            background-image: radial-gradient(at 10% 15%, rgba(5, 150, 105, 0.04) 0px, transparent 55%),
+                              radial-gradient(at 90% 85%, rgba(16, 185, 129, 0.04) 0px, transparent 55%) !important;
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* Stepper Bar */
+        .enrollment-steps-bar {
+            background: #ffffff !important;
+            border-bottom: 1.5px solid #e2e8f0 !important;
+            padding: 1.15rem clamp(1rem, 3vw, 2.5rem) 1.25rem !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03) !important;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(12px);
+        }
+
+        .enrollment-progress-summary {
+            max-width: 960px !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 auto 0.75rem !important;
+        }
+
+        .enrollment-progress-summary span {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .enrollment-progress-summary strong {
+            color: #0f172a !important;
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
+        }
+
+        .enrollment-progress-track {
+            max-width: 960px !important;
+            height: 6px !important;
+            background: #e2e8f0 !important;
+            border-radius: 999px !important;
+            margin: 0 auto 1.1rem !important;
+            overflow: hidden;
+        }
+
+        .enrollment-progress-track span {
+            background: linear-gradient(90deg, #059669, #10b981) !important;
+            border-radius: 999px !important;
+            transition: width 0.35s ease;
+        }
+
+        .enrollment-steps-container {
+            max-width: 960px !important;
+            margin: 0 auto !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .enrollment-step-item {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            opacity: 1 !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .enrollment-step-circle {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            background: #f8fafc !important;
+            border: 1.5px solid #cbd5e1 !important;
+            color: #64748b !important;
+            font-size: 0.82rem !important;
+            font-weight: 800 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .enrollment-step-label {
+            font-size: 0.82rem !important;
+            font-weight: 600 !important;
+            color: #64748b !important;
+            transition: all 0.2s ease;
+        }
+
+        /* Active Step: Always Emerald */
+        .enrollment-step-item.active .enrollment-step-circle {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+            border-color: #059669 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.22), 0 4px 12px rgba(5, 150, 105, 0.35) !important;
+            transform: scale(1.08);
+        }
+
+        .enrollment-step-item.active .enrollment-step-label {
+            color: #065f46 !important;
+            font-weight: 800 !important;
+        }
+
+        /* Done Step */
+        .enrollment-step-item.done:not(.active) .enrollment-step-circle {
+            background: #ecfdf5 !important;
+            border-color: #10b981 !important;
+            color: #047857 !important;
+            font-weight: 800 !important;
+        }
+
+        .enrollment-step-item.done:not(.active) .enrollment-step-label {
+            color: #047857 !important;
+            font-weight: 700 !important;
+        }
+
+        /* Main Form Container */
+        .enrollment-main {
+            padding: 2.25rem clamp(1rem, 2.5vw, 2rem) 4rem !important;
+        }
+
+        .enrollment-form-container {
+            max-width: 960px !important;
+            background: #ffffff !important;
+            border: 1.5px solid #e2e8f0 !important;
+            border-radius: 22px !important;
+            box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+            padding: clamp(1.75rem, 3.5vw, 2.75rem) !important;
+            margin-top: 0 !important;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enrollment-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #059669 0%, #10b981 50%, #f59e0b 100%);
+        }
+
+        /* Choice Cards */
+        .choice-card-grid {
+            gap: 1rem !important;
+        }
+
+        .choice-card {
+            min-height: 88px !important;
+            padding: 1.15rem 1.25rem !important;
+            background: #ffffff !important;
+            border: 1.5px solid #e2e8f0 !important;
+            border-radius: 16px !important;
+            opacity: 1 !important;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            text-align: left;
+        }
+
+        .choice-card:hover {
+            border-color: #10b981 !important;
+            background: #f0fdf4 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px -4px rgba(5, 150, 105, 0.12) !important;
+        }
+
+        .choice-card.is-selected {
+            border-color: #059669 !important;
+            background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%) !important;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.16), 0 12px 28px -4px rgba(5, 150, 105, 0.18) !important;
+        }
+
+        .choice-card-icon {
+            width: 44px !important;
+            height: 44px !important;
+            border-radius: 12px !important;
+            background: #f1f5f9 !important;
+            color: #475569 !important;
+            border: 1px solid #e2e8f0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex-shrink: 0 !important;
+            transition: all 0.2s ease;
+        }
+
+        .choice-card:hover .choice-card-icon,
+        .choice-card.is-selected .choice-card-icon {
+            background: #dcfce7 !important;
+            color: #047857 !important;
+            border-color: #a7f3d0 !important;
+        }
+
+        .choice-card-copy strong {
+            font-size: 0.95rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
+        }
+
+        .choice-card-copy small {
+            font-size: 0.82rem !important;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            line-height: 1.4;
+            margin-top: 0.15rem;
+        }
+
+        .choice-card-radio {
+            margin-left: auto;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .choice-card.is-selected .choice-card-radio {
+            border-color: #059669;
+            background: #059669;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(5, 150, 105, 0.4);
+        }
+
+        /* Form Labels & Fields */
+        .setup-section {
+            padding-top: 1.75rem !important;
+            border-top: 1.5px solid #f1f5f9 !important;
+            margin-top: 0 !important;
+        }
+
+        .field-label {
+            font-size: 0.8rem !important;
+            font-weight: 800 !important;
+            color: #0f172a !important;
+            letter-spacing: 0.04em !important;
+            text-transform: uppercase !important;
+            margin-bottom: 0.75rem !important;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .field-label .required {
+            color: #ef4444;
+            font-weight: 800;
+        }
+
+        .select-input {
+            width: 100% !important;
+            padding: 0.85rem 1.15rem !important;
+            border: 1.5px solid #cbd5e1 !important;
+            border-radius: 14px !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            color: #0f172a !important;
+            background: #ffffff !important;
+            cursor: pointer;
+            transition: all 0.2s ease !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23059669' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 1rem center !important;
+            padding-right: 2.75rem !important;
+        }
+
+        .select-input:hover {
+            border-color: #94a3b8 !important;
+        }
+
+        .select-input:focus {
+            border-color: #059669 !important;
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12) !important;
+        }
+
+        /* Action Buttons */
+        .form-actions-row {
+            border-top: 1.5px solid #f1f5f9 !important;
+            padding-top: 1.75rem !important;
+            margin-top: 2rem !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .form-actions-row .btn-secondary {
+            padding: 0.75rem 1.35rem !important;
+            border: 1.5px solid #cbd5e1 !important;
+            border-radius: 12px !important;
+            background: #ffffff !important;
+            color: #475569 !important;
+            font-size: 0.88rem !important;
+            font-weight: 700 !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .form-actions-row .btn-secondary:hover {
+            background: #f8fafc !important;
+            border-color: #94a3b8 !important;
+            color: #0f172a !important;
+        }
+
+        .form-actions-row .btn-primary {
+            padding: 0.8rem 1.85rem !important;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+            border: none !important;
+            border-radius: 12px !important;
+            color: #ffffff !important;
+            font-size: 0.92rem !important;
+            font-weight: 800 !important;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
+            transition: all 0.2s ease !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-actions-row .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(5, 150, 105, 0.45) !important;
+        }
     </style>
     <!-- Full Page Loading Skeleton -->
     <div x-show="initialLoading" x-cloak>
@@ -95,7 +446,14 @@
                         @keydown.space.prevent="goToStep(s.num)"
                     >
                         <div class="enrollment-step-circle" aria-hidden="true">
-                            <span x-text="s.num"></span>
+                            <template x-if="isStepComplete(s.num) && step !== s.num">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </template>
+                            <template x-if="!isStepComplete(s.num) || step === s.num">
+                                <span x-text="s.num"></span>
+                            </template>
                         </div>
                         <span class="enrollment-step-label" x-text="s.label"></span>
                     </div>
@@ -212,29 +570,41 @@
                 <!-- Form Actions -->
                 <div class="form-actions form-actions-row" x-show="!pageLoading">
                     {{-- Left: Cancel & Save Draft --}}
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <button type="button" @click="openCancelPrompt()" class="btn-secondary">
-                            Cancel
+                    <div style="display: flex; gap: 0.65rem; align-items: center;">
+                        <button type="button" @click="openCancelPrompt()" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.45rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            <span>Cancel</span>
                         </button>
-                        <button type="button" @click="saveDraft({ force: true, showStatus: true })" class="btn-secondary" :disabled="stepSaving" :class="{ 'is-disabled': stepSaving }">
-                            Save Draft
+                        <button type="button" @click="saveDraft({ force: true, showStatus: true })" class="btn-secondary" :disabled="stepSaving" :class="{ 'is-disabled': stepSaving }" style="display: inline-flex; align-items: center; gap: 0.45rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            <span>Save Draft</span>
                         </button>
                     </div>
                     {{-- Right: Back + Next/Submit --}}
-                    <div class="form-actions-group">
-                        <button type="button" x-show="step > 1" @click="prevStep()" class="btn-secondary">
-                            Back
+                    <div class="form-actions-group" style="display: flex; gap: 0.65rem; align-items: center;">
+                        <button type="button" x-show="step > 1" @click="prevStep()" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.45rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                            <span>Back</span>
                         </button>
                         <button type="button" x-show="step < totalSteps" @click="nextStep()" class="btn-primary"
                             :disabled="stepSaving"
                             :class="{ 'is-disabled': stepSaving }">
                             <span>Next</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="9 18 15 12 9 6"/>
                             </svg>
                         </button>
                         <button type="button" x-show="step === totalSteps" @click="openSubmitConfirmModal()" class="btn-primary"
-                            style="background-color: #059669 !important; border-color: #047857 !important;"
+                            style="background: linear-gradient(135deg, #059669 0%, #047857 100%) !important; border: none !important;"
                             :disabled="loading || hasFilePreparationPending() || draftSaving"
                             :class="{ 'is-disabled': loading || hasFilePreparationPending() || draftSaving }">
                             <span x-text="hasFilePreparationPending() ? 'Preparing files...' : (draftSaving ? 'Saving files...' : 'CONFIRM & FINAL SUBMIT ENROLLMENT')"></span>
