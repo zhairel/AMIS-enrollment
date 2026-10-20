@@ -34,7 +34,7 @@
     }
 }">
     <!-- Compact Desktop/Mobile FAQ Card Component -->
-    <div class="faq-section-card" style="background: rgba(255, 255, 255, 0.96); border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 18px; padding: 1.15rem 1.35rem; box-shadow: 0 14px 32px rgba(0,0,0,0.2); margin-top: 0.5rem; backdrop-filter: blur(12px);">
+    <div class="faq-section-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:1.35rem 1.5rem; box-shadow:0 4px 20px -2px rgba(0,0,0,0.04); margin-top:1.5rem;">
         <div @click="isCollapsed = !isCollapsed" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; flex-wrap:wrap; gap:0.5rem;">
             <div style="display:flex; align-items:center; gap:0.65rem;">
                 <div style="width:38px; height:38px; border-radius:12px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
