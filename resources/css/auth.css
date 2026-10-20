@@ -66,15 +66,31 @@
 }
 
 .auth-hero-panel {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 1.15rem;
-    padding: clamp(2.5rem, 4vw, 4rem);
-    overflow: visible;
-    background: linear-gradient(160deg, #059669 0%, #065f46 68%);
+    gap: 1.25rem;
+    padding: clamp(2.5rem, 4vw, 4.5rem);
+    overflow: hidden;
+    background: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.18) 0%, transparent 45%),
+                radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.22) 0%, transparent 50%),
+                linear-gradient(165deg, #022c22 0%, #064e3b 45%, #047857 100%);
     color: #ffffff;
     min-height: 100%;
+}
+
+.auth-hero-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px, 64px 64px, 64px 64px;
+    pointer-events: none;
+    opacity: 0.6;
 }
 
 .auth-hero-brand {
@@ -199,24 +215,99 @@
 }
 
 .login-form {
+    position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-width: 0;
-    padding: clamp(1.5rem, 5vw, 3rem);
-    background: #f3f4f6;
+    padding: clamp(2rem, 4vw, 4rem);
+    background: radial-gradient(circle at 90% 10%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 10% 90%, rgba(245, 158, 11, 0.06) 0%, transparent 45%),
+                linear-gradient(145deg, #f8fafc 0%, #f1f5f9 55%, #e2e8f0 100%);
 }
 
 .login-form-panel {
-    width: min(100%, 430px);
+    width: min(100%, 480px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
 }
 
 .auth-entry-card {
-    padding: 2rem;
+    position: relative;
+    padding: 2.25rem 2rem 2rem;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 20px 45px -10px rgba(6, 78, 59, 0.08), 0 10px 20px -5px rgba(0, 0, 0, 0.04);
+    border-top: 4px solid #059669;
+}
+
+/* School Theme Enhanced Components */
+.school-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #fef3c7;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.school-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    max-width: 580px;
+}
+
+.school-feature-item {
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    background: rgba(2, 44, 34, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(12px);
+    transition: all 0.2s ease;
+}
+
+.school-feature-item:hover {
+    background: rgba(2, 44, 34, 0.65);
+    border-color: rgba(52, 211, 153, 0.4);
+    transform: translateY(-2px);
+}
+
+.school-support-card {
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    background: #ffffff;
-    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.11);
+    padding: 1.25rem 1.5rem;
+    box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.05);
+}
+
+.school-support-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.82rem;
+    color: #334155;
+}
+
+.school-accreditation-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: rgba(241, 245, 249, 0.7);
+    border: 1px solid #e2e8f0;
 }
 
 .auth-entry-mobile-brand {
