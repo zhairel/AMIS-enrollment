@@ -61,18 +61,21 @@
 .login-grid {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+    grid-template-columns: minmax(0, 1.12fr) minmax(430px, 0.88fr);
     align-items: stretch;
 }
 
 .auth-hero-panel {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 1.15rem;
-    padding: clamp(2.5rem, 4vw, 4rem);
-    overflow: visible;
-    background: linear-gradient(160deg, #059669 0%, #065f46 68%);
+    justify-content: flex-start;
+    gap: 1.25rem;
+    padding: clamp(2rem, 3.5vw, 3.75rem);
+    overflow-y: auto;
+    max-height: 100vh;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+    background: linear-gradient(165deg, #064e3b 0%, #04382a 55%, #02261c 100%);
     color: #ffffff;
     min-height: 100%;
 }
@@ -785,6 +788,7 @@ input:-webkit-autofill:active {
     .login-form { padding: 2rem 1.25rem !important; min-height: 100vh; }
     .mobile-logo { display: block !important; margin: 0 auto 0.875rem !important; }
     .auth-entry-mobile-brand { display: block; }
+    .mobile-faq-wrapper { display: block !important; }
 }
 
 /* ── Premium Redesign & 4-Digit OTP Styles ────────────────────────── */
