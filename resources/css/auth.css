@@ -203,32 +203,20 @@
     align-items: center;
     justify-content: center;
     min-width: 0;
-    padding: clamp(1.5rem, 4vw, 3rem);
-    background: radial-gradient(circle at 50% 15%, rgba(241, 245, 249, 0.9) 0%, transparent 60%),
-                linear-gradient(150deg, #f8fafc 0%, #f1f5f9 100%);
+    padding: clamp(1.5rem, 5vw, 3rem);
+    background: #f3f4f6;
 }
 
 .login-form-panel {
-    width: min(100%, 460px);
+    width: min(100%, 430px);
 }
 
 .auth-entry-card {
-    padding: 0;
+    padding: 2rem;
     border: 1px solid #e2e8f0;
-    border-radius: 20px;
+    border-radius: 16px;
     background: #ffffff;
-    box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.09), 0 1px 3px rgba(0, 0, 0, 0.04);
-    overflow: hidden;
-}
-
-.auth-entry-card-body {
-    padding: 2.25rem 2.25rem 1.75rem;
-}
-
-.auth-entry-card-footer {
-    background: #f8fafc;
-    border-top: 1px solid #e2e8f0;
-    padding: 1.25rem 1.75rem;
+    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.11);
 }
 
 .auth-entry-mobile-brand {
@@ -1015,74 +1003,6 @@ input:-webkit-autofill:active {
         transform-origin: center;
         margin: 2px 0;
     }
-}
-
-/* ── Prestigious School Portal UI Additions ── */
-.school-hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 0.85rem;
-    border-radius: 999px;
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    color: #fef3c7;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-}
-
-.school-highlights-row {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    flex-wrap: wrap;
-    margin-top: 0.25rem;
-    max-width: 580px;
-}
-
-.school-highlight-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 999px;
-    background: rgba(2, 44, 34, 0.45);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(10px);
-    font-size: 0.76rem;
-    font-weight: 700;
-    color: #ffffff;
-    transition: all 0.2s ease;
-}
-
-.school-highlight-pill:hover {
-    background: rgba(2, 44, 34, 0.7);
-    border-color: rgba(52, 211, 153, 0.4);
-    transform: translateY(-1px);
-}
-
-.school-video-preview {
-    margin-top: 0.75rem;
-    background: rgba(2, 44, 34, 0.55);
-    border: 1px solid rgba(52, 211, 153, 0.35);
-    border-radius: 18px;
-    padding: 1.15rem 1.25rem;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
-    cursor: pointer;
-    transition: all 0.25s ease;
-    max-width: 580px;
-    position: relative;
-    overflow: hidden;
-}
-
-.school-video-preview:hover {
-    background: rgba(2, 44, 34, 0.75);
-    border-color: rgba(52, 211, 153, 0.6);
-    transform: translateY(-2px);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
 }
 
 
