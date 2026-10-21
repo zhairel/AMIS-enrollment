@@ -1,3 +1,5 @@
+@props(['theme' => 'light'])
+
 <div x-data="{ 
     showFaqModal: false, 
     isCollapsed: false,
@@ -33,11 +35,14 @@
         this.showFaqModal = true;
     }
 }">
-    <!-- Compact Desktop/Mobile FAQ Card Component -->
-    <div class="faq-section-card" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:18px; padding:1.35rem 1.5rem; box-shadow:0 4px 20px -2px rgba(0,0,0,0.04); margin-top:1.5rem;">
+    <!-- Compact FAQ Trigger Card Component (Supports glass and light themes) -->
+    <div class="faq-section-card {{ $theme === 'glass' ? 'faq-glass-card' : 'faq-light-card' }}" 
+         style="{{ $theme === 'glass' 
+            ? 'background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18); backdrop-filter: blur(14px); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18); border-radius: 18px; padding: 1.25rem 1.4rem;' 
+            : 'background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 1.35rem 1.5rem; box-shadow: 0 4px 20px -2px rgba(0,0,0,0.04);' }}">
         <div @click="isCollapsed = !isCollapsed" style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; flex-wrap:wrap; gap:0.5rem;">
             <div style="display:flex; align-items:center; gap:0.65rem;">
-                <div style="width:38px; height:38px; border-radius:12px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <div style="width:38px; height:38px; border-radius:12px; {{ $theme === 'glass' ? 'background: rgba(16, 185, 129, 0.25); color: #6ee7b7;' : 'background: #ecfdf5; color: #059669;' }} display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"/>
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
@@ -45,14 +50,14 @@
                     </svg>
                 </div>
                 <div>
-                    <h3 style="margin:0; font-size:1.15rem; font-weight:800; color:#0f172a; line-height:1.2;">Enrollment FAQs</h3>
-                    <p style="margin:2px 0 0; font-size:0.8rem; color:#64748b; font-weight:500;">Quick answers to common online enrollment questions</p>
+                    <h3 style="margin:0; font-size:1.1rem; font-weight:800; {{ $theme === 'glass' ? 'color: #ffffff;' : 'color: #0f172a;' }} line-height:1.2;">Enrollment FAQs</h3>
+                    <p style="margin:2px 0 0; font-size:0.8rem; {{ $theme === 'glass' ? 'color: rgba(255, 255, 255, 0.8);' : 'color: #64748b;' }} font-weight:500;">Quick answers to common online enrollment questions</p>
                 </div>
             </div>
             <div style="display:flex; align-items:center; gap:0.65rem;">
-                <span style="font-size:0.75rem; font-weight:700; color:#059669; background:#ecfdf5; padding:0.25rem 0.65rem; border-radius:999px; border:1px solid #a7f3d0;">4 Topics</span>
-                <div style="width: 28px; height: 28px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" :style="isCollapsed ? '' : 'transform: rotate(180deg);'">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <span style="font-size:0.75rem; font-weight:700; {{ $theme === 'glass' ? 'color: #a7f3d0; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(52, 211, 153, 0.4);' : 'color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0;' }} padding:0.25rem 0.65rem; border-radius:999px;">4 Topics</span>
+                <div style="width: 28px; height: 28px; border-radius: 50%; {{ $theme === 'glass' ? 'background: rgba(255, 255, 255, 0.12);' : 'background: #f1f5f9;' }} display: flex; align-items: center; justify-content: center; transition: transform 0.2s;" :style="isCollapsed ? '' : 'transform: rotate(180deg);'">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{ $theme === 'glass' ? '#ffffff' : '#475569' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </div>
@@ -61,12 +66,15 @@
 
         <div x-show="!isCollapsed" x-collapse class="faq-compact-grid" style="display:grid; grid-template-columns:1fr; gap:0.55rem; margin-top: 1rem;">
             <template x-for="faq in faqs" :key="faq.id">
-                <button type="button" @click="openFaq(faq.id)" class="faq-item-button" style="width:100%; text-align:left; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:0.85rem 1rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; cursor:pointer; transition:all 0.15s ease;" onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#cbd5e1';" onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0';">
+                <button type="button" @click="openFaq(faq.id)" class="faq-item-button" 
+                        style="width:100%; text-align:left; {{ $theme === 'glass' ? 'background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12);' : 'background: #f8fafc; border: 1px solid #e2e8f0;' }} border-radius:12px; padding:0.85rem 1rem; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; cursor:pointer; transition:all 0.15s ease;" 
+                        onmouseover="{{ $theme === 'glass' ? 'this.style.background=\'rgba(255, 255, 255, 0.14)\'; this.style.borderColor=\'rgba(52, 211, 153, 0.45)\';' : 'this.style.background=\'#f1f5f9\'; this.style.borderColor=\'#cbd5e1\';' }}" 
+                        onmouseout="{{ $theme === 'glass' ? 'this.style.background=\'rgba(255, 255, 255, 0.07)\'; this.style.borderColor=\'rgba(255, 255, 255, 0.12)\';' : 'this.style.background=\'#f8fafc\'; this.style.borderColor=\'#e2e8f0\';' }}">
                     <div style="display:flex; align-items:flex-start; gap:0.75rem; flex:1; min-width:0;">
                         <span style="width:28px; height:28px; border-radius:8px; background:#059669; color:#ffffff; font-size:0.75rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">?</span>
-                        <span style="font-size:0.88rem; font-weight:700; color:#1e293b; line-height:1.35; flex:1; min-width:0;" x-text="faq.title"></span>
+                        <span style="font-size:0.88rem; font-weight:700; {{ $theme === 'glass' ? 'color: #ffffff;' : 'color: #1e293b;' }} line-height:1.35; flex:1; min-width:0;" x-text="faq.title"></span>
                     </div>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:3px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ $theme === 'glass' ? '#a7f3d0' : '#64748b' }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:3px;">
                         <polyline points="9 18 15 12 9 6"/>
                     </svg>
                 </button>

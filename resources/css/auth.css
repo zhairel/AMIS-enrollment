@@ -61,7 +61,7 @@
 .login-grid {
     min-height: 100vh;
     display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
+    grid-template-columns: minmax(0, 1.15fr) minmax(440px, 0.85fr);
     align-items: stretch;
 }
 
@@ -69,10 +69,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 1.15rem;
-    padding: clamp(2.5rem, 4vw, 4rem);
-    overflow: visible;
-    background: linear-gradient(160deg, #059669 0%, #065f46 68%);
+    gap: 1.35rem;
+    padding: clamp(2.5rem, 4vw, 4.5rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    background: linear-gradient(155deg, #064e3b 0%, #043e30 48%, #022c22 100%);
     color: #ffffff;
     min-height: 100%;
 }
@@ -203,20 +205,25 @@
     align-items: center;
     justify-content: center;
     min-width: 0;
-    padding: clamp(1.5rem, 5vw, 3rem);
-    background: #f3f4f6;
+    padding: clamp(1.5rem, 4vw, 3.5rem);
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f8fafc 55%, #f1f5f9 100%);
+    position: relative;
+    min-height: 100vh;
 }
 
 .login-form-panel {
     width: min(100%, 430px);
+    position: relative;
+    z-index: 10;
 }
 
 .auth-entry-card {
-    padding: 2rem;
+    padding: 2.25rem 2rem;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
+    border-top: 3.5px solid #059669;
+    border-radius: 22px;
     background: #ffffff;
-    box-shadow: 0 24px 58px rgba(15, 23, 42, 0.11);
+    box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.02);
 }
 
 .auth-entry-mobile-brand {
@@ -785,6 +792,7 @@ input:-webkit-autofill:active {
     .login-form { padding: 2rem 1.25rem !important; min-height: 100vh; }
     .mobile-logo { display: block !important; margin: 0 auto 0.875rem !important; }
     .auth-entry-mobile-brand { display: block; }
+    .mobile-faq-wrapper { display: block !important; }
 }
 
 /* ── Premium Redesign & 4-Digit OTP Styles ────────────────────────── */
