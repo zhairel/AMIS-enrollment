@@ -103,8 +103,9 @@ class SubmitEnrollmentRequest extends FormRequest
 
             $allowedModes = ['Face-to-Face'];
             if (\Illuminate\Support\Facades\Schema::hasTable('enrollment_shifts')) {
+                $activeSy = \App\Services\Enrollment\GradeShiftService::activeSchoolYear();
                 $shifts = \App\Models\EnrollmentShift::where('is_active', true)
-                    ->where('school_year', '2026-2027')
+                    ->where('school_year', $activeSy)
                     ->pluck('name')
                     ->map(fn($name) => "Flexible Online Learning - {$name}")
                     ->all();

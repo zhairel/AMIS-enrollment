@@ -53,11 +53,13 @@ class EnrollmentApplicationService
         }
 
         if ($editableFirst) {
+            $activeYear = GradeShiftService::activeSchoolYear();
             return $user->enrollmentApplicants()
+                ->where('school_year', $activeYear)
                 ->whereIn('status', self::EDITABLE_STATUSES)
                 ->latest()
                 ->first()
-                ?? $user->enrollmentApplicants()->latest()->first();
+                ?? $user->enrollmentApplicants()->where('school_year', $activeYear)->latest()->first();
         }
 
         return null;
@@ -74,7 +76,7 @@ class EnrollmentApplicationService
             'user_id' => $user->id,
             'family_application_id' => $familyId,
             'status' => self::STATUS_DRAFT,
-            'school_year' => '2026-2027',
+            'school_year' => GradeShiftService::activeSchoolYear(),
             'last_step' => 1,
         ]));
 
@@ -87,7 +89,10 @@ class EnrollmentApplicationService
 
     public function canAddAnotherChild(User $user): bool
     {
-        $applications = $user->enrollmentApplicants()->get(['id', 'status']);
+        $activeYear = GradeShiftService::activeSchoolYear();
+        $applications = $user->enrollmentApplicants()
+            ->where('school_year', $activeYear)
+            ->get(['id', 'status']);
 
         if ($applications->isEmpty()) {
             return true;
@@ -209,7 +214,7 @@ class EnrollmentApplicationService
                 'middle_name' => $applicant?->middle_name,
                 'suffix' => $applicant?->suffix,
                 'grade_level' => $applicant?->grade_level,
-                'school_year' => $applicant?->school_year ?? '2026-2027',
+                'school_year' => $applicant?->school_year ?? GradeShiftService::activeSchoolYear(),
             ], array_filter($data));
 
             $activeDuplicate = EnrollmentDuplicateChecker::findActiveDuplicate($duplicateData, $applicant);
@@ -262,7 +267,9 @@ class EnrollmentApplicationService
 
     public function readyApplications(User $user): Collection
     {
+        $activeYear = GradeShiftService::activeSchoolYear();
         return $user->enrollmentApplicants()
+            ->where('school_year', $activeYear)
             ->where('status', self::STATUS_READY)
             ->oldest()
             ->get();
@@ -270,7 +277,9 @@ class EnrollmentApplicationService
 
     public function draftApplications(User $user): Collection
     {
+        $activeYear = GradeShiftService::activeSchoolYear();
         return $user->enrollmentApplicants()
+            ->where('school_year', $activeYear)
             ->whereIn('status', [self::STATUS_DRAFT, 'rejected'])
             ->oldest()
             ->get();

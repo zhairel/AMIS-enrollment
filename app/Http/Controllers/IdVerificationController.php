@@ -93,8 +93,8 @@ class IdVerificationController extends Controller
             ], 422);
         }
 
-        // Validate School Year (CSV defaults to 2026-2027)
-        $recordYear = $record['school_year'] ?? '2026-2027';
+        // Validate School Year (CSV defaults to active school year)
+        $recordYear = $record['school_year'] ?? \App\Services\Enrollment\GradeShiftService::activeSchoolYear();
         if ($recordYear !== $enteredYear) {
             return response()->json([
                 'success' => false,
@@ -160,8 +160,7 @@ class IdVerificationController extends Controller
         $isApproved = $applicant->status === 'approved';
 
         if (!$displayId) {
-            // Fallback to TEMP- format
-            $year = substr($applicant->school_year ?? '2026-2027', 0, 4);
+            $year = substr($applicant->school_year ?? \App\Services\Enrollment\GradeShiftService::activeSchoolYear(), 0, 4);
             $displayId = 'TEMP-' . $year . '-' . str_pad($applicant->id, 6, '0', STR_PAD_LEFT);
         } else {
             // Format numeric ID as AMIS-YYYY-XXXXXX for display
@@ -278,7 +277,7 @@ class IdVerificationController extends Controller
                             'display_id'  => $displayId,
                             'full_name'   => mb_strtoupper(trim($row[$fullNameIdx])),
                             'grade_level' => trim($row[$gradeLevelIdx]),
-                            'school_year' => '2026-2027', // CSV defaults to current school year
+                            'school_year' => \App\Services\Enrollment\GradeShiftService::activeSchoolYear(), // CSV defaults to current active school year
                             'status'      => 'Officially Enrolled',
                             'photo_url'   => $photoUrlIdx !== false ? trim($row[$photoUrlIdx]) : null,
                             'qr_code_url' => $qrUrlIdx !== false ? trim($row[$qrUrlIdx]) : null,

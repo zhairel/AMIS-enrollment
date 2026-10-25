@@ -20,7 +20,7 @@
         'student_name' => $studentName,
         'missing_credential' => '',
         'grade_level' => $applicant->grade_level,
-        'school_year' => $applicant->school_year ?: '2026-2027',
+        'school_year' => $applicant->school_year ?: \App\Services\Enrollment\GradeShiftService::activeSchoolYear(),
         'reason' => '',
         'commitment_date' => '',
         'attested_day' => now()->format('j'),

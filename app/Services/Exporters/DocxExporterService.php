@@ -33,8 +33,8 @@ class DocxExporterService
 
         // Header Title
         $section->addText('AL MUNAWWARA ISLAMIC SCHOOL', ['bold' => true, 'size' => 16, 'color' => '047857'], ['alignment' => Jc::CENTER]);
-        $section->addText('OFFICIAL STUDENT ENROLLMENT FORM', ['bold' => true, 'size' => 12, 'color' => '0F172A'], ['alignment' => Jc::CENTER]);
-        $section->addText('School Year ' . ($applicant->school_year ?? '2026-2027'), ['size' => 10, 'italic' => true, 'color' => '475569'], ['alignment' => Jc::CENTER]);
+        $yearFallback = \App\Services\Enrollment\GradeShiftService::activeSchoolYear();
+        $section->addText('School Year ' . ($applicant->school_year ?? $yearFallback), ['size' => 10, 'italic' => true, 'color' => '475569'], ['alignment' => Jc::CENTER]);
         $section->addTextBreak(1);
 
         // 1. STUDENT PERSONAL INFORMATION

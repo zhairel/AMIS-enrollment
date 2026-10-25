@@ -175,7 +175,7 @@
                                 <strong style="font-size: 0.85rem; color: #0f172a;">Re-enrolling student</strong>
                             </div>
                             <ul style="margin: 0; padding-left: 1.15rem; font-size: 0.85rem; color: #334155; line-height: 1.6;">
-                                <li>2×2 Recent Student Photo (Updated picture for SY 2026-2027).</li>
+                                <li>2×2 Recent Student Photo (Updated picture for SY {{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}).</li>
                                 <li>Current Grade Level & Shift Selection.</li>
                                 <li><em>Note: Birth Certificate & Transcript are already on file in school records.</em></li>
                             </ul>

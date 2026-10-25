@@ -24,9 +24,9 @@ class GradeLevel extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopeForYear($query, string $year = '2026-2027')
+    public function scopeForYear($query, ?string $year = null)
     {
-        return $query->where('school_year', $year);
+        return $query->where('school_year', $year ?: \App\Services\Enrollment\GradeShiftService::activeSchoolYear());
     }
 
     public function getAvailableSlotsAttribute(): int

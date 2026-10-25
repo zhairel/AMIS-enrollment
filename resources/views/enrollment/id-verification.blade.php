@@ -104,7 +104,7 @@
              student_id: '',
              full_name: '',
              grade_level: '',
-             school_year: '2026-2027',
+             school_year: '{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}',
              loading: false,
              errorMsg: '',
              success: false,
@@ -250,7 +250,7 @@
                                 <label for="school_year" class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">School Year</label>
                                 <select id="school_year" x-model="school_year" required
                                         class="w-full bg-slate-50/50 border border-slate-200 rounded-2xl px-4 py-3.5 text-slate-800 font-medium input-focus-glow transition-all duration-200">
-                                    <option value="2026-2027" selected>2026-2027</option>
+                                    <option value="{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}" selected>{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}</option>
                                 </select>
                             </div>
                         </div>

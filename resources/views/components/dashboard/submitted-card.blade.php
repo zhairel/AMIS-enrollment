@@ -59,7 +59,7 @@
         <div class="family-child-top">
             <div>
                 <span class="family-child-name">{{ $loop->iteration }}) {{ $childName }}</span>
-                <span class="family-child-meta">{{ $child->student_type ? (strtoupper($child->student_type) . ' | ') : '' }}{{ strtoupper($child->grade_level ?? 'NO GRADE') }} | {{ $learningMode }} | SY {{ $child->school_year ?? '2026-2027' }}</span>
+                <span class="family-child-meta">{{ $child->student_type ? (strtoupper($child->student_type) . ' | ') : '' }}{{ strtoupper($child->grade_level ?? 'NO GRADE') }} | {{ $learningMode }} | SY {{ $child->school_year ?? \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}</span>
             </div>
 
              <span class="family-status-badge {{ $childStatus['class'] }}">

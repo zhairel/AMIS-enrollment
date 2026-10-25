@@ -9,7 +9,7 @@
             <p class="guidance-eyebrow">Teacher feedback applied</p>
             <h2 id="dashboard-guidance-title">Enrollment Readiness Guide</h2>
         </div>
-        <span class="guidance-badge">SY 2026-2027</span>
+        <span class="guidance-badge">SY {{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}</span>
     </div>
 
     <div class="guidance-grid">

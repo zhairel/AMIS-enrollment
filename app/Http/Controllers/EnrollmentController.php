@@ -427,7 +427,8 @@ class EnrollmentController extends Controller
 
             $receiptPath = null;
             if ($request->hasFile('receipts')) {
-                $familyFolder = 'family_' . strtolower(trim($applicant->last_name)) . '_' . str_replace(' ', '_', strtolower(trim($applicant->school_year ?? '2026-2027')));
+                $yearFallback = \App\Services\Enrollment\GradeShiftService::activeSchoolYear();
+                $familyFolder = 'family_' . strtolower(trim($applicant->last_name)) . '_' . str_replace(' ', '_', strtolower(trim($applicant->school_year ?? $yearFallback)));
                 $familyFolder = preg_replace('/[^a-z0-9_\-]+/', '', $familyFolder);
                 $lastnameSlug = preg_replace('/[^a-z0-9]+/', '_', strtolower(trim($applicant->last_name)));
                 
@@ -736,7 +737,8 @@ class EnrollmentController extends Controller
         $receiptPath = $existingPayment ? ($existingPayment->getRawOriginal('receipt_url') ?? $existingPayment->receipt_url) : null;
 
         if ($request->hasFile('receipts')) {
-            $familyFolder = 'family_' . strtolower(trim($applicant->last_name)) . '_' . str_replace(' ', '_', strtolower(trim($applicant->school_year ?? '2026-2027')));
+            $yearFallback = \App\Services\Enrollment\GradeShiftService::activeSchoolYear();
+            $familyFolder = 'family_' . strtolower(trim($applicant->last_name)) . '_' . str_replace(' ', '_', strtolower(trim($applicant->school_year ?? $yearFallback)));
             $familyFolder = preg_replace('/[^a-z0-9_\-]+/', '', $familyFolder);
             $lastnameSlug = preg_replace('/[^a-z0-9]+/', '_', strtolower(trim($applicant->last_name)));
             

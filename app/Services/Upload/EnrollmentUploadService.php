@@ -20,8 +20,8 @@ class EnrollmentUploadService
 
     public function storeEnrollmentDocuments(EnrollmentApplicant $applicant, Request $request): void
     {
-        // 1. Determine Family Folder
-        $familyFolder = 'family_' . strtolower(trim($applicant->last_name)) . '_' . str_replace(' ', '_', strtolower(trim($applicant->school_year ?? '2026-2027')));
+        $yearFallback = \App\Services\Enrollment\GradeShiftService::activeSchoolYear();
+        $familyFolder = 'family_' . strtolower(trim($applicant->last_name)) . '_' . str_replace(' ', '_', strtolower(trim($applicant->school_year ?? $yearFallback)));
         $familyFolder = preg_replace('/[^a-z0-9_\-]+/', '', $familyFolder);
 
         // 2. Determine Child Full Name & Folder (fullname_grade)

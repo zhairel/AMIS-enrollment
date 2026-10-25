@@ -91,7 +91,7 @@
     <div class="family-group-header">
         <div class="family-group-title">
             <span class="family-section-kicker">Enrollment Applications</span>
-            <h3>Enrollment Applications <span>SY 2026-2027</span></h3>
+            <h3>Enrollment Applications <span>SY {{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}</span></h3>
             <p>Submitted applications are shown first. Drafts stay simple at the bottom.</p>
         </div>
 

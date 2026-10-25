@@ -17,7 +17,7 @@
                 <div>
                     <span class="beta-notice-badge" style="background: #e6fdf5; border-color: #a7f3d0; color: #047857;">Teacher feedback applied</span>
                     <h2 id="beta-notice-title">Enrollment Readiness Guide</h2>
-                    <p>SY 2026-2027</p>
+                    <p>SY {{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}</p>
                 </div>
             </header>
 

@@ -44,7 +44,7 @@ class StandardizeStorage extends Command
                 continue;
             }
 
-            $schoolYear = strtolower(trim($applicant->school_year ?? '2026-2027'));
+            $schoolYear = strtolower(trim($applicant->school_year ?? \App\Services\Enrollment\GradeShiftService::activeSchoolYear()));
             $familyFolder = 'family_' . $lastName . '_' . str_replace(' ', '_', $schoolYear);
             $familyFolder = preg_replace('/[^a-z0-9_\-]+/', '', $familyFolder);
 

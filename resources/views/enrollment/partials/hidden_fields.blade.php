@@ -48,7 +48,7 @@
 <input type="hidden" name="emergency_name" :value="form.emergency_name">
 <input type="hidden" name="emergency_relationship" :value="form.emergency_relationship">
 <input type="hidden" name="emergency_phone" :value="form.emergency_phone">
-<input type="hidden" name="school_year" value="2026-2027">
+<input type="hidden" name="school_year" value="{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}">
 <input type="hidden" name="agreed_to_data_privacy" :value="form.agreed_to_data_privacy ? '1' : ''">
 <input type="hidden" name="agreed_to_terms" :value="form.agreed_to_terms ? '1' : ''">
 <input type="hidden" name="agreed_to_fee_policy" :value="form.agreed_to_fee_policy ? '1' : ''">

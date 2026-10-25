@@ -828,7 +828,7 @@ function enrollmentForm() {
                     fd.append('from_step', fromStep);
                 }
                 fd.append('last_step', this.step);
-                fd.append('school_year', '2026-2027');
+                fd.append('school_year', '{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}');
                 if (this.savedApplicantId) fd.append('applicant_id', this.savedApplicantId);
                 const uploadedNames = [];
                 ['photo_2x2','birth_cert','report_card','marriage_contract','medical_record','affidavit','facebook_screenshot'].forEach(name => {
@@ -922,7 +922,7 @@ function enrollmentForm() {
                 if (typeof v !== 'boolean') fd.append(k, v ?? '');
             });
             fd.append('last_step', this.step);
-            fd.append('school_year', '2026-2027');
+            fd.append('school_year', '{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}');
             if (this.savedApplicantId) fd.append('applicant_id', this.savedApplicantId);
             navigator.sendBeacon('{{ route("enrollment.draft") }}', fd);
         },

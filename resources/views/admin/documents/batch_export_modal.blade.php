@@ -51,7 +51,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">School Year</label>
-                    <input type="text" name="school_year" value="2026-2027" class="w-full rounded-xl border-slate-200 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <input type="text" name="school_year" value="{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}" class="w-full rounded-xl border-slate-200 text-sm focus:border-emerald-500 focus:ring-emerald-500">
                 </div>
             </div>
 

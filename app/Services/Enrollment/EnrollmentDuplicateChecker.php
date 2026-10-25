@@ -32,7 +32,7 @@ class EnrollmentDuplicateChecker
         $middleName = self::normalizeString($data['middle_name'] ?? '');
         $suffix = self::normalizeString($data['suffix'] ?? '');
         $gradeLevel = self::normalizeGrade($data['grade_level'] ?? '');
-        $schoolYear = self::normalizeString($data['school_year'] ?? '2026-2027');
+        $schoolYear = self::normalizeString($data['school_year'] ?? GradeShiftService::activeSchoolYear());
 
         if (!$firstName || !$lastName || !$gradeLevel || !$schoolYear) {
             return null;

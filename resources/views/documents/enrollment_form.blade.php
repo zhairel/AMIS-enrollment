@@ -217,7 +217,7 @@
 
         <!-- TITLE BANNER -->
         <div class="doc-title-banner">
-            <h3>Enrollment Registration • School Year {{ $applicant->school_year ?? '2026-2027' }}</h3>
+            <h3>Enrollment Registration • School Year {{ $applicant->school_year ?? \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}</h3>
             <span>Student Type: <strong>{{ strtoupper($applicant->student_type ?? 'NEW') }}</strong> | Mode: <strong>{{ strtoupper($applicant->learning_mode ?? 'FACE TO FACE') }}</strong></span>
         </div>
 

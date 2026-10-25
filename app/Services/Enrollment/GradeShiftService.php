@@ -9,7 +9,29 @@ use Illuminate\Support\Collection;
 
 class GradeShiftService
 {
-    private const SCHOOL_YEAR = '2026-2027';
+    public const SCHOOL_YEAR = '2027-2028';
+
+    public static function activeSchoolYear(): string
+    {
+        static $cached = null;
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        if (\Illuminate\Support\Facades\Schema::hasTable('school_years')) {
+            try {
+                $active = \Illuminate\Support\Facades\DB::table('school_years')
+                    ->where('is_active', true)
+                    ->value('code');
+                if ($active) {
+                    return $cached = $active;
+                }
+            } catch (\Throwable) {
+            }
+        }
+
+        return $cached = self::SCHOOL_YEAR;
+    }
 
     /**
      * Get all active grade levels (no slots shown in dropdown).
@@ -17,7 +39,7 @@ class GradeShiftService
     public function getGradeLevels(): Collection
     {
         return GradeLevel::active()
-            ->forYear(self::SCHOOL_YEAR)
+            ->forYear(self::activeSchoolYear())
             ->orderBy('sort_order')
             ->get();
     }
@@ -28,7 +50,7 @@ class GradeShiftService
     public function getShifts(): Collection
     {
         return EnrollmentShift::active()
-            ->forYear(self::SCHOOL_YEAR)
+            ->forYear(self::activeSchoolYear())
             ->orderBy('start_time')
             ->get();
     }
@@ -39,8 +61,9 @@ class GradeShiftService
      */
     public function getShiftsForGrade(string $gradeName): Collection
     {
+        $year = self::activeSchoolYear();
         $grade = GradeLevel::where('name', $gradeName)
-            ->where('school_year', self::SCHOOL_YEAR)
+            ->where('school_year', $year)
             ->first();
 
         if (!$grade) {
@@ -48,7 +71,7 @@ class GradeShiftService
         }
 
         return GradeShiftSlot::where('grade_level_id', $grade->id)
-            ->where('school_year', self::SCHOOL_YEAR)
+            ->where('school_year', $year)
             ->where('is_active', true)
             ->with('shift')
             ->get()
@@ -75,14 +98,15 @@ class GradeShiftService
 
         $parts = explode(' - ', $learningMode);
         $shiftName = end($parts);
+        $year = self::activeSchoolYear();
 
-        $grade = GradeLevel::where('name', $gradeName)->where('school_year', self::SCHOOL_YEAR)->first();
-        $shift = EnrollmentShift::where('name', $shiftName)->where('school_year', self::SCHOOL_YEAR)->first();
+        $grade = GradeLevel::where('name', $gradeName)->where('school_year', $year)->first();
+        $shift = EnrollmentShift::where('name', $shiftName)->where('school_year', $year)->first();
 
         if ($grade && $shift) {
             GradeShiftSlot::where('grade_level_id', $grade->id)
                 ->where('enrollment_shift_id', $shift->id)
-                ->where('school_year', self::SCHOOL_YEAR)
+                ->where('school_year', $year)
                 ->increment('enrolled_count');
         }
     }
