@@ -590,7 +590,7 @@
             font-weight: 800 !important;
             box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
             transition: all 0.2s ease !important;
-            display: inline-flex !important;
+            display: inline-flex;
             align-items: center !important;
             gap: 0.6rem !important;
             cursor: pointer !important;
@@ -776,26 +776,34 @@
                     </div>
                     {{-- Right: Back + Next/Submit --}}
                     <div class="form-actions-group" style="display: flex; gap: 0.65rem; align-items: center;">
-                        <button type="button" x-show="step > 1" @click="prevStep()" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.45rem;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
-                            <span>Back</span>
-                        </button>
-                        <button type="button" x-show="step < totalSteps" @click="nextStep()" class="btn-primary"
-                            :disabled="stepSaving"
-                            :class="{ 'is-disabled': stepSaving }">
-                            <span>Next</span>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="9 18 15 12 9 6"/>
-                            </svg>
-                        </button>
-                        <button type="button" x-show="step === totalSteps" @click="openSubmitConfirmModal()" class="btn-primary"
-                            style="background: linear-gradient(135deg, #059669 0%, #047857 100%) !important; border: none !important;"
-                            :disabled="loading || hasFilePreparationPending() || draftSaving"
-                            :class="{ 'is-disabled': loading || hasFilePreparationPending() || draftSaving }">
-                            <span x-text="hasFilePreparationPending() ? 'Preparing files...' : (draftSaving ? 'Saving files...' : 'CONFIRM & FINAL SUBMIT ENROLLMENT')"></span>
-                        </button>
+                        <template x-if="step > 1">
+                            <button type="button" @click="prevStep()" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.45rem;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                                <span>Back</span>
+                            </button>
+                        </template>
+
+                        <template x-if="step < totalSteps">
+                            <button type="button" @click="nextStep()" class="btn-primary"
+                                :disabled="stepSaving"
+                                :class="{ 'is-disabled': stepSaving }">
+                                <span>Next</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </template>
+
+                        <template x-if="step === totalSteps">
+                            <button type="button" @click="openSubmitConfirmModal()" class="btn-primary"
+                                style="background: linear-gradient(135deg, #059669 0%, #047857 100%) !important; border: none !important;"
+                                :disabled="loading || hasFilePreparationPending() || draftSaving"
+                                :class="{ 'is-disabled': loading || hasFilePreparationPending() || draftSaving }">
+                                <span x-text="hasFilePreparationPending() ? 'Preparing files...' : (draftSaving ? 'Saving files...' : 'CONFIRM & FINAL SUBMIT ENROLLMENT')"></span>
+                            </button>
+                        </template>
                     </div>
                 </div>
 
