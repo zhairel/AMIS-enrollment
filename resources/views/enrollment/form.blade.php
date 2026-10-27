@@ -101,7 +101,7 @@
         }
 
         .enrollment-progress-back {
-            display: inline-flex !important;
+            display: inline-flex;
             align-items: center !important;
             gap: 0.35rem !important;
             padding: 0.38rem 0.85rem !important;
@@ -615,12 +615,14 @@
             <div class="enrollment-progress-wrapper">
                 <div class="enrollment-progress-top">
                     <div class="enrollment-progress-left">
-                        <button type="button" x-show="step > 1" @click="prevStep()" class="enrollment-progress-back" aria-label="Go to previous step">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 18 9 12 15 6"></polyline>
-                            </svg>
-                            <span>BACK</span>
-                        </button>
+                        <template x-if="step > 1">
+                            <button type="button" @click="prevStep()" class="enrollment-progress-back" aria-label="Go to previous step">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                                <span>BACK</span>
+                            </button>
+                        </template>
 
                         <div class="enrollment-step-pill">
                             <span class="step-live-dot" aria-hidden="true"></span>

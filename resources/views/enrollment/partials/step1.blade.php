@@ -31,7 +31,7 @@
         <input type="hidden" name="student_type" :value="form.student_type">
     </section>
 
-    <section class="setup-section" x-show="form.student_type === 'Old'" x-cloak>
+    <section class="setup-section old-student-record-section" x-show="form.student_type === 'Old'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
         <div class="form-divider" style="font-size: 0.95rem; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 1rem 0;">OLD Student Record</div>
         <div class="search-student-card" style="padding: 1.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; display: flex; flex-direction: column; gap: 1rem;">
             <div>
@@ -79,7 +79,8 @@
         </div>
     </section>
 
-    <section class="setup-section">
+    <!-- Grade Level: Appears after Student Type is chosen -->
+    <section class="setup-section grade-level-section" x-show="form.student_type" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
         <x-form-field-label required>Grade Level</x-form-field-label>
         <select name="grade_level" class="select-input" :class="{ 'is-invalid-field': isFieldInvalid('grade_level') }" x-model="form.grade_level" @change="loadShiftsForGrade()">
             <option value="">Select</option>
@@ -89,8 +90,8 @@
         </select>
     </section>
 
-    <!-- Learning Mode -->
-    <section class="setup-section">
+    <!-- Learning Mode: Appears after Grade Level is chosen -->
+    <section class="setup-section learning-mode-section" x-show="form.student_type && form.grade_level" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
         <x-form-field-label required>Which type do you prefer?</x-form-field-label>
 
         <div class="choice-card-grid">

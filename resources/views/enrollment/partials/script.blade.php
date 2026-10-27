@@ -440,6 +440,16 @@ function enrollmentForm() {
             if (this.form.student_type !== 'Old') {
                 this.form.amis_student_id = '';
             }
+            if (this.form.student_type) {
+                this.$nextTick(() => {
+                    const el = this.form.student_type === 'Old'
+                        ? document.querySelector('.old-student-record-section') || document.querySelector('.grade-level-section')
+                        : document.querySelector('.grade-level-section');
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                });
+            }
         },
 
         toggleLearningMode(value) {
@@ -1166,6 +1176,7 @@ function enrollmentForm() {
         },
 
         prevStep() {
+            if (this.step <= 1) return;
             this.error = '';
             this.hasAttemptedNext = false;
             if (!this.visitedSteps.includes(this.step)) this.visitedSteps.push(this.step);
@@ -1394,6 +1405,12 @@ function enrollmentForm() {
                 this.gradeShifts = [];
                 return;
             }
+            this.$nextTick(() => {
+                const el = document.querySelector('.learning-mode-section');
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
             try {
                 const response = await fetch('/enroll/shifts/' + encodeURIComponent(this.form.grade_level), {
                     headers: { 'Accept': 'application/json, text/plain, */*' },
