@@ -57,90 +57,6 @@
             <nav class="desktop-nav" aria-label="Main Navigation">
                 <ul class="nav-links-list">
                     <li>
-                        <a href="https://amis.edu.ph" class="nav-link">
-                            Main Website
-                        </a>
-                    </li>
-
-                    <!-- About Us Dropdown -->
-                    <li class="nav-dropdown">
-                        <button type="button" class="nav-link nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
-                            About Us
-                            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        <div class="nav-dropdown-card">
-                            <div class="dropdown-arrow"></div>
-                            <div class="dropdown-inner">
-                                <a href="https://amis.edu.ph/about/history" class="dropdown-item">
-                                    <span class="item-bullet"></span>
-                                    <div class="item-text">
-                                        <span class="item-title">School History</span>
-                                        <span class="item-desc">Founding roots & development</span>
-                                    </div>
-                                </a>
-                                <a href="https://amis.edu.ph/about/philosophy" class="dropdown-item">
-                                    <span class="item-bullet"></span>
-                                    <div class="item-text">
-                                        <span class="item-title">Philosophy, Vision & Mission</span>
-                                        <span class="item-desc">Core Islamic education values</span>
-                                    </div>
-                                </a>
-                                <a href="https://amis.edu.ph/about/certifications" class="dropdown-item">
-                                    <span class="item-bullet"></span>
-                                    <div class="item-text">
-                                        <span class="item-title">Certifications & Accreditations</span>
-                                        <span class="item-desc">DepEd recognition & government permits</span>
-                                    </div>
-                                </a>
-                                <a href="https://amis.edu.ph/about/location" class="dropdown-item">
-                                    <span class="item-bullet"></span>
-                                    <div class="item-text">
-                                        <span class="item-title">Campus Location</span>
-                                        <span class="item-desc">Ma-a, Davao City campus map</span>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Academics Dropdown -->
-                    <li class="nav-dropdown">
-                        <button type="button" class="nav-link nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
-                            Academics
-                            <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        <div class="nav-dropdown-card">
-                            <div class="dropdown-arrow"></div>
-                            <div class="dropdown-inner">
-                                <a href="https://amis.edu.ph/academics/basic-education" class="dropdown-item">
-                                    <span class="item-bullet"></span>
-                                    <div class="item-text">
-                                        <span class="item-title">Basic Education</span>
-                                        <span class="item-desc">Kindergarten to Junior & Senior High</span>
-                                    </div>
-                                </a>
-                                <a href="https://amis.edu.ph/academics/calendar" class="dropdown-item">
-                                    <span class="item-bullet"></span>
-                                    <div class="item-text">
-                                        <span class="item-title">Calendar S.Y. 2026-2027</span>
-                                        <span class="item-desc">Academic terms & event schedules</span>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <a href="https://amis.edu.ph/news" class="nav-link">
-                            News & Updates
-                        </a>
-                    </li>
-
-                    <li>
                         <a href="https://amis.edu.ph/contact" class="nav-link">
                             Contact
                         </a>
@@ -183,56 +99,8 @@
             </button>
         </div>
 
-        <div class="drawer-quick-actions">
-            <a href="https://amis.edu.ph" class="drawer-cta-btn">
-                <span>Visit Main Website (amis.edu.ph)</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </a>
-        </div>
-
         <div class="drawer-body">
             <nav class="drawer-nav">
-                <a href="https://amis.edu.ph" class="drawer-link">
-                    <svg class="drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    Main Website
-                </a>
-
-                <!-- Drawer Accordion: About Us -->
-                <div class="drawer-accordion">
-                    <button type="button" class="drawer-accordion-btn" aria-expanded="false">
-                        <span class="accordion-title-wrap">
-                            <svg class="drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            About Us
-                        </span>
-                        <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="drawer-accordion-content">
-                        <a href="https://amis.edu.ph/about/history">School History</a>
-                        <a href="https://amis.edu.ph/about/philosophy">Philosophy, Vision, Mission &amp; Goals</a>
-                        <a href="https://amis.edu.ph/about/certifications">Certifications &amp; DepEd Recognition</a>
-                        <a href="https://amis.edu.ph/about/location">Campus Location</a>
-                    </div>
-                </div>
-
-                <!-- Drawer Accordion: Academics -->
-                <div class="drawer-accordion">
-                    <button type="button" class="drawer-accordion-btn" aria-expanded="false">
-                        <span class="accordion-title-wrap">
-                            <svg class="drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-                            Academics
-                        </span>
-                        <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="drawer-accordion-content">
-                        <a href="https://amis.edu.ph/academics/basic-education">Basic Education (K to 12)</a>
-                        <a href="https://amis.edu.ph/academics/calendar">Calendar S.Y. 2026-2027</a>
-                    </div>
-                </div>
-
-                <a href="https://amis.edu.ph/news" class="drawer-link">
-                    <svg class="drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/></svg>
-                    News &amp; Updates
-                </a>
                 <a href="https://amis.edu.ph/contact" class="drawer-link">
                     <svg class="drawer-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                     Contact

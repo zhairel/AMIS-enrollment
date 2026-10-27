@@ -238,6 +238,7 @@
 .desktop-nav {
   display: flex;
   align-items: center;
+  margin-left: auto;
 }
 
 .nav-links-list {
