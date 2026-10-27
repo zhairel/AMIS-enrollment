@@ -16,31 +16,17 @@
     </div>
 
     <div class="enrollment-steps-bar">
-        <div class="enrollment-steps-container">
-            <div class="enrollment-step-item active">
-                <div class="enrollment-step-circle skeleton-step-active"><span>1</span></div>
-                <span class="enrollment-step-label skeleton-step-label-active">Setup</span>
+        <div class="enrollment-progress-wrapper">
+            <div class="enrollment-progress-top">
+                <div class="enrollment-progress-left">
+                    <div class="skeleton" style="width: 110px; height: 28px; border-radius: 999px;"></div>
+                    <div class="skeleton" style="width: 150px; height: 22px; border-radius: 6px;"></div>
+                </div>
+                <div class="enrollment-progress-right">
+                    <div class="skeleton" style="width: 115px; height: 28px; border-radius: 999px;"></div>
+                </div>
             </div>
-            <div class="enrollment-step-item">
-                <div class="enrollment-step-circle"><span>2</span></div>
-                <span class="enrollment-step-label">Student</span>
-            </div>
-            <div class="enrollment-step-item">
-                <div class="enrollment-step-circle"><span>3</span></div>
-                <span class="enrollment-step-label">Parents</span>
-            </div>
-            <div class="enrollment-step-item">
-                <div class="enrollment-step-circle"><span>4</span></div>
-                <span class="enrollment-step-label">Medical</span>
-            </div>
-            <div class="enrollment-step-item">
-                <div class="enrollment-step-circle"><span>5</span></div>
-                <span class="enrollment-step-label">Agreement</span>
-            </div>
-            <div class="enrollment-step-item">
-                <div class="enrollment-step-circle"><span>6</span></div>
-                <span class="enrollment-step-label">Documents</span>
-            </div>
+            <div class="skeleton" style="width: 100%; height: 9px; border-radius: 999px;"></div>
         </div>
     </div>
 

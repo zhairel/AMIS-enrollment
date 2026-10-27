@@ -68,150 +68,233 @@
             color: #1e293b;
         }
 
-        /* Stepper Bar */
+        /* Modern Loading Progress Bar */
         .enrollment-steps-bar {
             background: #ffffff !important;
             border-bottom: 1.5px solid #e2e8f0 !important;
-            padding: 1.25rem clamp(1rem, 3vw, 2.5rem) 1.35rem !important;
-            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03) !important;
+            padding: 1.1rem clamp(1rem, 3vw, 2.5rem) 1.25rem !important;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04) !important;
             position: sticky;
             top: 0;
             z-index: 30;
             backdrop-filter: blur(12px);
         }
 
-        .enrollment-progress-summary {
-            max-width: 960px !important;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0 auto 0.85rem !important;
-        }
-
-        .enrollment-progress-summary span {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.35rem 0.95rem;
-            border-radius: 999px;
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #047857;
-            font-size: 0.85rem !important;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .enrollment-progress-summary strong {
-            color: #0f172a !important;
-            font-size: 1.15rem !important;
-            font-weight: 800 !important;
-        }
-
-        .enrollment-progress-track {
-            max-width: 960px !important;
-            height: 7px !important;
-            background: #e2e8f0 !important;
-            border-radius: 999px !important;
-            margin: 0 auto 1.25rem !important;
-            overflow: hidden;
-        }
-
-        .enrollment-progress-track span {
-            background: linear-gradient(90deg, #059669, #10b981) !important;
-            border-radius: 999px !important;
-            transition: width 0.35s ease;
-        }
-
-        .enrollment-steps-container {
+        .enrollment-progress-wrapper {
             max-width: 960px !important;
             margin: 0 auto !important;
+        }
+
+        .enrollment-progress-top {
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
-            gap: 0.85rem !important;
-            overflow-x: auto !important;
-            scrollbar-width: none !important;
-            -webkit-overflow-scrolling: touch !important;
-            flex-wrap: nowrap !important;
-            padding-bottom: 4px !important;
+            gap: 1rem !important;
+            margin-bottom: 0.85rem !important;
         }
 
-        .enrollment-steps-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .enrollment-step-item {
-            display: flex !important;
+        .enrollment-progress-left {
+            display: inline-flex !important;
             align-items: center !important;
-            gap: 0.65rem !important;
-            flex-shrink: 0 !important;
-            opacity: 1 !important;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            gap: 0.75rem !important;
+            flex-wrap: wrap;
         }
 
-        .enrollment-step-circle {
-            width: 38px !important;
-            height: 38px !important;
-            border-radius: 50% !important;
-            background: #f8fafc !important;
+        .enrollment-progress-back {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.35rem !important;
+            padding: 0.38rem 0.85rem !important;
+            background: #f1f5f9 !important;
             border: 1.5px solid #cbd5e1 !important;
-            color: #64748b !important;
-            font-size: 0.95rem !important;
+            border-radius: 999px !important;
+            color: #334155 !important;
+            font-size: 0.78rem !important;
             font-weight: 800 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            flex-shrink: 0 !important;
-            transition: all 0.2s ease;
-        }
-
-        .enrollment-step-label {
-            font-size: 0.95rem !important;
-            font-weight: 700 !important;
-            color: #64748b !important;
-            white-space: nowrap !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.04em !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
             line-height: 1 !important;
-            transition: all 0.2s ease;
         }
 
-        /* Active Step: Always Emerald */
-        .enrollment-step-item.active .enrollment-step-circle {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-            border-color: #059669 !important;
-            color: #ffffff !important;
-            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.22), 0 4px 12px rgba(5, 150, 105, 0.35) !important;
-            transform: scale(1.08);
+        .enrollment-progress-back:hover {
+            background: #e2e8f0 !important;
+            border-color: #94a3b8 !important;
+            color: #0f172a !important;
+            transform: translateX(-2px);
         }
 
-        .enrollment-step-item.active .enrollment-step-label {
-            color: #065f46 !important;
-            font-weight: 800 !important;
-        }
-
-        /* Done Step */
-        .enrollment-step-item.done:not(.active) .enrollment-step-circle {
+        .enrollment-step-pill {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            padding: 0.38rem 0.95rem !important;
+            border-radius: 999px !important;
             background: #ecfdf5 !important;
-            border-color: #10b981 !important;
+            border: 1.5px solid #a7f3d0 !important;
             color: #047857 !important;
+            font-size: 0.82rem !important;
             font-weight: 800 !important;
+            letter-spacing: 0.05em !important;
+            text-transform: uppercase !important;
+            box-shadow: 0 1px 2px rgba(5, 150, 105, 0.06) !important;
+            line-height: 1 !important;
         }
 
-        .enrollment-step-item.done:not(.active) .enrollment-step-label {
+        .step-live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+            display: inline-block;
+            animation: pulse-dot 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.35);
+                opacity: 0.7;
+            }
+        }
+
+        .enrollment-step-sep {
+            color: #cbd5e1;
+            font-weight: 700;
+            font-size: 1rem;
+            user-select: none;
+        }
+
+        .enrollment-step-name {
+            color: #0f172a !important;
+            font-size: 1.1rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.01em !important;
+            text-transform: uppercase !important;
+        }
+
+        .enrollment-progress-right {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+
+        .enrollment-completion-badge {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.45rem !important;
+            padding: 0.38rem 0.9rem !important;
+            border-radius: 999px !important;
+            background: #f8fafc !important;
+            border: 1.5px solid #e2e8f0 !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+            line-height: 1 !important;
+        }
+
+        .completion-percent {
             color: #047857 !important;
-            font-weight: 700 !important;
+            font-size: 0.92rem !important;
+            font-weight: 900 !important;
+            letter-spacing: 0.02em !important;
         }
 
-        .enrollment-step-item.warning .enrollment-step-circle {
-            background: #fef3c7 !important;
-            border-color: #f59e0b !important;
-            color: #b45309 !important;
+        .completion-text {
+            color: #64748b !important;
+            font-size: 0.75rem !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.05em !important;
+            text-transform: uppercase !important;
         }
 
-        .enrollment-step-item.warning .enrollment-step-label {
-            color: #b45309 !important;
-            font-weight: 700 !important;
+        /* Modern Progress Track */
+        .enrollment-progress-track {
+            max-width: 960px !important;
+            height: 9px !important;
+            background: #e2e8f0 !important;
+            border-radius: 999px !important;
+            overflow: hidden !important;
+            position: relative !important;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+            margin: 0 !important;
+        }
+
+        .enrollment-progress-fill {
+            height: 100% !important;
+            background: linear-gradient(90deg, #059669 0%, #10b981 60%, #34d399 100%) !important;
+            border-radius: 999px !important;
+            transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            box-shadow: 0 1px 6px rgba(16, 185, 129, 0.35) !important;
+        }
+
+        .enrollment-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.45) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            background-size: 200% 100%;
+            animation: progress-shimmer 2.2s infinite linear;
+        }
+
+        @keyframes progress-shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .enrollment-steps-bar {
+                padding: 0.85rem 1rem 0.95rem !important;
+            }
+            .enrollment-progress-top {
+                margin-bottom: 0.65rem !important;
+                gap: 0.5rem !important;
+            }
+            .enrollment-progress-left {
+                gap: 0.45rem !important;
+            }
+            .enrollment-step-pill {
+                padding: 0.3rem 0.75rem !important;
+                font-size: 0.76rem !important;
+            }
+            .enrollment-step-sep {
+                display: none !important;
+            }
+            .enrollment-step-name {
+                font-size: 0.92rem !important;
+                width: 100% !important;
+                order: 3 !important;
+                margin-top: 0.15rem !important;
+            }
+            .enrollment-progress-right {
+                margin-left: auto !important;
+            }
+            .enrollment-completion-badge {
+                padding: 0.28rem 0.65rem !important;
+            }
+            .completion-percent {
+                font-size: 0.82rem !important;
+            }
+            .completion-text {
+                font-size: 0.7rem !important;
+            }
         }
 
         /* Main Form Container */
@@ -527,45 +610,39 @@
     <div x-show="!initialLoading" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
         <x-enrollment.brand-header />
 
-        <!-- Step Progress Bar -->
+        <!-- Modern Loading Progress Bar -->
         <div class="enrollment-steps-bar">
-            <div class="enrollment-progress-summary">
-                <span x-text="`Step ${step} of ${steps.length}`"></span>
-                <strong x-text="currentStepLabel()"></strong>
-            </div>
-            <div class="enrollment-progress-track" aria-hidden="true">
-                <span :style="`width: ${steps.length > 1 ? ((step - 1) / (steps.length - 1)) * 100 : 100}%`"></span>
-            </div>
-            <div class="enrollment-steps-container">
-                <template x-for="s in steps" :key="s.num">
-                    <div
-                        :class="{
-                            'enrollment-step-item': true,
-                            'active': step === s.num,
-                            'done': isStepComplete(s.num),
-                            'warning': isStepWarning(s.num)
-                        }"
-                        role="button"
-                        tabindex="0"
-                        :aria-current="step === s.num ? 'step' : null"
-                        :aria-label="`Go to step ${s.num}: ${s.label}`"
-                        @click="goToStep(s.num)"
-                        @keydown.enter.prevent="goToStep(s.num)"
-                        @keydown.space.prevent="goToStep(s.num)"
-                    >
-                        <div class="enrollment-step-circle" aria-hidden="true">
-                            <template x-if="isStepComplete(s.num) && step !== s.num">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"/>
-                                </svg>
-                            </template>
-                            <template x-if="!isStepComplete(s.num) || step === s.num">
-                                <span x-text="s.num"></span>
-                            </template>
+            <div class="enrollment-progress-wrapper">
+                <div class="enrollment-progress-top">
+                    <div class="enrollment-progress-left">
+                        <button type="button" x-show="step > 1" @click="prevStep()" class="enrollment-progress-back" aria-label="Go to previous step">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                            <span>BACK</span>
+                        </button>
+
+                        <div class="enrollment-step-pill">
+                            <span class="step-live-dot" aria-hidden="true"></span>
+                            <span x-text="`STEP ${step} OF ${totalSteps}`"></span>
                         </div>
-                        <span class="enrollment-step-label" x-text="s.label"></span>
+
+                        <span class="enrollment-step-sep" aria-hidden="true">•</span>
+
+                        <span class="enrollment-step-name" x-text="(stepTitles && stepTitles[step - 1]) ? stepTitles[step - 1] : currentStepLabel()"></span>
                     </div>
-                </template>
+
+                    <div class="enrollment-progress-right">
+                        <div class="enrollment-completion-badge">
+                            <span class="completion-percent" x-text="`${Math.round((step / totalSteps) * 100)}%`"></span>
+                            <span class="completion-text">COMPLETED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="enrollment-progress-track" role="progressbar" :aria-valuenow="Math.round((step / totalSteps) * 100)" aria-valuemin="0" aria-valuemax="100">
+                    <div class="enrollment-progress-fill" :style="`width: ${Math.round((step / totalSteps) * 100)}%`"></div>
+                </div>
             </div>
         </div>
 
