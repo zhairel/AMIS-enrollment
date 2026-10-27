@@ -54,8 +54,8 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
-                    <a href="https://amis.edu.ph" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 5px; padding: 0.5rem 0.95rem; border-radius: 999px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; font-size: 0.82rem; font-weight: 700; text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#059669'; this.style.color='#ffffff';" onmouseout="this.style.background='#ecfdf5'; this.style.color='#047857';">
-                        <span>Main Website</span>
+                    <a href="https://amis.edu.ph" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 5px; padding: 0.5rem 0.95rem; border-radius: 999px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; font-size: 0.82rem; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease;" onmouseover="this.style.background='#059669'; this.style.color='#ffffff';" onmouseout="this.style.background='#ecfdf5'; this.style.color='#047857';">
+                        <span>MAIN WEBSITE</span>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
                     </a>
                     <!-- User Profile & Status Badges -->
@@ -96,7 +96,7 @@
                     <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                         @csrf
                         <button type="submit" class="logout-btn" 
-                                style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.6rem 1.15rem; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 999px; font-size: 0.85rem; font-weight: 700; color: #475569; cursor: pointer; transition: all 0.2s ease;"
+                                style="display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.6rem 1.15rem; background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 999px; font-size: 0.85rem; font-weight: 700; color: #475569; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease;"
                                 onmouseover="this.style.background='#fef2f2'; this.style.borderColor='#fecaca'; this.style.color='#b91c1c';"
                                 onmouseout="this.style.background='#ffffff'; this.style.borderColor='#e2e8f0'; this.style.color='#475569';">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -104,7 +104,7 @@
                                 <polyline points="16 17 21 12 16 7"/>
                                 <line x1="21" y1="12" x2="9" y2="12"/>
                             </svg>
-                            <span>Sign Out</span>
+                            <span>SIGN OUT</span>
                         </button>
                     </form>
                 </div>
@@ -233,10 +233,10 @@
                         @if ($activeApplicant && $activeApplicant->status === 'draft')
                             <div style="position: relative; z-index: 1; flex-shrink: 0;">
                                 <a href="{{ route('enrollment.form.child', $activeApplicant) }}"
-                                   style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.4rem; background: #ffffff; color: #065f46; border-radius: 12px; font-size: 0.88rem; font-weight: 800; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.15); transition: all 0.2s ease;"
+                                   style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.4rem; background: #ffffff; color: #065f46; border-radius: 12px; font-size: 0.88rem; font-weight: 800; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.15); text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease;"
                                    onmouseover="this.style.background='#f0fdf4'; this.style.transform='translateY(-1px)';"
                                    onmouseout="this.style.background='#ffffff'; this.style.transform='none';">
-                                    <span>Continue Application</span>
+                                    <span>CONTINUE APPLICATION</span>
                                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                                 </a>
                             </div>
@@ -269,8 +269,8 @@
                             @endif
                         </div>
                         <a href="{{ route('enrollment.form.child', $activeApplicant) }}"
-                           style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.35rem; background: #ffffff; color: #b91c1c; border-radius: 12px; font-size: 0.88rem; font-weight: 800; text-decoration: none; white-space: nowrap; flex-shrink: 0; box-shadow: 0 4px 14px rgba(0,0,0,0.15);">
-                            <span>Re-upload</span>
+                           style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.35rem; background: #ffffff; color: #b91c1c; border-radius: 12px; font-size: 0.88rem; font-weight: 800; text-decoration: none; white-space: nowrap; flex-shrink: 0; box-shadow: 0 4px 14px rgba(0,0,0,0.15); text-transform: uppercase; letter-spacing: 0.05em;">
+                            <span>RE-UPLOAD</span>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                         </a>
                     </div>
@@ -428,8 +428,8 @@
                                         <div style="font-size: 0.9rem; color: #ffffff; font-weight: 500; margin-top: 0.15rem; line-height: 1.4;">
                                             Message <strong>Sir Mohaymen Unos</strong> directly on Facebook to fast-track your enrollment approval.
                                         </div>
-                                        <a href="https://web.facebook.com/sirmo.amis" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.6rem; background: #ffffff; color: #0f766e; font-size: 0.84rem; font-weight: 800; padding: 0.5rem 1rem; border-radius: 10px; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: background 0.15s ease;">
-                                            <span>Message Sir Mohaymen on Facebook</span>
+                                        <a href="https://web.facebook.com/sirmo.amis" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.6rem; background: #ffffff; color: #0f766e; font-size: 0.84rem; font-weight: 800; padding: 0.5rem 1rem; border-radius: 10px; text-decoration: none; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-transform: uppercase; letter-spacing: 0.05em; transition: background 0.15s ease;">
+                                            <span>MESSAGE SIR MOHAYMEN ON FACEBOOK</span>
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                                 <line x1="7" y1="17" x2="17" y2="7"></line>
                                                 <polyline points="7 7 17 7 17 17"></polyline>

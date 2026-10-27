@@ -135,11 +135,11 @@
 
     @if ($submittedApplications->isEmpty() && $canAddAnotherChild)
         <div class="family-draft-section">
-            <a href="{{ route('enrollment.new') }}" @if ($siblingSource) @click.prevent="showDuplicateModal = true" @endif class="family-add-yes">Create New Enrollment</a>
+            <a href="{{ route('enrollment.new') }}" @if ($siblingSource) @click.prevent="showDuplicateModal = true" @endif class="family-add-yes">CREATE NEW ENROLLMENT</a>
         </div>
     @elseif ($canAddAnotherChild)
         <div class="family-draft-section">
-            <a href="{{ route('enrollment.new') }}" @if ($siblingSource) @click.prevent="showDuplicateModal = true" @endif class="family-add-yes">Add Another Child</a>
+            <a href="{{ route('enrollment.new') }}" @if ($siblingSource) @click.prevent="showDuplicateModal = true" @endif class="family-add-yes">ADD ANOTHER CHILD</a>
         </div>
     @endif
 

@@ -7,8 +7,8 @@
         : (int) ($child->completion_percentage ?? 0);
     $step = min(max((int) ($child->last_step ?? 1), 1), 6);
     $actionLabel = $child->status === 'rejected'
-        ? 'Re-edit Form'
-        : ($child->status === 'ready_for_submission' ? 'Check Details' : 'Continue Draft');
+        ? 'RE-EDIT FORM'
+        : ($child->status === 'ready_for_submission' ? 'CHECK DETAILS' : 'CONTINUE DRAFT');
     $modeKey = strtolower((string) ($child->learning_mode ?? $child->enrollment_type ?? ''));
     $learningMode = $learningModeLabels[$modeKey] ?? strtoupper(str_replace('_', ' ', $modeKey ?: 'LEARNING MODE PENDING'));
 @endphp
@@ -61,7 +61,7 @@
                     <button type="submit" class="family-action family-action-danger">DELETE APPLICATION FORM</button>
                 </form>
 
-                <a href="{{ route('enrollment.form.child', $child) }}" class="family-action family-action-primary">{{ $actionLabel }}</a>
+                <a href="{{ route('enrollment.form.child', $child) }}" class="family-action family-action-primary">{{ strtoupper($actionLabel) }}</a>
             </div>
         </div>
     </div>

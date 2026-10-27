@@ -17,3 +17,25 @@
     --tw-ring-offset-shadow: 0 0 #0000 !important;
     --tw-ring-shadow: 0 0 #0000 !important;
 }
+
+/* All Buttons Always Uppercase */
+button,
+input[type="submit"],
+input[type="button"],
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.auth-button,
+.auth-provider-button,
+.premium-continue-button,
+.logout-btn,
+.family-action,
+.family-add-yes,
+.family-finalize,
+.duplicate-btn-cancel,
+.duplicate-btn-fresh,
+.duplicate-btn-confirm {
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+}

@@ -170,6 +170,8 @@
         font-weight: 900;
         text-decoration: none;
         white-space: nowrap;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
     }
 
     .family-group-count {

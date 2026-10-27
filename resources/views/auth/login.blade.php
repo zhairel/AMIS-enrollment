@@ -433,7 +433,7 @@
                                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                                     <polyline points="22,6 12,13 2,6"/>
                                 </svg>
-                                <span style="font-size: 0.92rem;">Sign in with Email OTP</span>
+                                <span style="font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.04em;">SIGN IN WITH EMAIL OTP</span>
                             </button>
                         </div>
 
@@ -461,12 +461,12 @@
                                     @click="submitEmail()" 
                                     :disabled="loading || !email" 
                                     :class="{ 'is-loading': loading }"
-                                    style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.65rem; transition: all 0.2s ease;">
+                                    style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; transition: all 0.2s ease;">
                                 <svg x-show="loading" class="amis-spinner-icon" viewBox="0 0 24 24" fill="none" style="display: none; width: 18px; height: 18px; flex-shrink: 0;" aria-hidden="true">
                                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25" stroke-width="3" fill="none"></circle>
                                     <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span x-text="loading ? 'Sending OTP Code...' : 'Send 4-Digit Code'">Send 4-Digit Code</span>
+                                <span x-text="loading ? 'SENDING OTP CODE...' : 'SEND 4-DIGIT CODE'">SEND 4-DIGIT CODE</span>
                             </button>
                         </div>
 
@@ -492,17 +492,17 @@
                                     @click="verifyOtpCode()" 
                                     :disabled="loading || otp.join('').length !== 4" 
                                     :class="{ 'is-loading': loading }"
-                                    style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.65rem; margin-top: 1.25rem; transition: all 0.2s ease;">
+                                    style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.65rem; margin-top: 1.25rem; text-transform: uppercase; letter-spacing: 0.04em; transition: all 0.2s ease;">
                                 <svg x-show="loading" class="amis-spinner-icon" viewBox="0 0 24 24" fill="none" style="display: none; width: 18px; height: 18px; flex-shrink: 0;" aria-hidden="true">
                                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25" stroke-width="3" fill="none"></circle>
                                     <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span x-text="loading ? 'Verifying Code...' : 'Verify Code & Sign In'">Verify Code &amp; Sign In</span>
+                                <span x-text="loading ? 'VERIFYING CODE...' : 'VERIFY CODE & SIGN IN'">VERIFY CODE &amp; SIGN IN</span>
                             </button>
 
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; font-size:0.85rem;">
                                 <a href="#" @click.prevent="step = 'email'; errorMessage = ''; successMessage = '';" class="otp-back-link" style="color: #64748b; font-weight: 600; text-decoration: none;">&larr; Back to email</a>
-                                <a href="#" @click.prevent="resendOtpCode()" class="otp-resend-link" style="color: #047857; font-weight: 700; text-decoration: none;" :style="loading ? 'pointer-events:none; opacity:0.5;' : ''">Resend Code</a>
+                                <a href="#" @click.prevent="resendOtpCode()" class="otp-resend-link" style="color: #047857; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.04em;" :style="loading ? 'pointer-events:none; opacity:0.5;' : ''">RESEND CODE</a>
                             </div>
                         </div>
 
