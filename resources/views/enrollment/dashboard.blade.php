@@ -34,22 +34,30 @@
         <!-- Actual Dashboard Content -->
         <div x-show="!loading" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
             <!-- Modernized AMIS Header -->
-            <header class="dashboard-header" style="background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 1rem clamp(1.25rem, 3vw, 2.5rem); display: flex; justify-content: space-between; align-items: center; gap: 1.25rem; flex-wrap: wrap; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);">
-                <div class="dashboard-logo" style="display: flex; align-items: center; gap: 0.95rem;">
-                    <div style="position: relative;">
-                        <img src="{{ asset('images/AMIS_Logo.png') }}" alt="AMIS Logo" style="width: 48px; height: 48px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));">
-                    </div>
+            <header class="dashboard-header" style="background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-bottom: 1px solid #e2e8f0; padding: 0.85rem clamp(1.25rem, 3vw, 2.5rem); display: flex; justify-content: space-between; align-items: center; gap: 1.25rem; flex-wrap: wrap; box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);">
+                <div class="dashboard-logo" style="display: flex; align-items: center; gap: 1rem;">
+                    <a href="https://amis.edu.ph" title="Visit Main Website" style="display: block; position: relative;">
+                        <img src="/logo.png" alt="AMIS Logo" width="56" height="56" style="width: 56px !important; height: 56px !important; max-width: 56px !important; max-height: 56px !important; object-fit: contain !important; filter: drop-shadow(0 3px 6px rgba(5, 150, 105, 0.2)); display: block;" onerror="this.src='{{ asset('images/AMIS_Logo.png') }}'">
+                    </a>
                     <div>
-                        <div style="font-size: 0.72rem; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.08em; line-height: 1.1;">
-                            Al Munawwara Islamic School
+                        <div style="font-family: 'Amiri', 'Traditional Arabic', serif; font-size: 1.15rem; font-weight: 700; color: #047857; line-height: 1.1; margin-bottom: 2px; direction: rtl; unicode-bidi: isolate;">
+                            المدرسة المنورة الإسلامية
                         </div>
-                        <h1 style="font-size: 1.2rem; font-weight: 900; color: #0f172a; margin: 2px 0 0 0; line-height: 1.2; letter-spacing: -0.01em;">
-                            AMIS Enrollment System
-                        </h1>
+                        <div style="font-family: 'Outfit', 'Inter', sans-serif; font-size: 0.98rem; font-weight: 900; color: #064e3b; letter-spacing: 0.4px; line-height: 1.15;">
+                            AL MUNAWWARA ISLAMIC SCHOOL
+                        </div>
+                        <div style="font-size: 0.72rem; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; display: flex; align-items: center; gap: 6px;">
+                            <span class="accreditation-dot"></span>
+                            <span>AMIS Enrollment System (AES)</span>
+                        </div>
                     </div>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+                    <a href="https://amis.edu.ph" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 5px; padding: 0.5rem 0.95rem; border-radius: 999px; background: #ecfdf5; border: 1px solid #a7f3d0; color: #047857; font-size: 0.82rem; font-weight: 700; text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#059669'; this.style.color='#ffffff';" onmouseout="this.style.background='#ecfdf5'; this.style.color='#047857';">
+                        <span>Main Website</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                    </a>
                     <!-- User Profile & Status Badges -->
                     <div style="display: flex; align-items: center; gap: 0.75rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 999px; padding: 0.35rem 0.95rem 0.35rem 0.45rem;">
                         <div style="width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; font-weight: 800; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);">
@@ -767,5 +775,6 @@
                 </div>
             </div>
         </div>
+        <x-site-footer />
     </div>
 </x-guest-layout>

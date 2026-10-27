@@ -3,24 +3,29 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('enrollment.dashboard') }}" class="flex items-center gap-3">
-                        <img src="{{ asset('images/AMIS_Logo.png') }}" alt="AMIS" class="h-9 w-9 object-contain">
+                <div class="shrink-0 flex items-center py-2">
+                    <a href="{{ route('enrollment.dashboard') }}" class="flex items-center gap-3 no-underline">
+                        <img src="/logo.png" alt="AMIS Logo" width="46" height="46" style="width: 46px !important; height: 46px !important; max-width: 46px !important; max-height: 46px !important; object-fit: contain !important; display: block;" onerror="this.src='{{ asset('images/AMIS_Logo.png') }}'">
                         <div>
-                            <span class="text-sm font-bold text-gray-900">AMIS</span>
-                            <span class="text-xs text-gray-500 block leading-none">Enrollment System</span>
+                            <div style="font-family: 'Amiri', 'Traditional Arabic', serif; font-size: 1.05rem; font-weight: 700; color: #047857; line-height: 1.1; direction: rtl; unicode-bidi: isolate;">المدرسة المنورة الإسلامية</div>
+                            <span class="text-xs font-black tracking-wide text-emerald-950 uppercase block leading-tight">AL MUNAWWARA ISLAMIC SCHOOL</span>
+                            <span class="text-[11px] text-emerald-600 font-bold block leading-none">AMIS Enrollment System</span>
                         </div>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
                     <x-nav-link :href="route('enrollment.dashboard')" :active="request()->routeIs('enrollment.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('enrollment.form')" :active="request()->routeIs('enrollment.form')">
                         {{ __('Enrollment') }}
                     </x-nav-link>
+                    <a href="https://amis.edu.ph" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 hover:bg-emerald-600 hover:text-white transition duration-150">
+                        <span>Main Website</span>
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </a>
                 </div>
             </div>
 
