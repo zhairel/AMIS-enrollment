@@ -1422,7 +1422,7 @@ function enrollmentForm() {
         },
 
         async searchAndAutofillStudent() {
-            if (!this.searchStudentNumber || !this.searchDOB) return;
+            if (!this.searchStudentNumber) return;
             this.searchingStudent = true;
             this.searchError = '';
             this.searchSuccess = '';
@@ -1437,7 +1437,7 @@ function enrollmentForm() {
                     },
                     body: JSON.stringify({
                         student_number: this.searchStudentNumber,
-                        date_of_birth: this.searchDOB
+                        date_of_birth: this.searchDOB || null
                     })
                 });
 
@@ -1446,12 +1446,19 @@ function enrollmentForm() {
                     throw new Error(data.message || 'Failed to search student record.');
                 }
 
+                // If user didn't enter DOB, populate searchDOB too from student record
+                if (data.student && data.student.date_of_birth && !this.searchDOB) {
+                    this.searchDOB = data.student.date_of_birth;
+                }
+
                 // Auto-fill form fields
-                Object.keys(data.student).forEach(key => {
-                    if (key in this.form) {
-                        this.form[key] = data.student[key];
-                    }
-                });
+                if (data.student) {
+                    Object.keys(data.student).forEach(key => {
+                        if (key in this.form) {
+                            this.form[key] = data.student[key];
+                        }
+                    });
+                }
 
                 // Sync UI elements that rely on form properties
                 if (this.form.country) {
@@ -1461,13 +1468,22 @@ function enrollmentForm() {
                     this.loadShiftsForGrade();
                 }
 
-                this.searchSuccess = 'Student profile auto-filled successfully! Please review the fields in the next steps.';
+                const sName = (data.student && data.student.first_name ? data.student.first_name + ' ' + (data.student.last_name || '') : '').trim();
+                this.searchSuccess = sName 
+                    ? `✓ Found record for ${sName}! Profile auto-filled successfully.`
+                    : '✓ Student profile auto-filled successfully! Please review the fields in the next steps.';
                 this.hasUserEdited = true;
+                if (typeof this.showToast === 'function') {
+                    this.showToast(this.searchSuccess, 'success');
+                }
                 
                 // Trigger auto-save draft
                 this.saveDraft();
             } catch (error) {
                 this.searchError = error.message;
+                if (typeof this.showToast === 'function') {
+                    this.showToast(error.message, 'error');
+                }
             } finally {
                 this.searchingStudent = false;
             }

@@ -43,20 +43,26 @@
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                 <div>
-                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">Student ID or LRN</label>
-                    <input type="text" x-model="searchStudentNumber" placeholder="e.g. 260001 or LRN" 
+                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">
+                        Student ID or LRN <span style="color:#ef4444;">*</span>
+                    </label>
+                    <input type="text" x-model="searchStudentNumber" placeholder="e.g. 260101 or LRN" 
                            style="width: 100%; padding: 0.9rem 1.2rem; min-height: 50px; font-size: 1.05rem; font-weight: 600; text-transform: uppercase; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; outline: none; transition: all 0.2s;"
                            onfocus="this.style.borderColor='#059669'; this.style.boxShadow='0 0 0 4px rgba(5,150,105,0.12)';"
                            onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';"
-                           :disabled="searchingStudent">
+                           :disabled="searchingStudent"
+                           @keydown.enter.prevent="searchAndAutofillStudent()">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">Date of Birth</label>
+                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">
+                        Date of Birth <span style="font-size:0.8rem; font-weight:600; color:#64748b; text-transform:none;">(Optional verification)</span>
+                    </label>
                     <input type="date" x-model="searchDOB" 
                            style="width: 100%; padding: 0.9rem 1.2rem; min-height: 50px; font-size: 1.05rem; font-weight: 600; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; outline: none; transition: all 0.2s;"
                            onfocus="this.style.borderColor='#059669'; this.style.boxShadow='0 0 0 4px rgba(5,150,105,0.12)';"
                            onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';"
-                           :disabled="searchingStudent">
+                           :disabled="searchingStudent"
+                           @keydown.enter.prevent="searchAndAutofillStudent()">
                 </div>
             </div>
             
@@ -65,10 +71,11 @@
                     <span x-show="searchError" x-text="searchError" style="color: #dc2626;" x-cloak></span>
                     <span x-show="searchSuccess" x-text="searchSuccess" style="color: #047857;" x-cloak></span>
                 </div>
-                <button type="button" @click="searchAndAutofillStudent()" :disabled="searchingStudent || !searchStudentNumber || !searchDOB"
+                <button type="button" @click="searchAndAutofillStudent()" :disabled="searchingStudent || !searchStudentNumber"
                         style="display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.85rem 1.85rem; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);"
                         onmouseover="this.style.boxShadow='0 6px 18px rgba(5, 150, 105, 0.4)';"
-                        onmouseout="this.style.boxShadow='0 4px 12px rgba(5, 150, 105, 0.3)';">
+                        onmouseout="this.style.boxShadow='0 4px 12px rgba(5, 150, 105, 0.3)';"
+                        :style="!searchStudentNumber ? 'opacity: 0.6; cursor: not-allowed;' : ''">
                     <svg x-show="searchingStudent" style="width: 18px; height: 18px; animation: spin 0.8s linear infinite;" fill="none" viewBox="0 0 24 24" x-cloak>
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>

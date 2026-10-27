@@ -860,11 +860,11 @@ class EnrollmentController extends Controller
     {
         $validated = $request->validate([
             'student_number' => 'required|string',
-            'date_of_birth' => 'required|date',
+            'date_of_birth' => 'nullable|date',
         ]);
 
         $studentNumber = trim($validated['student_number']);
-        $dob = $validated['date_of_birth'];
+        $dob = !empty($validated['date_of_birth']) ? $validated['date_of_birth'] : null;
 
         // Search by student number or LRN
         $student = \App\Models\Student::where('student_number', $studentNumber)
@@ -878,7 +878,7 @@ class EnrollmentController extends Controller
         if (!$student) {
             return response()->json([
                 'success' => false,
-                'message' => 'No student record found with the given Student ID or LRN.',
+                'message' => 'No student record found with the given Student ID or LRN (' . $studentNumber . ').',
             ], 404);
         }
 
@@ -886,16 +886,16 @@ class EnrollmentController extends Controller
         if (!$applicant) {
             return response()->json([
                 'success' => false,
-                'message' => 'No application details found for this student.',
+                'message' => 'No application details found for this student record.',
             ], 404);
         }
 
-        // Verify Date of Birth
+        // Verify Date of Birth if provided
         $formattedDob = $applicant->date_of_birth ? $applicant->date_of_birth->format('Y-m-d') : null;
-        if ($formattedDob !== $dob) {
+        if ($dob && $formattedDob && $formattedDob !== $dob) {
             return response()->json([
                 'success' => false,
-                'message' => 'The provided date of birth does not match our records.',
+                'message' => 'The provided date of birth does not match our records for this student.',
             ], 422);
         }
 
