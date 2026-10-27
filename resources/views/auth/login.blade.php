@@ -223,16 +223,25 @@
                                 this.errorMessage = '';
                                 this.successMessage = '';
 
+                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
                                 fetch('{{ route('auth.send-otp') }}', {
                                     method: 'POST',
                                     headers: {
-                                        'Accept': 'application/json, text/plain, */*',
+                                        'Accept': 'application/json',
                                         'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                        'X-CSRF-TOKEN': csrfToken
                                     },
                                     body: JSON.stringify({ email: this.email })
                                 })
-                                .then(response => response.json().then(data => ({ status: response.status, data })))
+                                .then(async response => {
+                                    let data;
+                                    try {
+                                        data = await response.json();
+                                    } catch (e) {
+                                        data = { status: 'error', message: 'Unexpected server response. Please try again.' };
+                                    }
+                                    return { status: response.status, data };
+                                })
                                 .then(res => {
                                     this.loading = false;
                                     if (res.status === 200 && res.data.status === 'success') {
@@ -280,16 +289,25 @@
                                 this.errorMessage = '';
                                 this.successMessage = '';
 
+                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
                                 fetch('{{ route('auth.verify-otp') }}', {
                                     method: 'POST',
                                     headers: {
-                                        'Accept': 'application/json, text/plain, */*',
+                                        'Accept': 'application/json',
                                         'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                        'X-CSRF-TOKEN': csrfToken
                                     },
                                     body: JSON.stringify({ email: this.email, code: code })
                                 })
-                                .then(response => response.json().then(data => ({ status: response.status, data })))
+                                .then(async response => {
+                                    let data;
+                                    try {
+                                        data = await response.json();
+                                    } catch (e) {
+                                        data = { status: 'error', message: 'Unexpected server response. Please try again.' };
+                                    }
+                                    return { status: response.status, data };
+                                })
                                 .then(res => {
                                     this.loading = false;
                                     if (res.status === 200 && res.data.status === 'success') {
@@ -312,16 +330,25 @@
                                 this.errorMessage = '';
                                 this.successMessage = '';
 
+                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
                                 fetch('{{ route('auth.send-otp') }}', {
                                     method: 'POST',
                                     headers: {
-                                        'Accept': 'application/json, text/plain, */*',
+                                        'Accept': 'application/json',
                                         'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name=&quot;csrf-token&quot;]').getAttribute('content')
+                                        'X-CSRF-TOKEN': csrfToken
                                     },
                                     body: JSON.stringify({ email: this.email })
                                 })
-                                .then(response => response.json().then(data => ({ status: response.status, data })))
+                                .then(async response => {
+                                    let data;
+                                    try {
+                                        data = await response.json();
+                                    } catch (e) {
+                                        data = { status: 'error', message: 'Unexpected server response. Please try again.' };
+                                    }
+                                    return { status: response.status, data };
+                                })
                                 .then(res => {
                                     this.loading = false;
                                     if (res.status === 200 && res.data.status === 'success') {
@@ -429,14 +456,17 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="auth-button premium-continue-button" @click="submitEmail()" :disabled="loading || !email" style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.6rem; transition: all 0.2s ease;" onmouseover="this.style.background='#047857'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#064e3b'; this.style.transform='translateY(0)';">
-                                <span x-show="!loading">Send 4-Digit Code</span>
-                                <span x-show="loading" style="display: flex; align-items: center; justify-content: center; gap: 0.6rem;">
-                                    <svg class="amis-spinner-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="32" stroke-dashoffset="10" fill="none"/>
-                                    </svg>
-                                    <span>Sending OTP Code...</span>
-                                </span>
+                            <button type="button" 
+                                    class="auth-button premium-continue-button" 
+                                    @click="submitEmail()" 
+                                    :disabled="loading || !email" 
+                                    :class="{ 'is-loading': loading }"
+                                    style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.65rem; transition: all 0.2s ease;">
+                                <svg x-show="loading" class="amis-spinner-icon" viewBox="0 0 24 24" fill="none" style="display: none; width: 18px; height: 18px; flex-shrink: 0;" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25" stroke-width="3" fill="none"></circle>
+                                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span x-text="loading ? 'Sending OTP Code...' : 'Send 4-Digit Code'">Send 4-Digit Code</span>
                             </button>
                         </div>
 
@@ -457,14 +487,17 @@
                                        style="width: 54px; height: 58px; font-size: 1.4rem; font-weight: 800; text-align: center; border: 2px solid #cbd5e1; border-radius: 14px; outline: none; background: #f8fafc; color: #0f172a;">
                             </div>
 
-                            <button type="button" class="auth-button premium-continue-button" @click="verifyOtpCode()" :disabled="loading || otp.join('').length !== 4" style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-top: 1.25rem; transition: all 0.2s ease;" onmouseover="this.style.background='#047857'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#064e3b'; this.style.transform='translateY(0)';">
-                                <span x-show="!loading">Verify Code &amp; Sign In</span>
-                                <span x-show="loading" style="display: flex; align-items: center; justify-content: center; gap: 0.6rem;">
-                                    <svg class="amis-spinner-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="32" stroke-dashoffset="10" fill="none"/>
-                                    </svg>
-                                    <span>Verifying Code...</span>
-                                </span>
+                            <button type="button" 
+                                    class="auth-button premium-continue-button" 
+                                    @click="verifyOtpCode()" 
+                                    :disabled="loading || otp.join('').length !== 4" 
+                                    :class="{ 'is-loading': loading }"
+                                    style="width: 100%; min-height: 48px; border-radius: 9999px; background: #064e3b; color: #ffffff; font-weight: 750; font-size: 0.95rem; border: none; cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.65rem; margin-top: 1.25rem; transition: all 0.2s ease;">
+                                <svg x-show="loading" class="amis-spinner-icon" viewBox="0 0 24 24" fill="none" style="display: none; width: 18px; height: 18px; flex-shrink: 0;" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25" stroke-width="3" fill="none"></circle>
+                                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span x-text="loading ? 'Verifying Code...' : 'Verify Code & Sign In'">Verify Code &amp; Sign In</span>
                             </button>
 
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; font-size:0.85rem;">
