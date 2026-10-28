@@ -40,26 +40,7 @@
                     </div>
 
                     <!-- Video Tutorial Guide Card with Interactive Modal Player -->
-                    <div x-data="{
-                        showVideoModal: false,
-                        openVideo() {
-                            this.showVideoModal = true;
-                            this.$nextTick(() => {
-                                const video = this.$refs.enrollmentVideo;
-                                if (video) {
-                                    video.currentTime = 0;
-                                    video.play().catch(() => {});
-                                }
-                            });
-                        },
-                        closeVideo() {
-                            const video = this.$refs.enrollmentVideo;
-                            if (video) {
-                                video.pause();
-                            }
-                            this.showVideoModal = false;
-                        }
-                    }" style="width: 100%;">
+                    <div x-data="videoGuide()" style="width: 100%;">
                         
                         <div @click="openVideo()" 
                              class="video-guide-preview-card" 
@@ -206,167 +187,7 @@
                 <div class="aes-right-showcase" style="display: flex; justify-content: center;">
                     <div class="auth-entry-card" 
                          style="width: 100%; max-width: 460px; padding: clamp(2rem, 3.5vw, 2.75rem) clamp(1.5rem, 3vw, 2.25rem); border-radius: 24px; border: 1px solid #e2e8f0; border-top: 4px solid #059669; background: #ffffff; box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.02);" 
-                         x-data="{ 
-                            email: '', 
-                            otp: ['', '', '', ''], 
-                            step: 'providers',
-                            showEmailForm: false, 
-                            loading: false, 
-                            errorMessage: '', 
-                            successMessage: '',
-                            submitEmail() {
-                                if (!this.email || !this.email.includes('@')) {
-                                    this.errorMessage = 'Please enter a valid email address.';
-                                    return;
-                                }
-                                this.loading = true;
-                                this.errorMessage = '';
-                                this.successMessage = '';
-
-                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
-                                fetch('{{ route('auth.send-otp') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    body: JSON.stringify({ email: this.email })
-                                })
-                                .then(async response => {
-                                    let data;
-                                    try {
-                                        data = await response.json();
-                                    } catch (e) {
-                                        data = { status: 'error', message: 'Unexpected server response. Please try again.' };
-                                    }
-                                    return { status: response.status, data };
-                                })
-                                .then(res => {
-                                    this.loading = false;
-                                    if (res.status === 200 && res.data.status === 'success') {
-                                        this.step = 'otp';
-                                        this.successMessage = res.data.message;
-                                        this.$nextTick(() => {
-                                            if (this.$refs.otp0) this.$refs.otp0.focus();
-                                        });
-                                    } else {
-                                        this.errorMessage = res.data.message || 'An error occurred. Please try again.';
-                                    }
-                                })
-                                .catch(err => {
-                                    this.loading = false;
-                                    this.errorMessage = 'Network error. Please check your internet connection.';
-                                });
-                            },
-                            handleOtpInput(event, index) {
-                                const val = event.target.value;
-                                this.otp[index] = val.replace(/[^0-9]/g, '');
-
-                                if (this.otp[index] && index < 3) {
-                                    const next = this.$refs['otp' + (index + 1)];
-                                    if (next) next.focus();
-                                }
-
-                                if (this.otp.join('').length === 4) {
-                                    this.verifyOtpCode();
-                                }
-                            },
-                            handleOtpKeydown(event, index) {
-                                if (event.key === 'Backspace') {
-                                    if (!this.otp[index] && index > 0) {
-                                        this.otp[index - 1] = '';
-                                        const prev = this.$refs['otp' + (index - 1)];
-                                        if (prev) prev.focus();
-                                    }
-                                }
-                            },
-                            verifyOtpCode() {
-                                const code = this.otp.join('');
-                                if (code.length !== 4) return;
-
-                                this.loading = true;
-                                this.errorMessage = '';
-                                this.successMessage = '';
-
-                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
-                                fetch('{{ route('auth.verify-otp') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    body: JSON.stringify({ email: this.email, code: code })
-                                })
-                                .then(async response => {
-                                    let data;
-                                    try {
-                                        data = await response.json();
-                                    } catch (e) {
-                                        data = { status: 'error', message: 'Unexpected server response. Please try again.' };
-                                    }
-                                    return { status: response.status, data };
-                                })
-                                .then(res => {
-                                    this.loading = false;
-                                    if (res.status === 200 && res.data.status === 'success') {
-                                        window.location.href = res.data.redirectUrl;
-                                    } else {
-                                        this.errorMessage = res.data.message || 'Invalid verification code.';
-                                        this.otp = ['', '', '', ''];
-                                        this.$nextTick(() => {
-                                            if (this.$refs.otp0) this.$refs.otp0.focus();
-                                        });
-                                    }
-                                })
-                                .catch(err => {
-                                    this.loading = false;
-                                    this.errorMessage = 'Network error. Please try again.';
-                                });
-                            },
-                            resendOtpCode() {
-                                this.loading = true;
-                                this.errorMessage = '';
-                                this.successMessage = '';
-
-                                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
-                                fetch('{{ route('auth.send-otp') }}', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': csrfToken
-                                    },
-                                    body: JSON.stringify({ email: this.email })
-                                })
-                                .then(async response => {
-                                    let data;
-                                    try {
-                                        data = await response.json();
-                                    } catch (e) {
-                                        data = { status: 'error', message: 'Unexpected server response. Please try again.' };
-                                    }
-                                    return { status: response.status, data };
-                                })
-                                .then(res => {
-                                    this.loading = false;
-                                    if (res.status === 200 && res.data.status === 'success') {
-                                        this.successMessage = 'A new 4-digit code has been sent!';
-                                        this.otp = ['', '', '', ''];
-                                        this.$nextTick(() => {
-                                            if (this.$refs.otp0) this.$refs.otp0.focus();
-                                        });
-                                    } else {
-                                        this.errorMessage = res.data.message || 'Could not resend the code.';
-                                    }
-                                })
-                                .catch(err => {
-                                    this.loading = false;
-                                    this.errorMessage = 'Network error. Please try again.';
-                                });
-                            }
-                         }">
+                         x-data="authCard()">
                         
                         <!-- Card Brand Header -->
                         <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -501,7 +322,7 @@
                             </button>
 
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; font-size:0.85rem;">
-                                <a href="#" @click.prevent="step = 'email'; errorMessage = ''; successMessage = '';" class="otp-back-link" style="color: #64748b; font-weight: 600; text-decoration: none;">&larr; Back to email</a>
+                                <a href="#" @click.prevent="step = 'email'; errorMessage = ''; successMessage = '';" class="otp-back-link" style="color: #64748b; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.04em;">&larr; BACK TO EMAIL</a>
                                 <a href="#" @click.prevent="resendOtpCode()" class="otp-resend-link" style="color: #047857; font-weight: 700; text-decoration: none; text-transform: uppercase; letter-spacing: 0.04em;" :style="loading ? 'pointer-events:none; opacity:0.5;' : ''">RESEND CODE</a>
                             </div>
                         </div>
@@ -524,4 +345,208 @@
 
     <!-- AMIS Institutional Footer (Unified with amis.edu.ph) -->
     <x-site-footer />
+
+    @push('scripts')
+    <script>
+        function videoGuide() {
+            return {
+                showVideoModal: false,
+                openVideo() {
+                    this.showVideoModal = true;
+                    this.$nextTick(() => {
+                        const video = this.$refs.enrollmentVideo;
+                        if (video) {
+                            video.currentTime = 0;
+                            video.play().catch(function() {});
+                        }
+                    });
+                },
+                closeVideo() {
+                    const video = this.$refs.enrollmentVideo;
+                    if (video) {
+                        video.pause();
+                    }
+                    this.showVideoModal = false;
+                }
+            };
+        }
+
+        function authCard() {
+            return {
+                email: '',
+                otp: ['', '', '', ''],
+                step: 'providers',
+                showEmailForm: false,
+                loading: false,
+                errorMessage: '',
+                successMessage: '',
+                submitEmail() {
+                    if (!this.email || !this.email.includes('@')) {
+                        this.errorMessage = 'Please enter a valid email address.';
+                        return;
+                    }
+                    this.loading = true;
+                    this.errorMessage = '';
+                    this.successMessage = '';
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+                    fetch('{{ route('auth.send-otp') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({ email: this.email })
+                    })
+                    .then(async response => {
+                        let data;
+                        try {
+                            data = await response.json();
+                        } catch (e) {
+                            data = { status: 'error', message: 'Unexpected server response. Please try again.' };
+                        }
+                        return { status: response.status, data };
+                    })
+                    .then(res => {
+                        this.loading = false;
+                        if (res.status === 200 && res.data.status === 'success') {
+                            this.step = 'otp';
+                            this.successMessage = res.data.message;
+                            this.$nextTick(() => {
+                                if (this.$refs.otp0) this.$refs.otp0.focus();
+                            });
+                        } else {
+                            this.errorMessage = res.data.message || 'An error occurred. Please try again.';
+                        }
+                    })
+                    .catch(err => {
+                        this.loading = false;
+                        this.errorMessage = 'Network error. Please check your internet connection.';
+                    });
+                },
+                handleOtpInput(event, index) {
+                    const val = event.target.value;
+                    this.otp[index] = val.replace(/[^0-9]/g, '');
+
+                    if (this.otp[index] && index < 3) {
+                        const next = this.$refs['otp' + (index + 1)];
+                        if (next) next.focus();
+                    }
+
+                    if (this.otp.join('').length === 4) {
+                        this.verifyOtpCode();
+                    }
+                },
+                handleOtpKeydown(event, index) {
+                    if (event.key === 'Backspace') {
+                        if (!this.otp[index] && index > 0) {
+                            this.otp[index - 1] = '';
+                            const prev = this.$refs['otp' + (index - 1)];
+                            if (prev) prev.focus();
+                        }
+                    }
+                },
+                verifyOtpCode() {
+                    const code = this.otp.join('');
+                    if (code.length !== 4) return;
+
+                    this.loading = true;
+                    this.errorMessage = '';
+                    this.successMessage = '';
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+                    fetch('{{ route('auth.verify-otp') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({ email: this.email, code: code })
+                    })
+                    .then(async response => {
+                        let data;
+                        try {
+                            data = await response.json();
+                        } catch (e) {
+                            data = { status: 'error', message: 'Unexpected server response. Please try again.' };
+                        }
+                        return { status: response.status, data };
+                    })
+                    .then(res => {
+                        this.loading = false;
+                        if (res.status === 200 && res.data.status === 'success') {
+                            window.location.href = res.data.redirectUrl;
+                        } else {
+                            this.errorMessage = res.data.message || 'Invalid verification code.';
+                            this.otp = ['', '', '', ''];
+                            this.$nextTick(() => {
+                                if (this.$refs.otp0) this.$refs.otp0.focus();
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        this.loading = false;
+                        this.errorMessage = 'Network error. Please try again.';
+                    });
+                },
+                resendOtpCode() {
+                    this.loading = true;
+                    this.errorMessage = '';
+                    this.successMessage = '';
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+                    fetch('{{ route('auth.send-otp') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({ email: this.email })
+                    })
+                    .then(async response => {
+                        let data;
+                        try {
+                            data = await response.json();
+                        } catch (e) {
+                            data = { status: 'error', message: 'Unexpected server response. Please try again.' };
+                        }
+                        return { status: response.status, data };
+                    })
+                    .then(res => {
+                        this.loading = false;
+                        if (res.status === 200 && res.data.status === 'success') {
+                            this.successMessage = 'A new 4-digit code has been sent!';
+                            this.otp = ['', '', '', ''];
+                            this.$nextTick(() => {
+                                if (this.$refs.otp0) this.$refs.otp0.focus();
+                            });
+                        } else {
+                            this.errorMessage = res.data.message || 'Could not resend the code.';
+                        }
+                    })
+                    .catch(err => {
+                        this.loading = false;
+                        this.errorMessage = 'Network error. Please try again.';
+                    });
+                }
+            };
+        }
+
+        window.videoGuide = videoGuide;
+        window.authCard = authCard;
+
+        if (window.Alpine) {
+            Alpine.data('videoGuide', videoGuide);
+            Alpine.data('authCard', authCard);
+        } else {
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('videoGuide', videoGuide);
+                Alpine.data('authCard', authCard);
+            });
+        }
+    </script>
+    @endpush
 </x-guest-layout>
