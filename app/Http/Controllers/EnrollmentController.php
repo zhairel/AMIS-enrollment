@@ -899,6 +899,25 @@ class EnrollmentController extends Controller
             ], 422);
         }
 
+        $photoUrl = null;
+        if (!empty($applicant->photo_2x2_url)) {
+            $photoPath = ltrim($applicant->photo_2x2_url, '/');
+            if (file_exists(public_path('storage/' . $photoPath))) {
+                $photoUrl = asset('storage/' . $photoPath);
+            } else {
+                $photoUrl = 'https://admin.amis.edu.ph/storage/' . $photoPath;
+            }
+        }
+
+        $fullName = trim(
+            ($applicant->first_name ?? '') . ' ' .
+            ($applicant->middle_name ? $applicant->middle_name . ' ' : '') .
+            ($applicant->last_name ?? '') .
+            ($applicant->suffix ? ' ' . $applicant->suffix : '')
+        );
+
+        $gradeLevel = $applicant->grade_level ?: $student->grade_level;
+
         // Return applicant data for auto-filling
         return response()->json([
             'success' => true,
@@ -910,6 +929,9 @@ class EnrollmentController extends Controller
                 'last_name' => $applicant->last_name,
                 'middle_name' => $applicant->middle_name,
                 'suffix' => $applicant->suffix,
+                'full_name' => $fullName,
+                'photo_url' => $photoUrl,
+                'grade_level' => $gradeLevel,
                 'gender' => $applicant->gender,
                 'date_of_birth' => $formattedDob,
                 'place_of_birth' => $applicant->place_of_birth,

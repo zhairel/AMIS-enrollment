@@ -82,6 +82,8 @@ function enrollmentForm() {
         searchingStudent: false,
         searchError: '',
         searchSuccess: '',
+        showOldStudentModal: false,
+        foundStudent: null,
         rejectionFixSteps: REJECTION_FIX_STEPS,
         rejectionRemarks: REJECTION_REMARKS,
         countriesLoading: true,
@@ -1477,6 +1479,21 @@ function enrollmentForm() {
                     this.showToast(this.searchSuccess, 'success');
                 }
                 
+                // Store found student details and show the pop-up modal!
+                this.foundStudent = {
+                    student_number: data.student.amis_student_id || this.searchStudentNumber,
+                    lrn: data.student.lrn || '',
+                    full_name: data.student.full_name || sName,
+                    first_name: data.student.first_name || '',
+                    last_name: data.student.last_name || '',
+                    middle_name: data.student.middle_name || '',
+                    grade_level: data.student.grade_level || '',
+                    date_of_birth: data.student.date_of_birth || this.searchDOB || '',
+                    gender: data.student.gender || '',
+                    photo_url: data.student.photo_url || null
+                };
+                this.showOldStudentModal = true;
+
                 // Trigger auto-save draft
                 this.saveDraft();
             } catch (error) {
@@ -1487,6 +1504,21 @@ function enrollmentForm() {
             } finally {
                 this.searchingStudent = false;
             }
+        },
+
+        confirmFoundStudent() {
+            this.showOldStudentModal = false;
+            if (this.foundStudent && this.foundStudent.grade_level && !this.form.grade_level) {
+                this.form.grade_level = this.foundStudent.grade_level;
+                this.loadShiftsForGrade();
+            }
+            if (typeof this.showToast === 'function') {
+                this.showToast('Student confirmed: ' + (this.foundStudent?.full_name || ''), 'success');
+            }
+        },
+
+        closeOldStudentModal() {
+            this.showOldStudentModal = false;
         },
 
         applySiblingParent(checked) {
