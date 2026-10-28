@@ -91,13 +91,30 @@
 
     <!-- Grade Level: Appears after Student Type is chosen -->
     <section class="setup-section grade-level-section" x-show="form.student_type" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
-        <x-form-field-label required>Grade Level</x-form-field-label>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.5rem;">
+            <x-form-field-label required>Grade Level</x-form-field-label>
+            <template x-if="form.student_type === 'Old' && completedGradeLevel">
+                <span style="font-size: 0.72rem; font-weight: 800; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 0.2rem 0.65rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 0.35rem;">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #059669;"></span>
+                    Completed: <span x-text="completedGradeLevel"></span> &bull; Advancing to <span x-text="form.grade_level"></span>
+                </span>
+            </template>
+        </div>
         <select name="grade_level" class="select-input" :class="{ 'is-invalid-field': isFieldInvalid('grade_level') }" x-model="form.grade_level" @change="loadShiftsForGrade()">
             <option value="">Select Grade Level</option>
             @foreach($gradeLevels as $grade)
-                <option value="{{ $grade->name }}">{{ $grade->name }}</option>
+                <option value="{{ $grade->name }}" 
+                        :disabled="isGradeDisabled('{{ $grade->name }}')"
+                        x-text="getGradeOptionLabel('{{ $grade->name }}')">
+                    {{ $grade->name }}
+                </option>
             @endforeach
         </select>
+        <template x-if="form.student_type === 'Old' && completedGradeLevel">
+            <span style="display: block; font-size: 0.78rem; color: #64748b; font-weight: 600; margin-top: 0.35rem;">
+                ℹ️ Completed grades (<span x-text="(disabledGrades || []).join(', ')"></span>) are locked to ensure correct academic progression.
+            </span>
+        </template>
     </section>
 
     <!-- Learning Mode: Appears after Grade Level is chosen -->

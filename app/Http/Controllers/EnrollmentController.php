@@ -54,6 +54,17 @@ class EnrollmentController extends Controller
             ? range(1, 6)
             : ($applicant ? range(1, min((int) ($applicant->last_step ?? 1), 6)) : []);
 
+        $completedGradeLevel = null;
+        $disabledGradeLevels = [];
+        if ($applicant && $applicant->student_type === 'Old' && $applicant->amis_student_id) {
+            $oldStudent = \App\Models\Student::where('student_number', $applicant->amis_student_id)->first();
+            if ($oldStudent && $oldStudent->grade_level) {
+                $prog = self::getGradeProgression($oldStudent->grade_level);
+                $completedGradeLevel = $prog['previous'];
+                $disabledGradeLevels = $prog['disabled'];
+            }
+        }
+
         return view('enrollment.form', [
             'gradeLevels' => $this->gradeShifts->getGradeLevels(),
             'shifts' => $this->gradeShifts->getShifts(),
@@ -63,6 +74,8 @@ class EnrollmentController extends Controller
             'rejectionFixSteps' => $rejectionFixSteps,
             'startFresh' => $startFresh,
             'siblingData' => $this->applications->getSiblingReusableData($user, $applicant),
+            'completedGradeLevel' => $completedGradeLevel,
+            'disabledGradeLevels' => $disabledGradeLevels,
         ]);
     }
 
@@ -108,6 +121,76 @@ class EnrollmentController extends Controller
         return collect($fixSteps)
             ->map(fn (array $labels) => array_values(array_unique($labels)))
             ->all();
+    }
+
+    /**
+     * Determine next grade level and disabled completed grades for an old student.
+     */
+    public static function getGradeProgression(?string $completedGrade): array
+    {
+        $order = [
+            'Kinder 1',
+            'Kinder 2',
+            'Grade 1',
+            'Grade 2',
+            'Grade 3',
+            'Grade 4',
+            'Grade 5',
+            'Grade 6',
+            'Grade 7',
+            'Grade 8',
+            'Grade 9',
+            'Grade 10',
+            'Grade 11',
+            'Grade 12',
+        ];
+
+        if (empty($completedGrade)) {
+            return [
+                'previous' => null,
+                'next' => null,
+                'disabled' => [],
+            ];
+        }
+
+        $cleanInput = trim(preg_replace('/\s+/', ' ', $completedGrade));
+        $matchedIndex = false;
+
+        foreach ($order as $i => $grade) {
+            if (strcasecmp($grade, $cleanInput) === 0) {
+                $matchedIndex = $i;
+                break;
+            }
+        }
+
+        if ($matchedIndex === false) {
+            if (preg_match('/(?:k|kinder|kindergarten)\s*([12])/i', $cleanInput, $m)) {
+                $matchedIndex = (int) $m[1] - 1;
+            } elseif (preg_match('/(?:grade|g)\s*(\d+)/i', $cleanInput, $m)) {
+                $num = (int) $m[1];
+                if ($num >= 1 && $num <= 12) {
+                    $matchedIndex = 1 + $num;
+                }
+            }
+        }
+
+        if ($matchedIndex === false) {
+            return [
+                'previous' => $completedGrade,
+                'next' => $completedGrade,
+                'disabled' => [$completedGrade],
+            ];
+        }
+
+        $previousGrade = $order[$matchedIndex];
+        $nextGrade = isset($order[$matchedIndex + 1]) ? $order[$matchedIndex + 1] : $order[$matchedIndex];
+        $disabled = array_slice($order, 0, $matchedIndex + 1);
+
+        return [
+            'previous' => $previousGrade,
+            'next' => $nextGrade,
+            'disabled' => $disabled,
+        ];
     }
 
     public function startNewApplication(Request $request)
@@ -916,7 +999,10 @@ class EnrollmentController extends Controller
             ($applicant->suffix ? ' ' . $applicant->suffix : '')
         );
 
-        $gradeLevel = $applicant->grade_level ?: $student->grade_level;
+        $previousGradeLevel = $applicant->grade_level ?: $student->grade_level;
+        $progression = self::getGradeProgression($previousGradeLevel);
+        $nextGradeLevel = $progression['next'];
+        $disabledGrades = $progression['disabled'];
 
         // Return applicant data for auto-filling
         return response()->json([
@@ -931,7 +1017,10 @@ class EnrollmentController extends Controller
                 'suffix' => $applicant->suffix,
                 'full_name' => $fullName,
                 'photo_url' => $photoUrl,
-                'grade_level' => $gradeLevel,
+                'previous_grade_level' => $progression['previous'] ?: $previousGradeLevel,
+                'grade_level' => $nextGradeLevel,
+                'next_grade_level' => $nextGradeLevel,
+                'disabled_grade_levels' => $disabledGrades,
                 'gender' => $applicant->gender,
                 'date_of_birth' => $formattedDob,
                 'place_of_birth' => $applicant->place_of_birth,

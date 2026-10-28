@@ -84,6 +84,8 @@ function enrollmentForm() {
         searchSuccess: '',
         showOldStudentModal: false,
         foundStudent: null,
+        completedGradeLevel: @json($completedGradeLevel ?? null),
+        disabledGrades: @json($disabledGradeLevels ?? []),
         rejectionFixSteps: REJECTION_FIX_STEPS,
         rejectionRemarks: REJECTION_REMARKS,
         countriesLoading: true,
@@ -259,6 +261,9 @@ function enrollmentForm() {
                     this.showToast(val, 'error');
                 }
             });
+            if (this.completedGradeLevel && (!this.disabledGrades || !this.disabledGrades.length)) {
+                this.disabledGrades = this.getGradeProgression(this.completedGradeLevel).disabled;
+            }
         },
         _debounceTimer: null,
         _submitted: false,
@@ -437,10 +442,70 @@ function enrollmentForm() {
             return Object.values(this.filePreparation).some(Boolean);
         },
 
+        getGradeProgression(completedGrade) {
+            const order = [
+                'Kinder 1',
+                'Kinder 2',
+                'Grade 1',
+                'Grade 2',
+                'Grade 3',
+                'Grade 4',
+                'Grade 5',
+                'Grade 6',
+                'Grade 7',
+                'Grade 8',
+                'Grade 9',
+                'Grade 10',
+                'Grade 11',
+                'Grade 12'
+            ];
+            if (!completedGrade) return { previous: '', next: '', disabled: [] };
+            const clean = completedGrade.trim().toLowerCase();
+            let idx = order.findIndex(g => g.toLowerCase() === clean);
+            if (idx === -1) {
+                const matchK = clean.match(/(?:k|kinder|kindergarten)\s*([12])/);
+                if (matchK) idx = parseInt(matchK[1], 10) - 1;
+                const matchG = clean.match(/(?:grade|g)\s*(\d+)/);
+                if (matchG) {
+                    const num = parseInt(matchG[1], 10);
+                    if (num >= 1 && num <= 12) idx = 1 + num;
+                }
+            }
+            if (idx === -1) return { previous: completedGrade, next: completedGrade, disabled: [completedGrade] };
+            const prev = order[idx];
+            const next = idx < order.length - 1 ? order[idx + 1] : order[idx];
+            const disabled = order.slice(0, idx + 1);
+            return { previous: prev, next: next, disabled: disabled };
+        },
+
+        isGradeDisabled(gradeName) {
+            if (this.form.student_type !== 'Old' || !this.disabledGrades || !this.disabledGrades.length) {
+                return false;
+            }
+            const clean = (gradeName || '').trim().toLowerCase();
+            return this.disabledGrades.some(g => (g || '').trim().toLowerCase() === clean);
+        },
+
+        getGradeOptionLabel(gradeName) {
+            if (this.isGradeDisabled(gradeName)) {
+                return gradeName + ' — Already Completed';
+            }
+            return gradeName;
+        },
+
         toggleStudentType(value) {
             this.form.student_type = this.form.student_type === value ? '' : value;
             if (this.form.student_type !== 'Old') {
                 this.form.amis_student_id = '';
+                this.completedGradeLevel = null;
+                this.disabledGrades = [];
+            } else if (this.foundStudent && this.foundStudent.previous_grade_level) {
+                const prog = this.getGradeProgression(this.foundStudent.previous_grade_level);
+                this.completedGradeLevel = prog.previous;
+                this.disabledGrades = prog.disabled;
+            } else if (this.completedGradeLevel) {
+                const prog = this.getGradeProgression(this.completedGradeLevel);
+                this.disabledGrades = prog.disabled;
             }
             if (this.form.student_type) {
                 this.$nextTick(() => {
@@ -1453,6 +1518,13 @@ function enrollmentForm() {
                     this.searchDOB = data.student.date_of_birth;
                 }
 
+                // Store completed & next grade levels
+                const prevGrade = data.student.previous_grade_level || data.student.grade_level;
+                const prog = this.getGradeProgression(prevGrade);
+                const nextGrade = data.student.next_grade_level || prog.next;
+                this.completedGradeLevel = prog.previous;
+                this.disabledGrades = data.student.disabled_grade_levels || prog.disabled;
+
                 // Auto-fill form fields
                 if (data.student) {
                     Object.keys(data.student).forEach(key => {
@@ -1460,6 +1532,11 @@ function enrollmentForm() {
                             this.form[key] = data.student[key];
                         }
                     });
+                }
+
+                // Explicitly ensure advancing to next grade
+                if (nextGrade) {
+                    this.form.grade_level = nextGrade;
                 }
 
                 // Sync UI elements that rely on form properties
@@ -1472,8 +1549,8 @@ function enrollmentForm() {
 
                 const sName = (data.student && data.student.first_name ? data.student.first_name + ' ' + (data.student.last_name || '') : '').trim();
                 this.searchSuccess = sName 
-                    ? `✓ Found record for ${sName}! Profile auto-filled successfully.`
-                    : '✓ Student profile auto-filled successfully! Please review the fields in the next steps.';
+                    ? `✓ Found record for ${sName}! Advancing to ${nextGrade} (Completed: ${prog.previous}).`
+                    : `✓ Student profile matched! Advancing to ${nextGrade}.`;
                 this.hasUserEdited = true;
                 if (typeof this.showToast === 'function') {
                     this.showToast(this.searchSuccess, 'success');
@@ -1487,7 +1564,9 @@ function enrollmentForm() {
                     first_name: data.student.first_name || '',
                     last_name: data.student.last_name || '',
                     middle_name: data.student.middle_name || '',
-                    grade_level: data.student.grade_level || '',
+                    previous_grade_level: prog.previous,
+                    grade_level: nextGrade,
+                    next_grade_level: nextGrade,
                     date_of_birth: data.student.date_of_birth || this.searchDOB || '',
                     gender: data.student.gender || '',
                     photo_url: data.student.photo_url || null
@@ -1508,8 +1587,8 @@ function enrollmentForm() {
 
         confirmFoundStudent() {
             this.showOldStudentModal = false;
-            if (this.foundStudent && this.foundStudent.grade_level && !this.form.grade_level) {
-                this.form.grade_level = this.foundStudent.grade_level;
+            if (this.foundStudent && this.foundStudent.next_grade_level) {
+                this.form.grade_level = this.foundStudent.next_grade_level;
                 this.loadShiftsForGrade();
             }
             if (typeof this.showToast === 'function') {

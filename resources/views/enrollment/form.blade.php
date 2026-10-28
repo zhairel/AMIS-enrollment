@@ -1128,8 +1128,11 @@
                                             <span style="width: 6px; height: 6px; border-radius: 50%; background: #059669;"></span>
                                             Verified AMIS Student
                                         </span>
-                                        <template x-if="foundStudent.grade_level">
-                                            <span style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155; font-size: 0.72rem; font-weight: 750; padding: 0.2rem 0.65rem; border-radius: 999px;" x-text="'Record: ' + foundStudent.grade_level"></span>
+                                        <template x-if="foundStudent.previous_grade_level">
+                                            <span style="background: #f1f5f9; border: 1px solid #cbd5e1; color: #475569; font-size: 0.72rem; font-weight: 750; padding: 0.2rem 0.65rem; border-radius: 999px;" x-text="'Completed: ' + foundStudent.previous_grade_level"></span>
+                                        </template>
+                                        <template x-if="foundStudent.next_grade_level">
+                                            <span style="background: #ecfdf5; border: 1px solid #6ee7b7; color: #047857; font-size: 0.72rem; font-weight: 800; padding: 0.2rem 0.65rem; border-radius: 999px;" x-text="'Advancing To: ' + foundStudent.next_grade_level"></span>
                                         </template>
                                     </div>
                                 </div>
@@ -1143,6 +1146,14 @@
                                     <div>
                                         <span style="display: block; font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.15rem;">LRN</span>
                                         <span style="font-size: 0.95rem; font-weight: 850; color: #0f172a;" x-text="foundStudent.lrn || '—'"></span>
+                                    </div>
+                                    <div>
+                                        <span style="display: block; font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.15rem;">Completed Grade</span>
+                                        <span style="font-size: 0.9rem; font-weight: 750; color: #64748b;" x-text="(foundStudent.previous_grade_level || '—') + ' (Completed)'"></span>
+                                    </div>
+                                    <div>
+                                        <span style="display: block; font-size: 0.72rem; font-weight: 800; color: #047857; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.15rem;">Enrolling Grade</span>
+                                        <span style="font-size: 0.95rem; font-weight: 850; color: #059669;" x-text="foundStudent.next_grade_level || foundStudent.grade_level || '—'"></span>
                                     </div>
                                     <div>
                                         <span style="display: block; font-size: 0.72rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.15rem;">Date of Birth</span>
@@ -1160,7 +1171,7 @@
                                         <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
                                         <path d="m9 12 2 2 4-4"/>
                                     </svg>
-                                    <span>Existing student record matched! Personal info, addresses, and contacts are auto-populated.</span>
+                                    <span>Existing record matched! Advancing to <strong x-text="foundStudent.next_grade_level || foundStudent.grade_level"></strong>. Previous completed grades are locked.</span>
                                 </div>
 
                                 <!-- Action Buttons -->
