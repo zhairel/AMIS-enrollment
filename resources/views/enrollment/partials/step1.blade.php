@@ -262,7 +262,7 @@
                                     <img :src="foundStudent.photo_url" 
                                          :alt="foundStudent.full_name" 
                                          style="width: 104px; height: 104px; border-radius: 20px; object-fit: cover; border: 3.5px solid #059669; box-shadow: 0 10px 25px -4px rgba(5, 150, 105, 0.25); display: block;"
-                                         @error="$el.style.display = 'none'; if ($refs.fallbackAvatar) $refs.fallbackAvatar.style.display = 'flex';">
+                                         x-on:error="$el.style.display = 'none'; if ($refs.fallbackAvatar) $refs.fallbackAvatar.style.display = 'flex';">
                                 </template>
 
                                 <!-- Fallback Avatar (shown if photo_url is missing or fails to load) -->
