@@ -1,7 +1,7 @@
 <div class="enrollment-form-header enrollment-form-header-with-action" style="display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 1.35rem; margin-bottom: 2rem; gap: 1rem;">
     <div>
-        <h2 x-text="stepTitles[step - 1]" style="font-size: 1.85rem; font-weight: 900; color: #0f172a; margin: 0; line-height: 1.2; letter-spacing: -0.015em;"></h2>
-        <p style="font-size: 0.95rem; color: #64748b; font-weight: 500; margin: 0.35rem 0 0 0; line-height: 1.4;">
+        <h2 x-text="stepTitles[step - 1]" style="font-family: 'Tajawal', 'Inter', sans-serif; font-size: 1.65rem; font-weight: 850; color: #0f172a; margin: 0; line-height: 1.25; letter-spacing: -0.02em;"></h2>
+        <p style="font-size: 0.9rem; color: #64748b; font-weight: 450; margin: 0.35rem 0 0 0; line-height: 1.5;">
             Please complete the required information below to proceed with your enrollment application.
         </p>
     </div>

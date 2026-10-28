@@ -2,7 +2,7 @@
     <!-- Student Type -->
     <section class="setup-section">
         <x-form-field-label required>Are you an OLD or NEW AMIS student?</x-form-field-label>
-        <div class="choice-card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div class="choice-card-grid">
             <x-enrollment.choice-card
                 label="OLD AMIS Student"
                 description="Previously enrolled at AMIS"
@@ -32,55 +32,53 @@
     </section>
 
     <section class="setup-section old-student-record-section" x-show="form.student_type === 'Old'" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
-        <div class="form-divider" style="font-size: 0.95rem; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 1rem 0;">OLD Student Record</div>
-        <div class="search-student-card" style="padding: 1.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0 0.85rem;">
+            <span style="background: #ecfdf5; border: 1.5px solid #a7f3d0; color: #047857; font-size: 0.76rem; font-weight: 800; padding: 0.28rem 0.85rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.05em;">Old Student Record</span>
+        </div>
+        <div class="search-student-card" style="padding: 1.4rem 1.5rem; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 18px; display: flex; flex-direction: column; gap: 1rem;">
             <div>
-                <h4 style="font-size: 1.15rem; font-weight: 800; color: #0f172a; margin: 0;">Search and Auto-fill Student Profile</h4>
-                <p style="font-size: 0.92rem; color: #475569; font-weight: 500; margin: 0.35rem 0 0 0; line-height: 1.5;">
+                <h4 style="font-size: 1.05rem; font-weight: 800; color: #0f172a; margin: 0;">Search and Auto-fill Student Profile</h4>
+                <p style="font-size: 0.88rem; color: #64748b; font-weight: 450; margin: 0.35rem 0 0 0; line-height: 1.5;">
                     Provide your child's Student ID (e.g. 260001) or LRN and Date of Birth to search and auto-populate all form fields.
                 </p>
             </div>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                 <div>
-                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 750; color: #334155; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem;">
                         Student ID or LRN <span style="color:#ef4444;">*</span>
                     </label>
                     <input type="text" x-model="searchStudentNumber" placeholder="e.g. 260101 or LRN" 
-                           style="width: 100%; padding: 0.9rem 1.2rem; min-height: 50px; font-size: 1.05rem; font-weight: 600; text-transform: uppercase; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; outline: none; transition: all 0.2s;"
-                           onfocus="this.style.borderColor='#059669'; this.style.boxShadow='0 0 0 4px rgba(5,150,105,0.12)';"
-                           onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';"
+                           class="plain-input"
+                           style="text-transform: uppercase; font-weight: 600;"
                            :disabled="searchingStudent"
                            @keydown.enter.prevent="searchAndAutofillStudent()">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.92rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.55rem;">
-                        Date of Birth <span style="font-size:0.8rem; font-weight:600; color:#64748b; text-transform:none;">(Optional verification)</span>
+                    <label style="display: block; font-size: 0.85rem; font-weight: 750; color: #334155; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.45rem;">
+                        Date of Birth <span style="font-size:0.75rem; font-weight:600; color:#64748b; text-transform:none;">(Optional verification)</span>
                     </label>
                     <input type="date" x-model="searchDOB" 
-                           style="width: 100%; padding: 0.9rem 1.2rem; min-height: 50px; font-size: 1.05rem; font-weight: 600; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; outline: none; transition: all 0.2s;"
-                           onfocus="this.style.borderColor='#059669'; this.style.boxShadow='0 0 0 4px rgba(5,150,105,0.12)';"
-                           onblur="this.style.borderColor='#cbd5e1'; this.style.boxShadow='none';"
+                           class="date-input"
+                           style="font-weight: 600;"
                            :disabled="searchingStudent"
                            @keydown.enter.prevent="searchAndAutofillStudent()">
                 </div>
             </div>
             
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 0.35rem;">
-                <div style="font-size: 0.95rem; font-weight: 700;">
+                <div style="font-size: 0.9rem; font-weight: 700;">
                     <span x-show="searchError" x-text="searchError" style="color: #dc2626;" x-cloak></span>
                     <span x-show="searchSuccess" x-text="searchSuccess" style="color: #047857;" x-cloak></span>
                 </div>
                 <button type="button" @click="searchAndAutofillStudent()" :disabled="searchingStudent || !searchStudentNumber"
-                        style="display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.85rem 1.85rem; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; border: none; border-radius: 14px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);"
-                        onmouseover="this.style.boxShadow='0 6px 18px rgba(5, 150, 105, 0.4)';"
-                        onmouseout="this.style.boxShadow='0 4px 12px rgba(5, 150, 105, 0.3)';"
-                        :style="!searchStudentNumber ? 'opacity: 0.6; cursor: not-allowed;' : ''">
-                    <svg x-show="searchingStudent" style="width: 18px; height: 18px; animation: spin 0.8s linear infinite;" fill="none" viewBox="0 0 24 24" x-cloak>
+                        class="btn-search-autofill"
+                        :class="{ 'is-disabled': !searchStudentNumber, 'is-loading': searchingStudent }">
+                    <svg x-show="searchingStudent" style="width: 16px; height: 16px; animation: spin 0.8s linear infinite;" fill="none" viewBox="0 0 24 24" x-cloak>
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                     </svg>
-                    <span x-text="searchingStudent ? 'Searching...' : 'Search & Auto-fill'"></span>
+                    <span x-text="searchingStudent ? 'SEARCHING...' : 'SEARCH & AUTO-FILL'">SEARCH &amp; AUTO-FILL</span>
                 </button>
             </div>
         </div>
@@ -90,7 +88,7 @@
     <section class="setup-section grade-level-section" x-show="form.student_type" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
         <x-form-field-label required>Grade Level</x-form-field-label>
         <select name="grade_level" class="select-input" :class="{ 'is-invalid-field': isFieldInvalid('grade_level') }" x-model="form.grade_level" @change="loadShiftsForGrade()">
-            <option value="">Select</option>
+            <option value="">Select Grade Level</option>
             @foreach($gradeLevels as $grade)
                 <option value="{{ $grade->name }}">{{ $grade->name }}</option>
             @endforeach

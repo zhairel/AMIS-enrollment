@@ -1074,7 +1074,6 @@ body {
 
 .enrollment-form-container .plain-input:not([type="email"]),
 .enrollment-form-container .textarea-input,
-.enrollment-form-container .select-input,
 .choice-card-copy strong,
 .shift-card-title {
     text-transform: uppercase;

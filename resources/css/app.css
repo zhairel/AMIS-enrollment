@@ -19,7 +19,7 @@
 }
 
 /* All Buttons Always Uppercase */
-button,
+button:not(.choice-card):not(.shift-card),
 input[type="submit"],
 input[type="button"],
 .btn,
@@ -38,4 +38,12 @@ input[type="button"],
 .duplicate-btn-confirm {
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
+}
+
+.choice-card-copy small,
+.shift-card-copy,
+.shift-card-local-time,
+.shift-slot-badge {
+    text-transform: none !important;
+    letter-spacing: normal !important;
 }
