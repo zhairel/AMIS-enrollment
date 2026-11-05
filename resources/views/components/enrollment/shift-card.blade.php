@@ -7,32 +7,19 @@
     'available' => 0,
 ])
 
-@php
-    $available = max(0, (int) $available);
-    $capacity = max(1, (int) $capacity);
-    $filled = min(100, (int) round((($capacity - $available) / $capacity) * 100));
-    $fillClass = 'fill-' . (int) (round($filled / 10) * 10);
-    $isFull = $available <= 0;
-    $isLimited = !$isFull && $available <= 5;
-    $slotLabel = $isFull ? 'Full' : ($isLimited ? 'Limited slots' : 'Open slots');
-@endphp
-
 <button
     type="button"
-    @if ($isFull) disabled @else @click="toggleLearningShift('{{ $shift }}')" @endif
-    class="shift-card {{ $isFull ? 'is-full' : '' }} {{ $isLimited ? 'is-limited' : '' }}"
+    @click="toggleLearningShift('{{ $shift }}')"
+    class="shift-card"
     :class="{ 'is-selected': form.learning_mode_shift === '{{ $shift }}' }"
 >
     <div class="shift-card-topline">
         <div class="shift-card-title">{{ $shift }}</div>
-        <span class="shift-slot-badge">{{ $slotLabel }}</span>
-    </div>
-
-    <div class="shift-slot-meter" aria-label="{{ $available }} slots available out of {{ $capacity }}">
-        <span class="shift-slot-meter-fill {{ $fillClass }}"></span>
-    </div>
-    <div class="shift-slot-copy">
-        <strong>{{ $available }}</strong> of {{ $capacity }} slots available
+        <span class="choice-card-radio" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </span>
     </div>
 
     <div class="shift-card-primary-time">

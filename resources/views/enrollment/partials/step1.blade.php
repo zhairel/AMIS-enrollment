@@ -175,19 +175,16 @@
                     </template>
                     <template x-for="shift in gradeShifts" :key="shift.name">
                         <button type="button"
-                            :disabled="shift.is_full"
                             @click="toggleLearningShift(shift.name)"
                             class="shift-card"
-                            :class="{ 'is-selected': form.learning_mode_shift === shift.name, 'is-full': shift.is_full, 'is-limited': !shift.is_full && shift.available <= 5 }">
+                            :class="{ 'is-selected': form.learning_mode_shift === shift.name }">
                             <div class="shift-card-topline">
                                 <div class="shift-card-title" x-text="shift.name"></div>
-                                <span class="shift-slot-badge" x-text="shift.is_full ? 'Full' : (shift.available <= 5 ? 'Limited slots' : 'Open slots')"></span>
-                            </div>
-                            <div class="shift-slot-meter">
-                                <span class="shift-slot-meter-fill" :style="'width:' + Math.min(100, Math.round(((shift.capacity - shift.available) / shift.capacity) * 100)) + '%'"></span>
-                            </div>
-                            <div class="shift-slot-copy">
-                                <strong x-text="shift.available"></strong> of <span x-text="shift.capacity"></span> slots available
+                                <span class="choice-card-radio" aria-hidden="true">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </span>
                             </div>
                             <div class="shift-card-primary-time">
                                 <img src="https://flagcdn.com/16x12/ph.png" width="16" height="12" alt="PH" class="flag-icon">

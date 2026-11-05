@@ -426,7 +426,8 @@
             transition: all 0.2s ease;
         }
 
-        .choice-card.is-selected .choice-card-radio {
+        .choice-card.is-selected .choice-card-radio,
+        .shift-card.is-selected .choice-card-radio {
             border-color: #059669 !important;
             background: #059669 !important;
             color: #ffffff !important;

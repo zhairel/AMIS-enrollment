@@ -45,12 +45,12 @@
             Use one parent email for coordination. For another child under the same parent, contact admissions so the records are grouped correctly.
         </x-dashboard.guidance-note>
 
-        <x-dashboard.guidance-note title="Schedule and slots">
+        <x-dashboard.guidance-note title="Schedule and sectioning">
             <x-slot:icon>
                 <circle cx="12" cy="12" r="10"/>
                 <path d="M12 6v6l4 2"/>
             </x-slot:icon>
-            Online classes follow Philippine Standard Time. If a section is full, admissions may assign the student to the next available shift.
+            Online classes follow Philippine Standard Time. Shift preferences and section assignments are arranged by the administration.
         </x-dashboard.guidance-note>
 
         <x-dashboard.guidance-note title="Privacy and payment agreement">
