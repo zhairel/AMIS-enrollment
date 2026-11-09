@@ -343,10 +343,6 @@ class EnrollmentApplicationService
             $requirements['Report card or signed temporary proof'] = $applicant->report_card_url ?: $applicant->affidavit_url;
         }
 
-        if (str_starts_with((string) $applicant->learning_mode, 'Flexible Online Learning')) {
-            $requirements['Timezone'] = $applicant->timezone;
-        }
-
         return collect($requirements)
             ->filter(fn ($value) => $value === null || $value === '')
             ->keys()

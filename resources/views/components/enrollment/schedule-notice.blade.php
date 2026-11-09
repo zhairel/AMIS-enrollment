@@ -7,7 +7,7 @@
     <div>
         <div class="schedule-notice-title">Important: Online Class Schedule Notice</div>
         <div class="schedule-notice-copy">
-            Class schedules follow <strong>Philippine Time (PHT / UTC+8)</strong>. Your local time is shown only as a guide. Shift preferences and section assignments are arranged by the administration based on student enrollment and timezone compatibility.
+            Class schedules follow <strong>Philippine Time (PHT / UTC+8)</strong>. Shift preferences and section assignments are arranged by the administration based on student enrollment.
         </div>
     </div>
 </div>

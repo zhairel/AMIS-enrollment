@@ -124,10 +124,6 @@ class SubmitEnrollmentRequest extends FormRequest
                 );
             }
 
-            if (str_starts_with((string) $mode, 'Flexible Online Learning') && !$this->filled('timezone')) {
-                $validator->errors()->add('timezone', 'Please select your timezone.');
-            }
-
             $hasReportCard = $this->hasFile('report_card') || filled($applicant?->report_card_url);
             $hasTemporaryProof = $this->hasFile('affidavit') || filled($applicant?->affidavit_url);
             $gradeLevel = strtolower((string) $this->input('grade_level'));

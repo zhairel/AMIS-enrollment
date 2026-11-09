@@ -203,7 +203,6 @@ function enrollmentForm() {
                 if (field === 'student_type') return !this.form.student_type;
                 if (field === 'grade_level') return !this.form.grade_level;
                 if (field === 'learning_mode_main') return !this.form.learning_mode_main;
-                if (field === 'timezone') return this.form.learning_mode_main === 'Flexible Online Learning' && !this.form.timezone;
                 if (field === 'learning_mode_shift') return this.form.learning_mode_main === 'Flexible Online Learning' && !this.form.learning_mode_shift;
             }
             if (this.step === 2) {
@@ -1010,9 +1009,6 @@ function enrollmentForm() {
                 if (!this.form.student_type) return 'Please answer if the student is OLD, NEW, or a TRANSFER student.';
                 if (!this.form.grade_level) return 'Grade level is required.';
                 if (!this.form.learning_mode_main) return 'Please select a learning modality.';
-                if (this.form.learning_mode_main === 'Flexible Online Learning' && !this.form.timezone) {
-                    return 'Please select your timezone.';
-                }
                 if (this.form.learning_mode_main === 'Flexible Online Learning' && !this.form.learning_mode_shift) {
                     return 'Please choose an available online learning shift.';
                 }
@@ -1119,7 +1115,7 @@ function enrollmentForm() {
                 return !!this.form.student_type
                     && !!this.form.grade_level
                     && !!this.form.learning_mode_main
-                    && (this.form.learning_mode_main !== 'Flexible Online Learning' || (!!this.form.timezone && !!this.form.learning_mode_shift));
+                    && (this.form.learning_mode_main !== 'Flexible Online Learning' || !!this.form.learning_mode_shift);
             }
             if (num === 2) {
                 return !!this.form.last_name.trim()
@@ -1329,10 +1325,6 @@ function enrollmentForm() {
                     if (grids[1]) invalidElements.push(grids[1]);
                 }
                 if (this.form.learning_mode_main === 'Flexible Online Learning') {
-                    if (!this.form.timezone) {
-                        const tzSelect = container.querySelector('.timezone-control select');
-                        if (tzSelect) invalidElements.push(tzSelect);
-                    }
                     if (!this.form.learning_mode_shift) {
                         const shiftGrid = container.querySelector('.shift-card-grid');
                         if (shiftGrid) invalidElements.push(shiftGrid);

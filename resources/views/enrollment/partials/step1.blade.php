@@ -141,28 +141,6 @@
         </div>
 
         <div x-show="form.learning_mode_main === 'Flexible Online Learning'" x-cloak>
-            <div class="setup-section setup-section-nested timezone-picker">
-                <x-form-field-label required>Your timezone</x-form-field-label>
-                <div class="timezone-control">
-                    <select class="select-input" :class="{ 'is-invalid-field': isFieldInvalid('timezone') }" x-model="form.timezone">
-                        <option value="">Select timezone</option>
-                        <option value="Asia/Manila">Philippines (PHT / UTC+8)</option>
-                        <option value="Asia/Dubai">UAE / Dubai (UTC+4)</option>
-                        <option value="Asia/Riyadh">Saudi Arabia / Riyadh (UTC+3)</option>
-                        <option value="Asia/Qatar">Qatar / Doha (UTC+3)</option>
-                        <option value="Asia/Kuwait">Kuwait (UTC+3)</option>
-                        <option value="America/New_York">Eastern Time - US/Canada</option>
-                        <option value="America/Los_Angeles">Pacific Time - US/Canada</option>
-                        <option value="Other">Others</option>
-                    </select>
-                    <button type="button" class="location-button" @click="detectTimezone()" :disabled="detectingTimezone" aria-label="Detect timezone">
-                        <svg class="location-button-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M2 12h4"/><path d="M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>
-                        <span x-text="detectingTimezone ? 'Detecting...' : 'Detect timezone'"></span>
-                    </button>
-                </div>
-                <p class="field-hint" x-show="timezoneMessage" x-text="timezoneMessage"></p>
-            </div>
-
             <div class="setup-section setup-section-nested setup-shift-section">
                 <x-form-field-label required>Which shift do you prefer?</x-form-field-label>
 
@@ -189,10 +167,6 @@
                             <div class="shift-card-primary-time">
                                 <img src="https://flagcdn.com/16x12/ph.png" width="16" height="12" alt="PH" class="flag-icon">
                                 <span x-text="shift.pht_time_range"></span> <span>(PHT / UTC+8)</span>
-                            </div>
-                            <div class="shift-card-local-time">
-                                <span>Local time guide</span>
-                                <strong x-text="formatShiftTime(shift.start_time, shift.end_time)"></strong>
                             </div>
                         </button>
                     </template>

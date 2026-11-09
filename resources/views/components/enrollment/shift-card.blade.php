@@ -26,9 +26,4 @@
         <img src="https://flagcdn.com/16x12/ph.png" width="16" height="12" alt="PH" class="flag-icon">
         {{ $phTime }} <span>(PHT / UTC+8)</span>
     </div>
-
-    <div class="shift-card-local-time">
-        <span>Local time guide</span>
-        <strong x-text="formatShiftTime('{{ $start }}', '{{ $end }}')"></strong>
-    </div>
 </button>
