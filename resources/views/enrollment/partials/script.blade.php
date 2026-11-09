@@ -77,13 +77,26 @@ function enrollmentForm() {
         detectingTimezone: false,
         timezoneMessage: '',
         error: '',
-        searchStudentNumber: '',
-        searchDOB: '',
+        searchStudentNumber: @js(old("amis_student_id", $applicant?->amis_student_id ?: ($applicant?->lrn && $applicant?->lrn !== "NA" ? $applicant?->lrn : ""))),
+        searchDOB: @js(old("date_of_birth", $applicant?->date_of_birth?->format("Y-m-d") ?? "")),
         searchingStudent: false,
         searchError: '',
-        searchSuccess: '',
+        searchSuccess: @js($applicant && $applicant->student_type === 'Old' && ($applicant->amis_student_id || ($applicant->lrn && $applicant->lrn !== 'NA')) ? ('✓ Student record active (' . ($applicant->amis_student_id ?: $applicant->lrn) . ')' . ($completedGradeLevel ? ' • Advancing to ' . ($applicant->grade_level ?? '') : '')) : ''),
         showOldStudentModal: false,
-        foundStudent: null,
+        foundStudent: @js($applicant && $applicant->student_type === 'Old' && ($applicant->amis_student_id || ($applicant->lrn && $applicant->lrn !== 'NA')) ? [
+            'student_number' => $applicant->amis_student_id ?: $applicant->lrn,
+            'lrn' => $applicant->lrn === 'NA' ? '' : ($applicant->lrn ?? ''),
+            'full_name' => trim(($applicant->first_name ?? '') . ' ' . ($applicant->last_name ?? '')),
+            'first_name' => $applicant->first_name ?? '',
+            'last_name' => $applicant->last_name ?? '',
+            'middle_name' => $applicant->middle_name ?? '',
+            'previous_grade_level' => $completedGradeLevel,
+            'grade_level' => $applicant->grade_level,
+            'next_grade_level' => $applicant->grade_level,
+            'date_of_birth' => $applicant->date_of_birth?->format('Y-m-d') ?? '',
+            'gender' => $applicant->gender ?? '',
+            'photo_url' => $applicant->photo_2x2_url ? asset('storage/' . ltrim($applicant->photo_2x2_url, '/')) : null,
+        ] : null),
         completedGradeLevel: @json($completedGradeLevel ?? null),
         disabledGrades: @json($disabledGradeLevels ?? []),
         rejectionFixSteps: REJECTION_FIX_STEPS,
@@ -1520,10 +1533,14 @@ function enrollmentForm() {
                 // Auto-fill form fields
                 if (data.student) {
                     Object.keys(data.student).forEach(key => {
-                        if (key in this.form) {
+                        if (key in this.form && data.student[key] !== null && data.student[key] !== undefined) {
                             this.form[key] = data.student[key];
                         }
                     });
+                    if (data.student.amis_student_id) {
+                        this.form.amis_student_id = data.student.amis_student_id;
+                        this.searchStudentNumber = data.student.amis_student_id;
+                    }
                 }
 
                 // Explicitly ensure advancing to next grade
@@ -1733,6 +1750,11 @@ function enrollmentForm() {
             Alpine.store('enrollmentGuide').gender = this.form.gender || '';
             this.$watch('form.gender', value => {
                 Alpine.store('enrollmentGuide').gender = value || '';
+            });
+            this.$watch('searchStudentNumber', value => {
+                if (value && this.form.student_type === 'Old') {
+                    this.form.amis_student_id = value.trim();
+                }
             });
 
             // If there are server-side validation errors, pop up the dedicated error modal

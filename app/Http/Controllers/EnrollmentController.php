@@ -56,12 +56,18 @@ class EnrollmentController extends Controller
 
         $completedGradeLevel = null;
         $disabledGradeLevels = [];
-        if ($applicant && $applicant->student_type === 'Old' && $applicant->amis_student_id) {
-            $oldStudent = \App\Models\Student::where('student_number', $applicant->amis_student_id)->first();
-            if ($oldStudent && $oldStudent->grade_level) {
-                $prog = self::getGradeProgression($oldStudent->grade_level);
-                $completedGradeLevel = $prog['previous'];
-                $disabledGradeLevels = $prog['disabled'];
+        if ($applicant && $applicant->student_type === 'Old') {
+            $identifier = $applicant->amis_student_id ?: ($applicant->lrn !== 'NA' ? $applicant->lrn : null);
+            if ($identifier) {
+                $oldStudent = \App\Models\Student::where('student_number', $identifier)
+                    ->orWhere('student_number', str_replace('-', '', $identifier))
+                    ->orWhereHas('applicant', fn($q) => $q->where('lrn', $identifier))
+                    ->first();
+                if ($oldStudent && $oldStudent->grade_level) {
+                    $prog = self::getGradeProgression($oldStudent->grade_level);
+                    $completedGradeLevel = $prog['previous'];
+                    $disabledGradeLevels = $prog['disabled'];
+                }
             }
         }
 

@@ -52,6 +52,7 @@
                            class="plain-input"
                            style="text-transform: uppercase; font-weight: 600;"
                            :disabled="searchingStudent"
+                           @input="form.amis_student_id = searchStudentNumber.trim()"
                            @keydown.enter.prevent="searchAndAutofillStudent()">
                 </div>
                 <div>
@@ -62,6 +63,7 @@
                            class="date-input"
                            style="font-weight: 600;"
                            :disabled="searchingStudent"
+                           @input="if (searchDOB) form.date_of_birth = searchDOB"
                            @keydown.enter.prevent="searchAndAutofillStudent()">
                 </div>
             </div>
