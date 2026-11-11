@@ -10,8 +10,8 @@ class ApplicantOnly
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::check() || Auth::user()->role !== 'applicant') {
-            abort(403, 'Access restricted to applicants only.');
+        if (!Auth::check() || !in_array(Auth::user()->role, ['applicant', 'admin', 'staff', 'superadmin'], true)) {
+            abort(403, 'Access restricted to applicants and administrators.');
         }
         return $next($request);
     }
