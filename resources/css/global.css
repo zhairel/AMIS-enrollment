@@ -317,8 +317,10 @@ body {
 .field-label {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    min-height: 22px;
+    margin-bottom: 0.45rem;
     color: #0f172a;
     font-size: 0.74rem;
     font-weight: 850;
@@ -390,6 +392,76 @@ body {
 .student-info-flow {
     display: grid;
     gap: 1.35rem;
+}
+
+.enrollment-section-card {
+    display: grid;
+    gap: 1.15rem;
+    padding: 1.35rem 1.4rem;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+}
+
+.enrollment-section-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.enrollment-section-card-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.enrollment-section-card-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: #059669;
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.enrollment-section-card-title {
+    margin: 0;
+    color: #0f172a;
+    font-size: 0.96rem;
+    font-weight: 850;
+    line-height: 1.25;
+}
+
+.enrollment-section-card-subtitle {
+    margin: 0.15rem 0 0;
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.35;
+}
+
+.enrollment-two-col-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.05rem 1.2rem;
+    align-items: start;
+}
+
+@media (max-width: 760px) {
+    .enrollment-two-col-grid {
+        grid-template-columns: 1fr;
+    }
+    .enrollment-section-card {
+        padding: 1rem;
+    }
 }
 
 .student-section {

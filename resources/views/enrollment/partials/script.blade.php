@@ -273,6 +273,11 @@ function enrollmentForm() {
                     this.showToast(val, 'error');
                 }
             });
+            if (this.form.gender) {
+                const g = this.form.gender.trim().toLowerCase();
+                if (g === 'male' || g === 'm') this.form.gender = 'Male';
+                else if (g === 'female' || g === 'f') this.form.gender = 'Female';
+            }
             if (this.completedGradeLevel && (!this.disabledGrades || !this.disabledGrades.length)) {
                 this.disabledGrades = this.getGradeProgression(this.completedGradeLevel).disabled;
             }
@@ -1842,13 +1847,33 @@ function enrollmentForm() {
                 this.completedGradeLevel = prog.previous;
                 this.disabledGrades = data.student.disabled_grade_levels || prog.disabled;
 
-                // Auto-fill form fields
+                // Auto-fill form fields without wiping defaults with empty strings
                 if (data.student) {
+                    const preserveIfEmpty = ['country', 'mobile_country_code', 'parent_country_code'];
                     Object.keys(data.student).forEach(key => {
                         if (key in this.form && data.student[key] !== null && data.student[key] !== undefined) {
-                            this.form[key] = data.student[key];
+                            const val = typeof data.student[key] === 'string' ? data.student[key].trim() : data.student[key];
+                            if (preserveIfEmpty.includes(key) && val === '') {
+                                return;
+                            }
+                            this.form[key] = val;
                         }
                     });
+                    if (this.form.gender) {
+                        const g = String(this.form.gender).trim().toLowerCase();
+                        if (g === 'male' || g === 'm') this.form.gender = 'Male';
+                        else if (g === 'female' || g === 'f') this.form.gender = 'Female';
+                    }
+                    if (!this.form.country) this.form.country = 'Philippines';
+                    this.form.country_choice = this.form.country;
+                    if (!this.form.mobile_country_code) this.form.mobile_country_code = '+63';
+                    if (!this.form.parent_country_code) this.form.parent_country_code = '+63';
+                    if (this.form.mobile_number) {
+                        this.form.mobile_number = this.formatPhoneNumber(String(this.form.mobile_number), this.form.mobile_country_code);
+                    }
+                    if (this.form.parent_mobile) {
+                        this.form.parent_mobile = this.formatPhoneNumber(String(this.form.parent_mobile), this.form.parent_country_code);
+                    }
                     if (data.student.amis_student_id) {
                         this.form.amis_student_id = data.student.amis_student_id;
                         this.searchStudentNumber = data.student.amis_student_id;

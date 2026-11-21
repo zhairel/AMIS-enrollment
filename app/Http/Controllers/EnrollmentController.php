@@ -1004,6 +1004,147 @@ class EnrollmentController extends Controller
         $nextGradeLevel = $progression['next'];
         $disabledGrades = $progression['disabled'];
 
+        // Normalize Gender ('male'/'MALE'/'M' -> 'Male', 'female'/'FEMALE'/'F' -> 'Female')
+        $rawGender = strtolower(trim((string) $applicant->gender));
+        $normalizedGender = match (true) {
+            in_array($rawGender, ['male', 'm', 'boy'], true) => 'Male',
+            in_array($rawGender, ['female', 'f', 'girl'], true) => 'Female',
+            default => $applicant->gender ?: 'Male',
+        };
+
+        // Resolve sibling record for fallback if parent or address fields were left empty during 2026-2027 batch import
+        $sibling = null;
+        if (
+            (empty($applicant->father_first_name) && empty($applicant->mother_first_name))
+            || empty($applicant->place_of_birth)
+        ) {
+            $sibling = EnrollmentApplicant::where('id', '!=', $applicant->id)
+                ->where('last_name', $applicant->last_name)
+                ->where(function ($q) {
+                    $q->whereNotNull('father_first_name')->where('father_first_name', '!=', '')
+                        ->orWhere(function ($q2) {
+                            $q2->whereNotNull('mother_first_name')->where('mother_first_name', '!=', '');
+                        })
+                        ->orWhere(function ($q3) {
+                            $q3->whereNotNull('place_of_birth')->where('place_of_birth', '!=', '');
+                        });
+                })
+                ->latest('id')
+                ->first();
+        }
+
+        // Normalize Address, City, Region/Province, Postal Code, Country, and Place of Birth
+        $rawAddress = trim((string) ($applicant->street_address ?: ($applicant->address ?: ($applicant->home_address ?: ($sibling?->street_address ?: $sibling?->address)))));
+        $streetAddress = $rawAddress !== '' ? $rawAddress : 'DAVAO CITY';
+        $country = trim((string) ($applicant->country ?: ($sibling?->country ?: 'Philippines')));
+        $stateProvince = trim((string) ($applicant->state_province ?: ($sibling?->state_province ?? '')));
+        $city = trim((string) ($applicant->city ?: ($sibling?->city ?? '')));
+        $postalCode = trim((string) ($applicant->postal_code ?: ($sibling?->postal_code ?? '')));
+
+        $upperAddr = strtoupper($streetAddress . ' ' . ($applicant->address ?? ''));
+        if ($city === '') {
+            if (preg_match('/\b(DAVAO|TALOMO|BUHANGIN|MA-A|MAA|BANGKAL|MATINA|TORIL|TUGBOK|BANKEROHAN|CATALUNAN|SASA|PANACAN|TIBUNGCO|CALINAN|MINTAL|BUCANA|WAAN|ISLA VERDE|AGDAO|CABANTIAN|INDANGAN|MANDUG|LANANG|BAJADA|OBRERO|ECOLAND|ULAS)\b/i', $upperAddr)) {
+                $city = 'DAVAO CITY';
+                $stateProvince = $stateProvince ?: 'DAVAO REGION (REGION XI)';
+                $postalCode = $postalCode ?: '8000';
+            } elseif (str_contains($upperAddr, 'COTABATO')) {
+                $city = 'COTABATO CITY';
+                $stateProvince = $stateProvince ?: 'BARMM';
+            } elseif (str_contains($upperAddr, 'TAGUM')) {
+                $city = 'TAGUM CITY';
+                $stateProvince = $stateProvince ?: 'DAVAO REGION (REGION XI)';
+            } elseif (str_contains($upperAddr, 'GENERAL SANTOS') || str_contains($upperAddr, 'GENSAN')) {
+                $city = 'GENERAL SANTOS CITY';
+                $stateProvince = $stateProvince ?: 'SOCCSKSARGEN (REGION XII)';
+            } elseif (str_contains($upperAddr, 'MARAWI')) {
+                $city = 'MARAWI CITY';
+                $stateProvince = $stateProvince ?: 'BARMM';
+            } elseif (str_contains($upperAddr, 'ZAMBOANGA')) {
+                $city = 'ZAMBOANGA CITY';
+                $stateProvince = $stateProvince ?: 'ZAMBOANGA PENINSULA (REGION IX)';
+            } elseif (str_contains($upperAddr, 'QUEZON CITY')) {
+                $city = 'QUEZON CITY';
+                $stateProvince = $stateProvince ?: 'NATIONAL CAPITAL REGION (NCR)';
+            } elseif (str_contains($upperAddr, 'MANILA')) {
+                $city = 'MANILA';
+                $stateProvince = $stateProvince ?: 'NATIONAL CAPITAL REGION (NCR)';
+            } else {
+                $city = 'DAVAO CITY';
+                $stateProvince = $stateProvince ?: 'DAVAO REGION (REGION XI)';
+            }
+        }
+
+        $placeOfBirth = trim((string) ($applicant->place_of_birth ?: ($sibling?->place_of_birth ?: ($city ?: 'DAVAO CITY'))));
+        $religion = trim((string) ($applicant->religion ?: ($sibling?->religion ?: 'ISLAM')));
+
+        // Normalize Father / Mother Names (recover from sibling or emergency_name if missing in 2026-2027 import)
+        $fatherFirst = trim((string) ($applicant->father_first_name ?: ($sibling?->father_first_name ?? '')));
+        $fatherMiddle = trim((string) ($applicant->father_middle_name ?: ($sibling?->father_middle_name ?? '')));
+        $fatherLast = trim((string) ($applicant->father_last_name ?: ($sibling?->father_last_name ?? '')));
+        $motherFirst = trim((string) ($applicant->mother_first_name ?: ($sibling?->mother_first_name ?? '')));
+        $motherMiddle = trim((string) ($applicant->mother_middle_name ?: ($sibling?->mother_middle_name ?? '')));
+        $motherLast = trim((string) ($applicant->mother_last_name ?: ($sibling?->mother_last_name ?? '')));
+
+        if ($fatherFirst !== '' && $fatherLast === '') {
+            $parts = preg_split('/\s+/', $fatherFirst) ?: [];
+            if (count($parts) >= 2) {
+                $fatherLast = array_pop($parts);
+                $fatherFirst = implode(' ', $parts);
+            } else {
+                $fatherLast = (string) $applicant->last_name;
+            }
+        }
+        if ($motherFirst !== '' && $motherLast === '') {
+            $parts = preg_split('/\s+/', $motherFirst) ?: [];
+            if (count($parts) >= 2) {
+                $motherLast = array_pop($parts);
+                $motherFirst = implode(' ', $parts);
+            } else {
+                $motherLast = (string) $applicant->last_name;
+            }
+        }
+
+        if ($fatherFirst === '' && $motherFirst === '' && filled($applicant->emergency_name)) {
+            $emName = trim(preg_replace('/^FAMILY\s+/i', '', (string) $applicant->emergency_name));
+            $emRel = strtoupper(trim((string) $applicant->emergency_relationship));
+            $tokens = array_values(array_filter(preg_split('/\s+/', $emName) ?: []));
+
+            $parsedFirst = $tokens[0] ?? 'PARENT';
+            $parsedMiddle = '';
+            $parsedLast = (string) ($applicant->last_name ?: 'GUARDIAN');
+
+            if (count($tokens) === 2) {
+                $parsedFirst = $tokens[0];
+                $parsedLast = $tokens[1];
+            } elseif (count($tokens) >= 3) {
+                $parsedLast = array_pop($tokens);
+                $midCandidate = end($tokens);
+                if ($midCandidate && (strlen(rtrim($midCandidate, '.')) <= 2 || str_ends_with($midCandidate, '.'))) {
+                    $parsedMiddle = array_pop($tokens);
+                }
+                $parsedFirst = implode(' ', $tokens);
+            }
+
+            if (str_contains($emRel, 'FATHER') || str_contains($emRel, 'UNCLE') || str_contains($emRel, 'GRANDFATHER')) {
+                $fatherFirst = mb_strtoupper($parsedFirst);
+                $fatherMiddle = mb_strtoupper($parsedMiddle);
+                $fatherLast = mb_strtoupper($parsedLast);
+            } else {
+                $motherFirst = mb_strtoupper($parsedFirst);
+                $motherMiddle = mb_strtoupper($parsedMiddle);
+                $motherLast = mb_strtoupper($parsedLast);
+            }
+        }
+
+        $mobileCode = trim((string) ($applicant->mobile_country_code ?: '+63'));
+        $parentCode = trim((string) ($applicant->parent_country_code ?: '+63'));
+        $mobileNumber = trim((string) ($applicant->mobile_number ?: ($applicant->parent_mobile ?: ($applicant->emergency_phone ?: ''))));
+        $parentMobile = trim((string) ($applicant->parent_mobile ?: ($applicant->mobile_number ?: ($applicant->emergency_phone ?: ''))));
+        $emergencyName = trim((string) ($applicant->emergency_name ?: trim("{$motherFirst} {$motherLast}") ?: trim("{$fatherFirst} {$fatherLast}") ?: "FAMILY {$applicant->last_name}"));
+        $emergencyRel = trim((string) ($applicant->emergency_relationship ?: ($motherFirst !== '' ? 'Mother' : 'Parent')));
+        $emergencyPhone = trim((string) ($applicant->emergency_phone ?: ($parentMobile ?: $mobileNumber)));
+        $medicalConcern = trim((string) ($applicant->medical_has_concern ?: 'No'));
+
         // Return applicant data for auto-filling
         return response()->json([
             'success' => true,
@@ -1017,45 +1158,48 @@ class EnrollmentController extends Controller
                 'suffix' => $applicant->suffix,
                 'full_name' => $fullName,
                 'photo_url' => $photoUrl,
+                'has_existing_photo' => !empty($applicant->photo_2x2_url),
                 'previous_grade_level' => $progression['previous'] ?: $previousGradeLevel,
                 'grade_level' => $nextGradeLevel,
                 'next_grade_level' => $nextGradeLevel,
                 'disabled_grade_levels' => $disabledGrades,
-                'gender' => $applicant->gender,
+                'gender' => $normalizedGender,
                 'date_of_birth' => $formattedDob,
-                'place_of_birth' => $applicant->place_of_birth,
-                'religion' => $applicant->religion,
-                'ethnicity' => $applicant->ethnicity,
-                'country' => $applicant->country,
-                'state_province' => $applicant->state_province,
-                'city' => $applicant->city,
-                'street_address' => $applicant->street_address,
-                'postal_code' => $applicant->postal_code,
-                'address' => $applicant->address,
+                'place_of_birth' => $placeOfBirth,
+                'religion' => $religion,
+                'ethnicity' => $applicant->ethnicity ?: ($sibling?->ethnicity ?? ''),
+                'country' => $country,
+                'state_province' => $stateProvince,
+                'city' => $city,
+                'street_address' => $streetAddress,
+                'postal_code' => $postalCode,
+                'address' => $applicant->address ?: $streetAddress,
                 'email' => $applicant->email,
-                'mobile_country_code' => $applicant->mobile_country_code,
-                'mobile_number' => $applicant->mobile_number,
-                'father_last_name' => $applicant->father_last_name,
-                'father_first_name' => $applicant->father_first_name,
-                'father_middle_name' => $applicant->father_middle_name,
-                'father_occupation' => $applicant->father_occupation,
-                'mother_last_name' => $applicant->mother_last_name,
-                'mother_first_name' => $applicant->mother_first_name,
-                'mother_middle_name' => $applicant->mother_middle_name,
-                'mother_occupation' => $applicant->mother_occupation,
-                'home_address' => $applicant->home_address,
-                'home_state_province' => $applicant->home_state_province,
-                'home_city' => $applicant->home_city,
-                'home_street_address' => $applicant->home_street_address,
-                'home_postal_code' => $applicant->home_postal_code,
-                'parent_country_code' => $applicant->parent_country_code,
-                'parent_mobile' => $applicant->parent_mobile,
-                'parent_email' => $applicant->parent_email,
-                'emergency_name' => $applicant->emergency_name,
-                'emergency_relationship' => $applicant->emergency_relationship,
-                'emergency_phone' => $applicant->emergency_phone,
+                'mobile_country_code' => $mobileCode,
+                'mobile_number' => $mobileNumber,
+                'father_last_name' => $fatherLast,
+                'father_first_name' => $fatherFirst,
+                'father_middle_name' => $fatherMiddle,
+                'father_occupation' => $applicant->father_occupation ?: ($sibling?->father_occupation ?? ''),
+                'mother_last_name' => $motherLast,
+                'mother_first_name' => $motherFirst,
+                'mother_middle_name' => $motherMiddle,
+                'mother_occupation' => $applicant->mother_occupation ?: ($sibling?->mother_occupation ?? ''),
+                'home_address' => $applicant->home_address ?: $streetAddress,
+                'home_state_province' => $applicant->home_state_province ?: $stateProvince,
+                'home_city' => $applicant->home_city ?: $city,
+                'home_street_address' => $applicant->home_street_address ?: $streetAddress,
+                'home_postal_code' => $applicant->home_postal_code ?: $postalCode,
+                'parent_country_code' => $parentCode,
+                'parent_mobile' => $parentMobile,
+                'parent_email' => $applicant->parent_email ?: ($sibling?->parent_email ?? ''),
+                'facebook' => $applicant->facebook ?: ($sibling?->facebook ?? ''),
+                'whatsapp' => $applicant->whatsapp ?: ($sibling?->whatsapp ?? ''),
+                'emergency_name' => $emergencyName,
+                'emergency_relationship' => $emergencyRel,
+                'emergency_phone' => $emergencyPhone,
                 'emergency_instructions' => $applicant->emergency_instructions,
-                'medical_has_concern' => $applicant->medical_has_concern,
+                'medical_has_concern' => $medicalConcern,
                 'allergies' => $applicant->allergies,
                 'current_medications' => $applicant->current_medications,
                 'health_conditions' => $applicant->health_conditions,
