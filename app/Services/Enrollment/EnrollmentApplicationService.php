@@ -129,6 +129,13 @@ class EnrollmentApplicationService
 
         $applicant = $this->resolveEditableApplication($user, $request);
 
+        if (!$applicant) {
+            $applicant = $user->enrollmentApplicants()
+                ->whereIn('status', self::EDITABLE_STATUSES)
+                ->latest()
+                ->first();
+        }
+
         if ($applicant && in_array($applicant->status, self::FINAL_STATUSES, true)) {
             return $applicant;
         }
@@ -158,17 +165,7 @@ class EnrollmentApplicationService
         if ($applicant) {
             $applicant->update($data);
         } else {
-            $recent = $user->enrollmentApplicants()
-                ->whereIn('status', self::EDITABLE_STATUSES)
-                ->latest()
-                ->first();
-
-            if ($recent) {
-                $recent->update($data);
-                $applicant = $recent;
-            } else {
-                $applicant = EnrollmentApplicant::create($data);
-            }
+            $applicant = EnrollmentApplicant::create($data);
         }
 
         $this->ensureFamilyApplication($applicant, $user);
@@ -602,31 +599,16 @@ class EnrollmentApplicationService
 
     private function findDuplicate(array $data, ?EnrollmentApplicant $currentApplicant = null): ?EnrollmentApplicant
     {
-        $lastName = trim($data['last_name'] ?? '');
-        $firstName = trim($data['first_name'] ?? '');
-        $middleName = trim($data['middle_name'] ?? '');
-        $dob = $data['date_of_birth'] ?? null;
+        $duplicateData = [
+            'first_name' => $data['first_name'] ?? $currentApplicant?->first_name,
+            'last_name' => $data['last_name'] ?? $currentApplicant?->last_name,
+            'middle_name' => $data['middle_name'] ?? $currentApplicant?->middle_name,
+            'suffix' => $data['suffix'] ?? $currentApplicant?->suffix,
+            'grade_level' => $data['grade_level'] ?? $currentApplicant?->grade_level,
+            'school_year' => $data['school_year'] ?? $currentApplicant?->school_year ?? GradeShiftService::activeSchoolYear(),
+        ];
 
-        if (!$lastName || !$firstName || !$dob) {
-            return null;
-        }
-
-        $middleInitial = $middleName !== '' ? (rtrim(mb_substr(strtolower($middleName), 0, 1, 'UTF-8'), '.') . '.') : '';
-
-        return EnrollmentApplicant::query()
-            ->when($currentApplicant, fn ($q) => $q->where('id', '!=', $currentApplicant->id))
-            ->whereRaw('LOWER(TRIM(last_name)) = ?', [strtolower($lastName)])
-            ->whereRaw('LOWER(TRIM(first_name)) = ?', [strtolower($firstName)])
-            ->where(function ($q) use ($middleName, $middleInitial) {
-                if ($middleName === '') {
-                    $q->whereNull('middle_name')
-                        ->orWhereRaw('LOWER(TRIM(middle_name)) = \'\'');
-                } else {
-                    $q->whereRaw('LOWER(TRIM(middle_name)) IN (?, ?)', [strtolower($middleName), $middleInitial]);
-                }
-            })
-            ->whereDate('date_of_birth', $dob)
-            ->first();
+        return EnrollmentDuplicateChecker::findActiveDuplicate($duplicateData, $currentApplicant);
     }
 
     private function submitStatusFor(?EnrollmentApplicant $applicant): string
