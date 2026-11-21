@@ -14,13 +14,14 @@ class SaveDraftRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'photo_2x2'         => 'nullable|file|mimes:png,jpg,jpeg',
-            'birth_cert'        => 'nullable|file|mimes:png,jpg,jpeg,webp,pdf',
-            'report_card'       => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp',
-            'marriage_contract' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'medical_record'    => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'affidavit'         => 'nullable|file|mimes:pdf,jpg,jpeg,png',
-            'payment_receipt'   => 'nullable|file|mimes:png,jpg,jpeg,webp,pdf',
+            'photo_2x2'           => 'nullable|file|mimes:png,jpg,jpeg',
+            'birth_cert'          => 'nullable|file|mimes:png,jpg,jpeg,webp,pdf',
+            'report_card'         => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp',
+            'marriage_contract'   => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'medical_record'      => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'affidavit'           => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'facebook_screenshot' => 'nullable|file|mimes:png,jpg,jpeg,webp',
+            'payment_receipt'     => 'nullable|file|mimes:png,jpg,jpeg,webp,pdf',
         ];
     }
 
@@ -28,7 +29,7 @@ class SaveDraftRequest extends FormRequest
     {
         $data = $this->only([
             'student_type', 'amis_student_id', 'learning_mode', 'timezone', 'lrn', 'grade_level',
-            'last_name', 'first_name', 'middle_name', 'gender',
+            'last_name', 'first_name', 'middle_name', 'suffix', 'gender',
             'date_of_birth', 'place_of_birth', 'religion', 'ethnicity', 'country',
             'state_province', 'city', 'street_address', 'postal_code', 'address',
             'email', 'mobile_country_code', 'mobile_number',

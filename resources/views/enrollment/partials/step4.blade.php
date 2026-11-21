@@ -16,9 +16,9 @@
     </section>
 
     <section class="parent-section-card">
-        <div class="form-divider">Mother's Information</div>
+        <div class="form-divider">Mother's Information (Maiden Name)</div>
         <div class="parent-name-grid">
-            <x-form-input label="Last Name" name="mother_last_name" :col="1" x-model="form.mother_last_name" />
+            <x-form-input label="Maiden Last Name" name="mother_last_name" :col="1" x-model="form.mother_last_name" />
             <x-form-input label="First Name" name="mother_first_name" :col="1" x-model="form.mother_first_name" />
             <x-form-input label="Middle Name" name="mother_middle_name" :col="1" x-model="form.mother_middle_name" />
         </div>
@@ -67,9 +67,62 @@
                 <x-form-field-label optional>Postal Code</x-form-field-label>
                 <input type="text" name="home_postal_code" class="plain-input" placeholder="Postal code" x-model="form.home_postal_code">
             </div>
+
+            <div class="form-group address-country-field">
+                <x-form-field-label optional>Region / Province / State</x-form-field-label>
+                <div class="country-combobox" x-data="{ open: false, search: '' }" @click.outside="open = false">
+                    <button type="button" class="country-combobox-trigger" @click="open = !open; if (open) $nextTick(() => $refs.homeRegionSearch?.focus())">
+                        <span class="country-combobox-value" :style="!form.home_state_province ? 'color: #94a3b8; font-weight: 400;' : ''" x-text="form.home_state_province || 'Select or type Region / Province...'"></span>
+                        <svg class="country-combobox-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div x-show="open" x-transition class="country-combobox-menu">
+                        <input type="text" x-ref="homeRegionSearch" class="country-combobox-search" placeholder="Search or type Region / Province..." x-model="search" @keydown.escape="open = false" @keydown.enter.prevent="if (search.trim()) { selectHomeRegion(search.trim()); open = false; search = ''; }">
+                        <div class="country-combobox-list">
+                            <template x-if="search.trim() && !filteredRegions(form.home_country || form.country, search).some(r => r.toLowerCase() === search.trim().toLowerCase())">
+                                <button type="button" class="country-combobox-option" @click="selectHomeRegion(search.trim()); open = false; search = ''">
+                                    <span class="country-option-name" x-text="'Use &quot;' + search.trim().toUpperCase() + '&quot;'"></span>
+                                </button>
+                            </template>
+                            <template x-for="region in filteredRegions(form.home_country || form.country, search)" :key="'home-region-' + region">
+                                <button type="button" class="country-combobox-option" @click="selectHomeRegion(region); open = false; search = ''">
+                                    <span class="country-option-name" x-text="region"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="home_state_province" :value="form.same_as_permanent ? form.state_province : form.home_state_province">
+            </div>
+
+            <div class="form-group address-postal-field">
+                <x-form-field-label optional>City / Municipality</x-form-field-label>
+                <div class="country-combobox" x-data="{ open: false, search: '' }" @click.outside="open = false">
+                    <button type="button" class="country-combobox-trigger" @click="open = !open; if (open) $nextTick(() => $refs.homeCitySearch?.focus())">
+                        <span class="country-combobox-value" :style="!form.home_city ? 'color: #94a3b8; font-weight: 400;' : ''" x-text="form.home_city || 'Select or type City...'"></span>
+                        <svg class="country-combobox-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div x-show="open" x-transition class="country-combobox-menu">
+                        <input type="text" x-ref="homeCitySearch" class="country-combobox-search" placeholder="Search or type City..." x-model="search" @keydown.escape="open = false" @keydown.enter.prevent="if (search.trim()) { selectHomeCity(search.trim()); open = false; search = ''; }">
+                        <div class="country-combobox-list">
+                            <template x-if="search.trim() && !filteredCities(form.home_country || form.country, form.home_state_province, search).some(c => c.toLowerCase() === search.trim().toLowerCase())">
+                                <button type="button" class="country-combobox-option" @click="selectHomeCity(search.trim()); open = false; search = ''">
+                                    <span class="country-option-name" x-text="'Use &quot;' + search.trim().toUpperCase() + '&quot;'"></span>
+                                </button>
+                            </template>
+                            <template x-for="cityName in filteredCities(form.home_country || form.country, form.home_state_province, search)" :key="'home-city-' + cityName">
+                                <button type="button" class="country-combobox-option" @click="selectHomeCity(cityName); open = false; search = ''">
+                                    <span class="country-option-name" x-text="cityName"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="home_city" :value="form.same_as_permanent ? form.city : form.home_city">
+            </div>
+
             <div class="form-group address-full-field">
-                <x-form-field-label optional>Complete Address</x-form-field-label>
-                <input type="text" name="home_street_address" class="plain-input" placeholder="Permanent complete address" x-model="form.home_street_address">
+                <x-form-field-label optional>Complete Street / District / Barangay Address</x-form-field-label>
+                <input type="text" name="home_street_address" class="plain-input" placeholder="Permanent street, district, or barangay address" x-model="form.home_street_address">
             </div>
         </div>
     </section>

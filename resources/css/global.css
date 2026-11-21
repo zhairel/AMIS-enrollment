@@ -424,11 +424,18 @@ body {
     grid-column: span 12;
 }
 
-@media (min-width: 761px) {
-    .student-name-grid > :nth-child(1) { grid-column: span 4; }
+@media (min-width: 640px) and (max-width: 959px) {
+    .student-name-grid > :nth-child(1) { grid-column: span 6; }
+    .student-name-grid > :nth-child(2) { grid-column: span 6; }
+    .student-name-grid > :nth-child(3) { grid-column: span 8; }
+    .student-name-grid > :nth-child(4) { grid-column: span 4; }
+}
+
+@media (min-width: 960px) {
+    .student-name-grid > :nth-child(1) { grid-column: span 3; }
     .student-name-grid > :nth-child(2) { grid-column: span 4; }
     .student-name-grid > :nth-child(3) { grid-column: span 3; }
-    .student-name-grid > :nth-child(4) { grid-column: span 1; }
+    .student-name-grid > :nth-child(4) { grid-column: span 2; }
 }
 
 .student-origin-grid {
@@ -450,8 +457,8 @@ body {
 
 .address-contact-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(150px, 0.32fr);
-    gap: 1.05rem 1.1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.05rem 1.15rem;
 }
 
 .address-country-field {
@@ -503,8 +510,121 @@ body {
 
 .permanent-address-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(150px, 0.32fr);
-    gap: 1.05rem 1.1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.05rem 1.15rem;
+}
+
+.enrollment-stepper-nav {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.enrollment-stepper-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 40px;
+    padding: 0.4rem 0.55rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #64748b;
+    font-family: inherit;
+    font-size: 0.73rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.16s ease;
+}
+
+.enrollment-stepper-btn:hover:not(:disabled) {
+    border-color: #6ee7b7;
+    background: #f0fdf4;
+    color: #065f46;
+}
+
+.enrollment-stepper-btn.is-active {
+    border-color: #059669;
+    background: #ecfdf5;
+    color: #065f46;
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+}
+
+.enrollment-stepper-btn.is-done:not(.is-active) {
+    border-color: #a7f3d0;
+    background: #ffffff;
+    color: #047857;
+}
+
+.enrollment-stepper-btn.needs-fix {
+    border-color: #fca5a5;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.enrollment-stepper-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.enrollment-stepper-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 0.7rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.enrollment-stepper-btn.is-active .enrollment-stepper-num {
+    background: #059669;
+    color: #ffffff;
+}
+
+.enrollment-stepper-btn.is-done:not(.is-active) .enrollment-stepper-num {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.enrollment-stepper-btn.needs-fix .enrollment-stepper-num {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.enrollment-stepper-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 960px) {
+    .enrollment-stepper-nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 540px) {
+    .enrollment-stepper-nav {
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+        scrollbar-width: thin;
+    }
+    .enrollment-stepper-btn {
+        flex: 0 0 auto;
+        padding: 0.4rem 0.65rem;
+    }
 }
 
 .parent-info-flow {

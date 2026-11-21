@@ -19,12 +19,14 @@
     ];
 
     $stepNames = [
-        1 => 'Enrollment setup',
-        2 => 'Student information',
-        3 => 'Address & contact',
-        4 => 'Parent or guardian details',
-        5 => 'Medical & emergency',
-        6 => 'Documents',
+        1 => 'Step 1 of 8 • Enrollment Setup',
+        2 => 'Step 2 of 8 • Learner Personal Information',
+        3 => 'Step 3 of 8 • Present Address & Contact',
+        4 => 'Step 4 of 8 • Parent / Guardian Details',
+        5 => 'Step 5 of 8 • Health & Emergency Contact',
+        6 => 'Step 6 of 8 • School Credentials & Documents',
+        7 => 'Step 7 of 8 • Payment & Proof of Receipt',
+        8 => 'Step 8 of 8 • Final Review & Submit',
     ];
 
     $learningModeLabels = [

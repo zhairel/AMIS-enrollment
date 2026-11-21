@@ -48,4 +48,17 @@ return [
         'tenant' => env('MICROSOFT_TENANT_ID', 'common'),
     ],
 
+    'microsoft_graph_mail' => [
+        'enabled' => (bool) env('MICROSOFT_GRAPH_ENABLED', false),
+        'tenant_id' => env('MICROSOFT_GRAPH_TENANT_ID'),
+        'client_id' => env('MICROSOFT_GRAPH_CLIENT_ID'),
+        'client_secret' => env('MICROSOFT_GRAPH_CLIENT_SECRET'),
+        'senders' => array_values(array_filter([
+            env('MICROSOFT_GRAPH_PRIMARY_SENDER'),
+            env('MICROSOFT_GRAPH_BACKUP_SENDER'),
+        ])),
+        'per_minute_limit' => (int) env('MICROSOFT_GRAPH_PER_MINUTE_LIMIT', 25),
+        'daily_limit' => (int) env('MICROSOFT_GRAPH_DAILY_LIMIT', 9000),
+    ],
+
 ];

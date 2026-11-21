@@ -48,6 +48,7 @@ class MicrosoftAuthController extends Controller
                 $user = User::create([
                     'name' => mb_strtoupper($name ?: $fallbackName, 'UTF-8'),
                     'email' => $email,
+                    'username' => User::makeUniqueUsername($email),
                     'password' => bcrypt(Str::random(24)),
                     'role' => 'applicant',
                     'account_status' => 'verified',

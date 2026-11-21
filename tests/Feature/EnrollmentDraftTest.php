@@ -312,6 +312,60 @@ class EnrollmentDraftTest extends TestCase
             ->assertViewHas('applicant', fn ($applicant) => $applicant?->timezone === 'Asia/Dubai');
     }
 
+    public function test_save_draft_persists_country_region_city_suffix_and_payment_draft(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->postJson('/enroll/draft', [
+            'student_type' => 'New',
+            'grade_level' => 'Grade 4',
+            'learning_mode' => 'Flexible Online Learning - 1st Shift',
+            'first_name' => 'Ahamad',
+            'last_name' => 'Abdullah',
+            'suffix' => 'JR.',
+            'country' => 'Saudi Arabia',
+            'state_province' => 'MAKKAH (MECCA)',
+            'city' => 'MAKKAH',
+            'street_address' => 'AL AZIZIYAH DISTRICT',
+            'postal_code' => '24243',
+            'address' => 'AL AZIZIYAH DISTRICT, MAKKAH, MAKKAH (MECCA), 24243, Saudi Arabia',
+            'home_state_province' => 'MAKKAH (MECCA)',
+            'home_city' => 'JEDDAH',
+            'home_street_address' => 'AL SALAMAH DISTRICT',
+            'home_postal_code' => '23525',
+            'home_address' => 'AL SALAMAH DISTRICT, JEDDAH, MAKKAH (MECCA), 23525, Saudi Arabia',
+            'payment_method' => 'bdo',
+            'amount' => '4000.00',
+            'reference_no' => 'BDO-99887766',
+            'remarks' => 'Overseas remittance to BDO',
+            'school_year' => \App\Services\Enrollment\GradeShiftService::activeSchoolYear(),
+            'last_step' => 7,
+        ]);
+
+        $response->assertOk();
+        $applicantId = $response->json('applicant_id');
+
+        $this->assertDatabaseHas('enrollment_applicants', [
+            'id' => $applicantId,
+            'user_id' => $user->id,
+            'suffix' => 'JR.',
+            'country' => 'Saudi Arabia',
+            'state_province' => 'MAKKAH (MECCA)',
+            'city' => 'MAKKAH',
+            'street_address' => 'AL AZIZIYAH DISTRICT',
+            'postal_code' => '24243',
+            'home_state_province' => 'MAKKAH (MECCA)',
+            'home_city' => 'JEDDAH',
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'enrollment_applicant_id' => $applicantId,
+            'method' => 'bdo',
+            'reference_no' => 'BDO-99887766',
+            'remarks' => 'Overseas remittance to BDO',
+        ]);
+    }
+
     public function test_save_draft_returns_applicant_id_and_dashboard_shows_saved_draft(): void
     {
         $user = User::factory()->create();
@@ -340,7 +394,7 @@ class EnrollmentDraftTest extends TestCase
             ->get('/enrollment/dashboard?applicant=' . $applicantId)
             ->assertOk()
             ->assertSee('Enrollment Applications')
-            ->assertSee('Continue Draft');
+            ->assertSee('CONTINUE DRAFT');
     }
 
     public function test_incomplete_draft_cannot_open_payment(): void
@@ -397,6 +451,7 @@ class EnrollmentDraftTest extends TestCase
             'status' => 'ready_for_submission',
             'first_name' => 'Ready',
             'last_name' => 'Child',
+            'school_year' => \App\Services\Enrollment\GradeShiftService::activeSchoolYear(),
         ]));
 
         $this->actingAs($user)
@@ -421,11 +476,13 @@ class EnrollmentDraftTest extends TestCase
             'status' => 'ready_for_submission',
             'first_name' => 'Ready',
             'last_name' => 'Child',
+            'school_year' => \App\Services\Enrollment\GradeShiftService::activeSchoolYear(),
         ]));
         $draft = EnrollmentApplicant::create(array_merge($this->completeDraftData($user->id), [
             'status' => 'draft',
             'first_name' => 'Draft',
             'last_name' => 'Child',
+            'school_year' => \App\Services\Enrollment\GradeShiftService::activeSchoolYear(),
         ]));
 
         $response = $this->actingAs($user)->get('/enrollment/finalize');
@@ -445,7 +502,7 @@ class EnrollmentDraftTest extends TestCase
         EnrollmentApplicant::create([
             'user_id' => $user->id,
             'status' => 'draft',
-            'school_year' => '2026-2027',
+            'school_year' => \App\Services\Enrollment\GradeShiftService::activeSchoolYear(),
             'last_step' => 2,
         ]);
 
@@ -534,7 +591,7 @@ class EnrollmentDraftTest extends TestCase
             'emergency_name' => 'Parent Guardian',
             'emergency_relationship' => 'Parent',
             'emergency_phone' => '9123456789',
-            'school_year' => '2026-2027',
+            'school_year' => \App\Services\Enrollment\GradeShiftService::activeSchoolYear(),
             'last_step' => 6,
         ]);
 

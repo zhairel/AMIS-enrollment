@@ -14,23 +14,10 @@ class GoogleAuthTest extends TestCase
 
     public function test_google_sign_in_redirects_to_google(): void
     {
-        $mockProvider = Mockery::mock(\Laravel\Socialite\Two\GoogleProvider::class);
-        $mockProvider->shouldReceive('scopes')->with(['openid', 'email'])->andReturnSelf();
-        $mockProvider->shouldReceive('with')->with(['response_mode' => 'form_post'])->andReturnSelf();
-        
-        $redirectResponse = Mockery::mock(\Illuminate\Http\RedirectResponse::class);
-        $redirectResponse->shouldReceive('getTargetUrl')->andReturn('https://accounts.google.com/o/oauth2/auth');
-        
-        $mockProvider->shouldReceive('redirect')->andReturn($redirectResponse);
-
-        Socialite::shouldReceive('driver')->with('google')->andReturn($mockProvider);
-
-        // When navigating to our signin route
+        // When navigating to our signin route, it redirects to login with prompt_google=1
         $response = $this->get(route('auth.google'));
 
-        // It should contain the script redirect
-        $response->assertStatus(200);
-        $response->assertSee('window.location.href');
+        $response->assertRedirect(route('login', ['prompt_google' => 1]));
     }
 
     public function test_google_callback_authenticates_user(): void

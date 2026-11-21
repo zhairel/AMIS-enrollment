@@ -5,7 +5,7 @@
     $progress = in_array($child->status, ['ready_for_submission', 'approved'], true)
         ? 100
         : (int) ($child->completion_percentage ?? 0);
-    $step = min(max((int) ($child->last_step ?? 1), 1), 6);
+    $step = min(max((int) ($child->last_step ?? 1), 1), 8);
     $actionLabel = $child->status === 'rejected'
         ? 'RE-EDIT FORM'
         : ($child->status === 'ready_for_submission' ? 'CHECK DETAILS' : 'CONTINUE DRAFT');

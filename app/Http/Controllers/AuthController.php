@@ -153,22 +153,26 @@ class AuthController extends Controller
             ]
         );
 
-        // Send Notification containing the code
+        // Send Notification containing the code via Smart Daily Gmail Rotator & Multi-Transport Failover
         try {
-            $user->notify(new \App\Notifications\SendOtpCode($code));
+            $deliveryResult = app(\App\Services\System\SmartSmtpRotatorService::class)
+                ->sendNotification($email, new \App\Notifications\SendOtpCode($code), $user);
         } catch (\Throwable $exception) {
-            Log::error('Failed to send OTP verification code.', [
+            // Clear rate limiter on delivery failure so the user isn't penalized for a transport issue
+            RateLimiter::clear($limiterKey);
+            Log::error('Failed to send OTP verification code across all transports.', [
                 'email' => $email,
                 'error' => $exception->getMessage(),
             ]);
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to send the verification code. Please check your SMTP mail configuration.'
+                'message' => 'We encountered a temporary mail delay. Please try requesting the code again in a moment.'
             ], 500);
         }
 
         // Log OTP Generation
         try {
+            $mailerUsed = $deliveryResult['mailer_used'] ?? 'default';
             DB::table('admin_audit_logs')->insert([
                 'user_id' => $user->id,
                 'event' => 'otp_generated',
@@ -176,7 +180,7 @@ class AuthController extends Controller
                 'ip_address' => $request->ip(),
                 'user_agent' => Str::limit((string) $request->userAgent(), 1000, ''),
                 'successful' => true,
-                'message' => '4-digit OTP code generated and sent',
+                'message' => "4-digit OTP code generated and sent via {$mailerUsed}",
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

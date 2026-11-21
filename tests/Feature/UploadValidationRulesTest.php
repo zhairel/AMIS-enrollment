@@ -13,7 +13,7 @@ class UploadValidationRulesTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_payment_proof_accepts_png_jpg_jpeg_and_rejects_pdf(): void
+    public function test_payment_proof_accepts_png_jpg_jpeg_webp_and_pdf(): void
     {
         $user = User::factory()->create();
 
@@ -29,14 +29,14 @@ class UploadValidationRulesTest extends TestCase
         ]);
         $resJpg->assertJsonMissingValidationErrors('payment_receipt');
 
-        // 3. Payment receipt PDF - Rejected
+        // 3. Payment receipt PDF - Allowed
         $resPdf = $this->actingAs($user)->postJson('/enroll/draft', [
             'payment_receipt' => UploadedFile::fake()->create('receipt.pdf', 100, 'application/pdf'),
         ]);
-        $resPdf->assertJsonValidationErrors('payment_receipt');
+        $resPdf->assertJsonMissingValidationErrors('payment_receipt');
     }
 
-    public function test_report_card_accepts_pdf_jpg_jpeg_and_rejects_png(): void
+    public function test_report_card_accepts_pdf_jpg_jpeg_png_and_webp(): void
     {
         $user = User::factory()->create();
 
@@ -52,11 +52,11 @@ class UploadValidationRulesTest extends TestCase
         ]);
         $resJpg->assertJsonMissingValidationErrors('report_card');
 
-        // 3. Report card PNG - Rejected
+        // 3. Report card PNG - Allowed
         $resPng = $this->actingAs($user)->postJson('/enroll/draft', [
             'report_card' => UploadedFile::fake()->create('report.png', 100, 'image/png'),
         ]);
-        $resPng->assertJsonValidationErrors('report_card');
+        $resPng->assertJsonMissingValidationErrors('report_card');
     }
 
     public function test_photo_2x2_accepts_png_jpg_jpeg(): void

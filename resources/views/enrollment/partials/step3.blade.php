@@ -27,12 +27,65 @@
         <input type="hidden" name="country" :value="form.country">
     </div>
     <div class="form-group address-postal-field">
-        <x-form-field-label optional>Postal Code</x-form-field-label>
-        <input type="text" name="postal_code" class="plain-input" placeholder="Postal code" x-model="form.postal_code">
+        <x-form-field-label optional>ZIP / Postal Code</x-form-field-label>
+        <input type="text" inputmode="numeric" name="postal_code" class="plain-input" placeholder="e.g. 8000" x-model="form.postal_code">
     </div>
+
+    <div class="form-group address-country-field">
+        <x-form-field-label optional>Region / Province / State</x-form-field-label>
+        <div class="country-combobox" x-data="{ open: false, search: '' }" @click.outside="open = false">
+            <button type="button" class="country-combobox-trigger" @click="open = !open; if (open) $nextTick(() => $refs.regionSearch?.focus())">
+                <span class="country-combobox-value" :style="!form.state_province ? 'color: #94a3b8; font-weight: 400;' : ''" x-text="form.state_province || 'Select or type Region / Province (e.g. Davao Region, BARMM, NCR)...'"></span>
+                <svg class="country-combobox-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div x-show="open" x-transition class="country-combobox-menu">
+                <input type="text" x-ref="regionSearch" class="country-combobox-search" placeholder="Search or type Region / Province..." x-model="search" @keydown.escape="open = false" @keydown.enter.prevent="if (search.trim()) { selectRegion(search.trim()); open = false; search = ''; }">
+                <div class="country-combobox-list">
+                    <template x-if="search.trim() && !filteredRegions(form.country, search).some(r => r.toLowerCase() === search.trim().toLowerCase())">
+                        <button type="button" class="country-combobox-option" @click="selectRegion(search.trim()); open = false; search = ''">
+                            <span class="country-option-name" x-text="'Use &quot;' + search.trim().toUpperCase() + '&quot;'"></span>
+                        </button>
+                    </template>
+                    <template x-for="region in filteredRegions(form.country, search)" :key="'region-' + region">
+                        <button type="button" class="country-combobox-option" @click="selectRegion(region); open = false; search = ''">
+                            <span class="country-option-name" x-text="region"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="state_province" :value="form.state_province">
+    </div>
+
+    <div class="form-group address-postal-field">
+        <x-form-field-label optional>City / Municipality</x-form-field-label>
+        <div class="country-combobox" x-data="{ open: false, search: '' }" @click.outside="open = false">
+            <button type="button" class="country-combobox-trigger" @click="open = !open; if (open) $nextTick(() => $refs.citySearch?.focus())">
+                <span class="country-combobox-value" :style="!form.city ? 'color: #94a3b8; font-weight: 400;' : ''" x-text="form.city || 'Select or type City / Municipality (e.g. Davao City, Cotabato City, Quezon City)...'"></span>
+                <svg class="country-combobox-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div x-show="open" x-transition class="country-combobox-menu">
+                <input type="text" x-ref="citySearch" class="country-combobox-search" placeholder="Search or type City..." x-model="search" @keydown.escape="open = false" @keydown.enter.prevent="if (search.trim()) { selectCity(search.trim()); open = false; search = ''; }">
+                <div class="country-combobox-list">
+                    <template x-if="search.trim() && !filteredCities(form.country, form.state_province, search).some(c => c.toLowerCase() === search.trim().toLowerCase())">
+                        <button type="button" class="country-combobox-option" @click="selectCity(search.trim()); open = false; search = ''">
+                            <span class="country-option-name" x-text="'Use &quot;' + search.trim().toUpperCase() + '&quot;'"></span>
+                        </button>
+                    </template>
+                    <template x-for="cityName in filteredCities(form.country, form.state_province, search)" :key="'city-' + cityName">
+                        <button type="button" class="country-combobox-option" @click="selectCity(cityName); open = false; search = ''">
+                            <span class="country-option-name" x-text="cityName"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="city" :value="form.city">
+    </div>
+
     <div class="form-group address-full-field">
-        <x-form-field-label required>Complete Address</x-form-field-label>
-        <input type="text" name="street_address" class="plain-input" :class="{ 'is-invalid-field': isFieldInvalid('street_address') }" placeholder="House no., street, building, unit, city/province" x-model="form.street_address">
+        <x-form-field-label required>House No. / Street / Purok / Subdivision / Barangay</x-form-field-label>
+        <input type="text" name="street_address" class="plain-input" :class="{ 'is-invalid-field': isFieldInvalid('street_address') }" placeholder="e.g. Blk 4 Lot 12, Purok 3, Brgy. Buhangin (or District / Street)" x-model="form.street_address">
     </div>
 
     <div class="form-divider address-full-field">Contact Information</div>

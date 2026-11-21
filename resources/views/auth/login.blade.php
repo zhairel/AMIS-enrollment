@@ -294,17 +294,17 @@
                         <!-- Step 3: OTP Code Inputs View -->
                         <div x-show="step === 'otp'" style="display:none;">
                             <div class="otp-inputs-row" style="display: flex; gap: 0.65rem; justify-content: center; margin: 1.25rem 0;">
-                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-input-box" 
-                                       x-model="otp[0]" @input="handleOtpInput($event, 0)" @keydown="handleOtpKeydown($event, 0)" x-ref="otp0"
+                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" autocomplete="one-time-code" autocorrect="off" autocapitalize="none" spellcheck="false" class="otp-input-box" 
+                                       x-model="otp[0]" @input="handleOtpInput($event, 0)" @keydown="handleOtpKeydown($event, 0)" @paste="handleOtpPaste($event)" x-ref="otp0"
                                        style="width: 54px; height: 58px; font-size: 1.4rem; font-weight: 800; text-align: center; border: 2px solid #cbd5e1; border-radius: 14px; outline: none; background: #f8fafc; color: #0f172a;">
-                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-input-box" 
-                                       x-model="otp[1]" @input="handleOtpInput($event, 1)" @keydown="handleOtpKeydown($event, 1)" x-ref="otp1"
+                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" class="otp-input-box" 
+                                       x-model="otp[1]" @input="handleOtpInput($event, 1)" @keydown="handleOtpKeydown($event, 1)" @paste="handleOtpPaste($event)" x-ref="otp1"
                                        style="width: 54px; height: 58px; font-size: 1.4rem; font-weight: 800; text-align: center; border: 2px solid #cbd5e1; border-radius: 14px; outline: none; background: #f8fafc; color: #0f172a;">
-                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-input-box" 
-                                       x-model="otp[2]" @input="handleOtpInput($event, 2)" @keydown="handleOtpKeydown($event, 2)" x-ref="otp2"
+                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" class="otp-input-box" 
+                                       x-model="otp[2]" @input="handleOtpInput($event, 2)" @keydown="handleOtpKeydown($event, 2)" @paste="handleOtpPaste($event)" x-ref="otp2"
                                        style="width: 54px; height: 58px; font-size: 1.4rem; font-weight: 800; text-align: center; border: 2px solid #cbd5e1; border-radius: 14px; outline: none; background: #f8fafc; color: #0f172a;">
-                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" class="otp-input-box" 
-                                       x-model="otp[3]" @input="handleOtpInput($event, 3)" @keydown="handleOtpKeydown($event, 3)" x-ref="otp3"
+                                <input type="text" maxlength="1" pattern="[0-9]*" inputmode="numeric" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" class="otp-input-box" 
+                                       x-model="otp[3]" @input="handleOtpInput($event, 3)" @keydown="handleOtpKeydown($event, 3)" @paste="handleOtpPaste($event)" x-ref="otp3"
                                        style="width: 54px; height: 58px; font-size: 1.4rem; font-weight: 800; text-align: center; border: 2px solid #cbd5e1; border-radius: 14px; outline: none; background: #f8fafc; color: #0f172a;">
                             </div>
 
@@ -445,6 +445,21 @@
                             const prev = this.$refs['otp' + (index - 1)];
                             if (prev) prev.focus();
                         }
+                    }
+                },
+                handleOtpPaste(event) {
+                    event.preventDefault();
+                    const pasted = (event.clipboardData || window.clipboardData)?.getData('text') || '';
+                    const digits = pasted.replace(/\D/g, '').slice(0, 4);
+                    if (!digits) return;
+                    for (let i = 0; i < 4; i++) {
+                        this.otp[i] = digits[i] || '';
+                    }
+                    const focusIdx = Math.min(digits.length, 3);
+                    const targetRef = this.$refs['otp' + focusIdx];
+                    if (targetRef) targetRef.focus();
+                    if (digits.length === 4) {
+                        this.verifyOtpCode();
                     }
                 },
                 verifyOtpCode() {

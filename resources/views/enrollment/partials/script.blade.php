@@ -302,15 +302,24 @@ function enrollmentForm() {
         visitedSteps: @json($completedSteps ? array_values(array_unique(array_merge([1], $completedSteps))) : [1]),
         steps: [
             { num: 1, label: 'Setup' },
-            { num: 2, label: 'Student' },
+            { num: 2, label: 'Learner Info' },
             { num: 3, label: 'Address' },
-            { num: 4, label: 'Parents' },
-            { num: 5, label: 'Medical' },
-            { num: 6, label: 'Documents' },
+            { num: 4, label: 'Parent/Guardian' },
+            { num: 5, label: 'Health' },
+            { num: 6, label: 'Credentials' },
             { num: 7, label: 'Payment' },
-            { num: 8, label: 'Preview' },
+            { num: 8, label: 'Review' },
         ],
-        stepTitles: ['Enrollment Setup', 'Student Information', 'Address & Contact', 'Parent / Guardian Information', 'Medical & Emergency', 'Documents', 'Mode of Payment & Receipt', 'Final Review & Submit'],
+        stepTitles: [
+            'Enrollment Setup',
+            'Learner Personal Information',
+            'Present Address & Contact',
+            'Parent / Guardian Information',
+            'Health & Emergency Contact',
+            'School Credentials & Documents',
+            'Mode of Payment & Receipt',
+            'Final Review & Submit'
+        ],
         form: {
             payment_method: '{{ old("method", $applicant?->payment?->method ?? "gcash") }}',
             amount: '{{ old("amount", ($applicant?->payment?->amount ?? "4000.00")) }}',
@@ -335,8 +344,8 @@ function enrollmentForm() {
             place_of_birth: '{{ old("place_of_birth", $applicant?->place_of_birth) }}',
             religion: '{{ old("religion", $applicant?->religion) }}',
             ethnicity: '{{ old("ethnicity", $applicant?->ethnicity ?? "") }}',
-            country: '{{ old("country", $applicant?->country) }}',
-            country_choice: @js(old("country", $applicant?->country) ? old("country", $applicant?->country) : ''),
+            country: '{{ old("country", $applicant?->country ?: "Philippines") }}',
+            country_choice: @js(old("country", $applicant?->country ?: "Philippines")),
             state_province: '{{ old("state_province", $applicant?->state_province) }}',
             city: '{{ old("city", $applicant?->city) }}',
             street_address: '{{ old("street_address", $applicant?->street_address) }}',
@@ -417,6 +426,8 @@ function enrollmentForm() {
         get compiledPresentAddress() {
             return [
                 this.form.street_address,
+                this.form.city,
+                this.form.state_province,
                 this.form.postal_code,
                 this.form.country,
             ].filter(Boolean).join(', ');
@@ -427,6 +438,8 @@ function enrollmentForm() {
 
             return [
                 this.form.home_street_address,
+                this.form.home_city,
+                this.form.home_state_province,
                 this.form.home_postal_code,
                 this.form.home_country,
             ].filter(Boolean).join(', ');
@@ -520,6 +533,8 @@ function enrollmentForm() {
                 this.disabledGrades = prog.disabled;
             }
             if (this.form.student_type) {
+                this.hasUserEdited = true;
+                this.scheduleDraft();
                 this.$nextTick(() => {
                     const el = this.form.student_type === 'Old'
                         ? document.querySelector('.old-student-record-section') || document.querySelector('.grade-level-section')
@@ -549,6 +564,8 @@ function enrollmentForm() {
             if (value === 'Face-to-Face') {
                 this.form.timezone = '';
             }
+            this.hasUserEdited = true;
+            this.scheduleDraft();
         },
 
         toggleLearningShift(shift) {
@@ -659,22 +676,285 @@ function enrollmentForm() {
                 });
         },
 
+        countryLocations: {
+            'SAUDI ARABIA': {
+                'MAKKAH (MECCA)': ['MAKKAH', 'JEDDAH', 'TAIF', 'RABIGH', 'AL QUNFUDHAH', 'AL LITH', 'KHULAYS', 'AL JUMUM'],
+                'RIYADH': ['RIYADH', 'AL KHARJ', 'AD DIRIYAH', 'AL MAJMA\'AH', 'AD DAWADIMI', 'WADI AD-DAWASIR', 'AZ ZULFI', 'SHAQRA'],
+                'MADINAH (MEDINA)': ['MADINAH', 'YANBU', 'AL ULA', 'BADR', 'KHAYBAR', 'AL MAHD'],
+                'EASTERN PROVINCE (ASH SHARQIYAH)': ['DAMMAM', 'AL KHOBAR', 'DHAHRAN', 'JUBAIL', 'AL AHSA (HOFUF)', 'QATIF', 'HAFR AL-BATIN', 'RAS TANURA', 'KHAFJI'],
+                'ASIR': ['ABHA', 'KHAMIS MUSHAIT', 'BISHA', 'MAHAYIL', 'AN NAMAS', 'SARAT ABIDAH'],
+                'QASSIM': ['BURAYDAH', 'UNAYZAH', 'AR RASS', 'AL BUKAYRIYAH', 'AL MITHNAB', 'AL BADAYEA'],
+                'TABUK': ['TABUK', 'DUBA', 'AL WAJH', 'UMLUJ', 'HAQL', 'TAYMA'],
+                'HAIL': ['HAIL', 'BAQAA', 'AL GHAZALAH', 'ASH SHINAN'],
+                'JAZAN': ['JAZAN', 'SABYA', 'ABU ARISH', 'SAMTAH', 'BAISH', 'FARASAN'],
+                'NAJRAN': ['NAJRAN', 'SHARURAH', 'HUBUNA'],
+                'AL BAHAH': ['AL BAHAH', 'BALJURASHI', 'AL MANDAQQ', 'AL MIKHWAH'],
+                'AL JAWF': ['SAKAKA', 'QURAYYAT', 'DAWMAT AL JANDAL', 'TABARJAL'],
+                'NORTHERN BORDERS': ['ARAR', 'RAFHA', 'TURAYF']
+            },
+            'PHILIPPINES': {
+                'DAVAO REGION (REGION XI)': ['DAVAO CITY', 'TAGUM CITY', 'PANABO CITY', 'DIGOS CITY', 'MATI CITY', 'SAMAL (IGACOS)', 'CARMEN', 'NABUNTURAN', 'MALITA'],
+                'METRO MANILA (NCR)': ['MANILA', 'QUEZON CITY', 'MAKATI', 'TAGUIG', 'PASIG', 'PARAÑAQUE', 'PASAY', 'MANDALUYONG', 'MARIKINA', 'LAS PIÑAS', 'MUNTINLUPA', 'CALOOCAN', 'VALENZUELA', 'SAN JUAN', 'MALABON', 'NAVOTAS', 'PATEROS'],
+                'BARMM': ['COTABATO CITY', 'MARAWI CITY', 'JOLO', 'BONGAO', 'LAMITAN CITY', 'BULUAN', 'SHARIFF AGUAK', 'DATU ODIN SINSUAT', 'PARANG', 'WAO'],
+                'SOCCSKSARGEN (REGION XII)': ['GENERAL SANTOS CITY', 'KORONADAL CITY', 'KIDAPAWAN CITY', 'TACURONG CITY', 'POLOMOLOK', 'ALABEL', 'MIDSAYAP', 'KABACAN', 'ISULAN'],
+                'NORTHERN MINDANAO (REGION X)': ['CAGAYAN DE ORO CITY', 'ILIGAN CITY', 'VALENCIA CITY', 'MALAYBALAY CITY', 'OZAMIZ CITY', 'OROQUIETA CITY', 'GINGOOG CITY', 'TANGUB CITY', 'EL SALVADOR CITY'],
+                'ZAMBOANGA PENINSULA (REGION IX)': ['ZAMBOANGA CITY', 'PAGADIAN CITY', 'DIPOLOG CITY', 'DAPITAN CITY', 'ISABELA CITY', 'IPIL'],
+                'CARAGA (REGION XIII)': ['BUTUAN CITY', 'SURIGAO CITY', 'BISLIG CITY', 'TANDAG CITY', 'BAYUGAN CITY', 'CABADBARAN CITY'],
+                'CENTRAL VISAYAS (REGION VII)': ['CEBU CITY', 'LAPU-LAPU CITY', 'MANDAUE CITY', 'TALISAY CITY', 'TAGBILARAN CITY', 'DUMAGUETE CITY'],
+                'WESTERN VISAYAS (REGION VI)': ['ILOILO CITY', 'BACOLOD CITY', 'ROXAS CITY', 'KALIBO', 'SAN CARLOS CITY'],
+                'EASTERN VISAYAS (REGION VIII)': ['TACLOBAN CITY', 'ORMOC CITY', 'CATBALOGAN CITY', 'MAASIN CITY', 'BAYBAY CITY'],
+                'CALABARZON (REGION IV-A)': ['ANTIPOLO CITY', 'CALAMBA CITY', 'SANTA ROSA CITY', 'BIÑAN CITY', 'BACOOR CITY', 'IMUS CITY', 'DASMARIÑAS CITY', 'TAGAYTAY CITY', 'BATANGAS CITY', 'LIPA CITY', 'LUCENA CITY'],
+                'CENTRAL LUZON (REGION III)': ['ANGELES CITY', 'SAN FERNANDO CITY', 'MALOLOS CITY', 'MEYCAUAYAN CITY', 'SAN JOSE DEL MONTE', 'OLONGAPO CITY', 'CABANATUAN CITY', 'TARLAC CITY'],
+                'ILOCOS REGION (REGION I)': ['LAOAG CITY', 'VIGAN CITY', 'SAN FERNANDO CITY (LA UNION)', 'DAGUPAN CITY', 'URDANETA CITY', 'ALAMINOS CITY'],
+                'CAGAYAN VALLEY (REGION II)': ['TUGUEGARAO CITY', 'CAUAYAN CITY', 'ILAGAN CITY', 'SANTIAGO CITY'],
+                'CORDILLERA (CAR)': ['BAGUIO CITY', 'LA TRINIDAD', 'TABUK CITY', 'BANGUED'],
+                'MIMAROPA (REGION IV-B)': ['PUERTO PRINCESA CITY', 'CALAPAN CITY', 'ODIONGAN', 'BOAC', 'MAMBURAO'],
+                'BICOL REGION (REGION V)': ['NAGA CITY', 'LEGAZPI CITY', 'SORSOGON CITY', 'IRIGA CITY', 'MASBATE CITY', 'VIRAC']
+            },
+            'UNITED ARAB EMIRATES': {
+                'DUBAI': ['DUBAI', 'DEIRA', 'BUR DUBAI', 'JUMEIRAH', 'AL BARSHA', 'AL QUSAIS', 'AL NAHDA'],
+                'ABU DHABI': ['ABU DHABI CITY', 'AL AIN', 'MADINAT ZAYED', 'RUWAIS', 'KHALIFA CITY', 'MUSSAFAH'],
+                'SHARJAH': ['SHARJAH CITY', 'KHOR FAKKAN', 'KALBA', 'DIBBA AL-HISN', 'AL DHAID'],
+                'AJMAN': ['AJMAN CITY', 'MASFOOT', 'MANAMA'],
+                'RAS AL KHAIMAH': ['RAS AL KHAIMAH CITY', 'AL JAZIRAH AL HAMRA', 'DIGDAGGA'],
+                'FUJAIRAH': ['FUJAIRAH CITY', 'DIBBA AL-FUJAIRAH', 'MASAAFI'],
+                'UMM AL QUWAIN': ['UMM AL QUWAIN CITY', 'FALAJ AL MUALLA']
+            },
+            'QATAR': {
+                'AD DAWHAH (DOHA)': ['DOHA', 'WEST BAY', 'AL SADD', 'AL DAFNA', 'THE PEARL', 'LUSAIL'],
+                'AL RAYYAN': ['AL RAYYAN', 'MUAITHER', 'AL AZIZIYAH', 'AL GHARRAFA', 'EDUCATION CITY'],
+                'AL WAKRAH': ['AL WAKRAH', 'AL WUKAIR', 'MESAIEED'],
+                'AL KHOR': ['AL KHOR', 'AL THAKHIRA', 'RAS LAFFAN'],
+                'UMM SALAL': ['UMM SALAL MOHAMMED', 'UMM SALAL ALI'],
+                'AL DAAYEN': ['AL DAAYEN', 'LUSAIL CITY'],
+                'ASH SHAMAL': ['MADINAT ASH SHAMAL', 'AL RUWAIS'],
+                'AL SHAHANIYA': ['AL SHAHANIYA', 'DUKHAN']
+            },
+            'KUWAIT': {
+                'AL ASIMAH (CAPITAL)': ['KUWAIT CITY', 'SHARQ', 'DASMAN', 'QIBLA', 'SHUWAIKH', 'KAIFAN'],
+                'HAWALLI': ['HAWALLI', 'SALMIYA', 'JABRIYA', 'RUMAITHIYA', 'SALWA', 'BAYAN'],
+                'AL FARWANIYAH': ['FARWANIYAH', 'KHAITAN', 'JLEEB AL-SHUYOUKH', 'RIGGAI', 'ARDHIYA'],
+                'AL AHMADI': ['AHMADI', 'FAHAHEEL', 'MANGAF', 'MAHBOULA', 'ABU HALIFA', 'FINITAS'],
+                'AL JAHRA': ['JAHRA', 'SULAIBIYA', 'NAEEM', 'QASR'],
+                'MUBARAK AL-KABEER': ['MUBARAK AL-KABEER', 'SABAH AL-SALEM', 'QURAIN', 'ADAN', 'QUSOUR']
+            },
+            'BAHRAIN': {
+                'CAPITAL GOVERNORATE': ['MANAMA', 'JUFFAIR', 'SEEF', 'ADLIYA', 'HOORA'],
+                'MUHARRAQ GOVERNORATE': ['MUHARRAQ', 'ARAD', 'HIDD', 'BUSAYTEEN', 'AMWAJ ISLANDS'],
+                'NORTHERN GOVERNORATE': ['SAAR', 'BUDAIYA', 'HAMAD TOWN', 'A\'ALI', 'DIRAZ'],
+                'SOUTHERN GOVERNORATE': ['RIFFA', 'ISA TOWN', 'ZALLAQ', 'AWALI', 'ASKAR']
+            },
+            'OMAN': {
+                'MUSCAT': ['MUSCAT', 'MUTTRAH', 'SEEB', 'BAWSHAR', 'AMERAT', 'QURAYYAT'],
+                'DHOFAR': ['SALALAH', 'TAQAH', 'MIRBAT'],
+                'AL BATINAH NORTH': ['SOHAR', 'SHINAS', 'LIWA', 'SAHAM', 'AL KHABOURAH', 'SUWAIQ'],
+                'AL BATINAH SOUTH': ['RUSTAQ', 'BARKA', 'NAKHAL', 'AL MUSANNAH'],
+                'AD DAKHILIYAH': ['NIZWA', 'BAHLA', 'SAMAIL', 'IZKI'],
+                'ASH SHARQIYAH SOUTH': ['SUR', 'JALAN BANI BU ALI']
+            },
+            'MALAYSIA': {
+                'KUALA LUMPUR': ['KUALA LUMPUR', 'BUKIT BINTANG', 'CHERAS', 'BANGSAR', 'SETAPAK'],
+                'SELANGOR': ['SHAH ALAM', 'PETALING JAYA', 'SUBANG JAYA', 'KLANG', 'KAJANG', 'SEPANG', 'AMPANG'],
+                'SABAH': ['KOTA KINABALU', 'SANDAKAN', 'TAWAU', 'LAHAD DATU', 'SEMPORNA', 'KENINGAU'],
+                'SARAWAK': ['KUCHING', 'MIRI', 'SIBU', 'BINTULU'],
+                'JOHOR': ['JOHOR BAHRU', 'ISKANDAR PUTERI', 'BATU PAHAT', 'MUAR', 'KLUANG'],
+                'PENANG': ['GEORGE TOWN', 'BUTTERWORTH', 'BAYAN LEPAS', 'BUKIT MERTAJAM'],
+                'PUTRAJAYA': ['PUTRAJAYA']
+            },
+            'UNITED STATES': {
+                'CALIFORNIA': ['LOS ANGELES', 'SAN FRANCISCO', 'SAN DIEGO', 'SAN JOSE', 'SACRAMENTO', 'IRVINE'],
+                'NEW YORK': ['NEW YORK CITY', 'BROOKLYN', 'QUEENS', 'BUFFALO', 'ALBANY'],
+                'TEXAS': ['HOUSTON', 'DALLAS', 'AUSTIN', 'SAN ANTONIO', 'FORT WORTH'],
+                'ILLINOIS': ['CHICAGO', 'AURORA', 'NAPERVILLE'],
+                'FLORIDA': ['MIAMI', 'ORLANDO', 'TAMPA', 'JACKSONVILLE'],
+                'MICHIGAN': ['DETROIT', 'DEARBORN', 'ANN ARBOR'],
+                'NEW JERSEY': ['JERSEY CITY', 'NEWARK', 'PATERSON'],
+                'VIRGINIA': ['ARLINGTON', 'FAIRFAX', 'ALEXANDRIA', 'RICHMOND'],
+                'WASHINGTON': ['SEATTLE', 'BELLEVUE', 'TACOMA']
+            },
+            'CANADA': {
+                'ONTARIO': ['TORONTO', 'MISSISSAUGA', 'OTTAWA', 'BRAMPTON', 'HAMILTON', 'MARKHAM'],
+                'BRITISH COLUMBIA': ['VANCOUVER', 'SURREY', 'BURNABY', 'RICHMOND', 'VICTORIA'],
+                'ALBERTA': ['CALGARY', 'EDMONTON', 'RED DEER'],
+                'QUEBEC': ['MONTREAL', 'QUEBEC CITY', 'LAVAL']
+            },
+            'UNITED KINGDOM': {
+                'ENGLAND': ['LONDON', 'BIRMINGHAM', 'MANCHESTER', 'LEEDS', 'LIVERPOOL', 'BRADFORD', 'SHEFFIELD'],
+                'SCOTLAND': ['EDINBURGH', 'GLASGOW', 'ABERDEEN'],
+                'WALES': ['CARDIFF', 'SWANSEA', 'NEWPORT'],
+                'NORTHERN IRELAND': ['BELFAST', 'DERRY']
+            },
+            'AUSTRALIA': {
+                'NEW SOUTH WALES': ['SYDNEY', 'NEWCASTLE', 'WOLLONGONG', 'PARRAMATTA'],
+                'VICTORIA': ['MELBOURNE', 'GEELONG', 'BALLARAT'],
+                'QUEENSLAND': ['BRISBANE', 'GOLD COAST', 'CAIRNS'],
+                'WESTERN AUSTRALIA': ['PERTH', 'FREMANTLE'],
+                'SOUTH AUSTRALIA': ['ADELAIDE']
+            },
+            'JAPAN': {
+                'TOKYO': ['TOKYO', 'SHINJUKU', 'SHIBUYA', 'MINATO', 'SETAGAYA'],
+                'OSAKA': ['OSAKA CITY', 'SAKAI', 'HIGASHIOSAKA'],
+                'KANAGAWA': ['YOKOHAMA', 'KAWASAKI', 'SAGAMIHARA'],
+                'AICHI': ['NAGOYA', 'TOYOTA', 'OKAZAKI']
+            },
+            'SINGAPORE': {
+                'CENTRAL REGION': ['SINGAPORE', 'ORCHARD', 'BUKIT TIMAH', 'MARINA BAY'],
+                'EAST REGION': ['TAMPINES', 'BEDOK', 'PASIR RIS'],
+                'WEST REGION': ['JURONG EAST', 'JURONG WEST', 'CLEMENTI'],
+                'NORTH REGION': ['WOODLANDS', 'YISHUN', 'SEMBAWANG'],
+                'NORTH-EAST REGION': ['SENGKANG', 'PUNGGOL', 'HOUGANG']
+            }
+        },
+
+        resolveLocationCountryKey(countryName) {
+            const raw = (countryName || '').trim().toUpperCase();
+            if (!raw) return '';
+            if (this.countryLocations[raw]) return raw;
+            if (raw.includes('SAUDI')) return 'SAUDI ARABIA';
+            if (raw.includes('PHILIPPINE')) return 'PHILIPPINES';
+            if (raw.includes('EMIRATES') || raw === 'UAE') return 'UNITED ARAB EMIRATES';
+            if (raw.includes('UNITED STATES') || raw === 'USA') return 'UNITED STATES';
+            if (raw.includes('UNITED KINGDOM') || raw === 'UK' || raw.includes('BRITAIN')) return 'UNITED KINGDOM';
+            return raw;
+        },
+
+        filteredRegions(countryName, search) {
+            const key = this.resolveLocationCountryKey(countryName);
+            const map = this.countryLocations[key] || {};
+            const regions = Object.keys(map);
+            const q = (search || '').trim().toLowerCase();
+            if (!q) return regions;
+            return regions.filter(r => r.toLowerCase().includes(q) || (map[r] || []).some(c => c.toLowerCase().includes(q)));
+        },
+
+        filteredCities(countryName, regionName, search) {
+            const key = this.resolveLocationCountryKey(countryName);
+            const map = this.countryLocations[key] || {};
+            const regUpper = (regionName || '').trim().toUpperCase();
+            let cities = [];
+            if (regUpper && map[regUpper]) {
+                cities = [...map[regUpper]];
+            } else if (regUpper) {
+                const matchedRegion = Object.keys(map).find(r => r.toUpperCase().includes(regUpper) || regUpper.includes(r.toUpperCase()));
+                if (matchedRegion) {
+                    cities = [...map[matchedRegion]];
+                } else {
+                    cities = Object.values(map).flat();
+                }
+            } else {
+                cities = Object.values(map).flat();
+            }
+            cities = Array.from(new Set(cities));
+            const q = (search || '').trim().toLowerCase();
+            if (!q) return cities;
+            return cities.filter(c => c.toLowerCase().includes(q));
+        },
+
+        selectRegion(region) {
+            const val = (region || '').trim().toUpperCase();
+            if (this.form.state_province !== val) {
+                this.form.state_province = val;
+                const validCities = this.filteredCities(this.form.country, val, '');
+                if (this.form.city && validCities.length > 0 && !validCities.includes(this.form.city.toUpperCase())) {
+                    this.form.city = '';
+                }
+            }
+            if (this.form.same_as_permanent) {
+                this.form.home_state_province = val;
+            }
+            this.hasUserEdited = true;
+            this.scheduleDraft();
+        },
+
+        selectCity(cityName) {
+            const val = (cityName || '').trim().toUpperCase();
+            this.form.city = val;
+            // Auto-fill state_province if empty and city belongs to a known region
+            if (!this.form.state_province && this.form.country) {
+                const key = this.resolveLocationCountryKey(this.form.country);
+                const map = this.countryLocations[key] || {};
+                const foundRegion = Object.keys(map).find(r => (map[r] || []).some(c => c.toUpperCase() === val));
+                if (foundRegion) {
+                    this.form.state_province = foundRegion;
+                    if (this.form.same_as_permanent) this.form.home_state_province = foundRegion;
+                }
+            }
+            if (this.form.same_as_permanent) {
+                this.form.home_city = val;
+            }
+            this.hasUserEdited = true;
+            this.scheduleDraft();
+        },
+
+        selectHomeRegion(region) {
+            const val = (region || '').trim().toUpperCase();
+            if (this.form.home_state_province !== val) {
+                this.form.home_state_province = val;
+                const validCities = this.filteredCities(this.form.home_country || this.form.country, val, '');
+                if (this.form.home_city && validCities.length > 0 && !validCities.includes(this.form.home_city.toUpperCase())) {
+                    this.form.home_city = '';
+                }
+            }
+            this.hasUserEdited = true;
+            this.scheduleDraft();
+        },
+
+        selectHomeCity(cityName) {
+            const val = (cityName || '').trim().toUpperCase();
+            this.form.home_city = val;
+            const ctry = this.form.home_country || this.form.country;
+            if (!this.form.home_state_province && ctry) {
+                const key = this.resolveLocationCountryKey(ctry);
+                const map = this.countryLocations[key] || {};
+                const foundRegion = Object.keys(map).find(r => (map[r] || []).some(c => c.toUpperCase() === val));
+                if (foundRegion) {
+                    this.form.home_state_province = foundRegion;
+                }
+            }
+            this.hasUserEdited = true;
+            this.scheduleDraft();
+        },
+
         selectCountry(country) {
+            const prevCountry = (this.form.country || '').toUpperCase();
+            const nextCountry = (country.name || '').toUpperCase();
             this.form.country_choice = country.name;
             this.form.country = country.name;
-            if (this.form.same_as_permanent) this.form.home_country = country.name;
+            if (prevCountry && prevCountry !== nextCountry) {
+                this.form.state_province = '';
+                this.form.city = '';
+            }
+            if (this.form.same_as_permanent) {
+                this.form.home_country = country.name;
+                if (prevCountry && prevCountry !== nextCountry) {
+                    this.form.home_state_province = '';
+                    this.form.home_city = '';
+                }
+            }
             if (country.callingCode) {
                 this.form.mobile_country_code = country.callingCode;
                 this.form.parent_country_code = country.callingCode;
             }
+            this.hasUserEdited = true;
+            this.scheduleDraft();
         },
 
         selectPermanentCountry(country) {
+            const prevCountry = (this.form.home_country || '').toUpperCase();
+            const nextCountry = (country.name || '').toUpperCase();
             this.form.home_country = country.name;
+            if (prevCountry && prevCountry !== nextCountry) {
+                this.form.home_state_province = '';
+                this.form.home_city = '';
+            }
+            this.hasUserEdited = true;
+            this.scheduleDraft();
         },
 
         selectCallingCode(country, target) {
             this.form[target] = country.callingCode;
+            this.hasUserEdited = true;
+            this.scheduleDraft();
         },
 
         normalizeCountry(country) {
@@ -745,6 +1025,12 @@ function enrollmentForm() {
             let code = (countryCode || '').trim();
 
             if (code === '+63') {
+                if (digits.startsWith('63') && digits.length >= 11) {
+                    digits = digits.slice(2);
+                }
+                if (digits.startsWith('0')) {
+                    digits = digits.slice(1);
+                }
                 if (digits.length > 10) digits = digits.slice(0, 10);
                 let formatted = '';
                 if (digits.length > 0) formatted += digits.substring(0, 3);
@@ -919,8 +1205,16 @@ function enrollmentForm() {
                 fd.append('last_step', this.step);
                 fd.append('school_year', '{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}');
                 if (this.savedApplicantId) fd.append('applicant_id', this.savedApplicantId);
+                fd.append('address', this.compiledPresentAddress || '');
+                fd.append('home_address', this.compiledHomeAddress || '');
+                if (this.form.same_as_permanent) {
+                    fd.set('home_state_province', this.form.state_province || '');
+                    fd.set('home_city', this.form.city || '');
+                    fd.set('home_street_address', this.form.street_address || '');
+                    fd.set('home_postal_code', this.form.postal_code || '');
+                }
                 const uploadedNames = [];
-                ['photo_2x2','birth_cert','report_card','marriage_contract','medical_record','affidavit','facebook_screenshot'].forEach(name => {
+                ['photo_2x2','birth_cert','report_card','marriage_contract','medical_record','affidavit','facebook_screenshot','payment_receipt'].forEach(name => {
                     const input = document.querySelector('input[name="' + name + '"]');
                     if (input && input.files.length) {
                         fd.append(name, input.files[0]);
@@ -1012,6 +1306,14 @@ function enrollmentForm() {
             });
             fd.append('last_step', this.step);
             fd.append('school_year', '{{ \App\Services\Enrollment\GradeShiftService::activeSchoolYear() }}');
+            fd.append('address', this.compiledPresentAddress || '');
+            fd.append('home_address', this.compiledHomeAddress || '');
+            if (this.form.same_as_permanent) {
+                fd.set('home_state_province', this.form.state_province || '');
+                fd.set('home_city', this.form.city || '');
+                fd.set('home_street_address', this.form.street_address || '');
+                fd.set('home_postal_code', this.form.postal_code || '');
+            }
             if (this.savedApplicantId) fd.append('applicant_id', this.savedApplicantId);
             navigator.sendBeacon('{{ route("enrollment.draft") }}', fd);
         },
@@ -1202,6 +1504,10 @@ function enrollmentForm() {
 
         fixStepNumbers() {
             return Object.keys(this.rejectionFixSteps || {}).map(Number);
+        },
+
+        stepNeedsFix(num) {
+            return this.fixStepNumbers().includes(Number(num));
         },
 
         currentFixMessage() {
@@ -1418,6 +1724,12 @@ function enrollmentForm() {
             Object.keys(this.form).forEach(key => {
                 this.form[key] = typeof this.form[key] === 'boolean' ? false : '';
             });
+            this.form.country = 'Philippines';
+            this.form.country_choice = 'Philippines';
+            this.form.mobile_country_code = '+63';
+            this.form.parent_country_code = '+63';
+            this.form.payment_method = 'gcash';
+            this.form.amount = '4000.00';
 
             const formEl = document.querySelector('[data-no-browser-autofill]');
             if (formEl) formEl.reset();
@@ -1448,7 +1760,7 @@ function enrollmentForm() {
 
         saveFileSelection() {
             if (this.isDiscarding || this.draftDiscarded) return;
-            if (this.step !== 6) return;
+            if (![4, 6, 7].includes(this.step)) return;
             this.hasUserEdited = true;
             this.saveDraft();
         },

@@ -48,11 +48,11 @@ class EnrollmentController extends Controller
         $hasErrors = session()->has('errors') && session('errors')->any();
         $rejectionFixSteps = $this->rejectionFixSteps($applicant);
         $initialStep = $hasErrors
-            ? 6
-            : ($rejectionFixSteps ? min(array_keys($rejectionFixSteps)) : ($applicant ? min((int) ($applicant->last_step ?? 1), 6) : 1));
+            ? 8
+            : ($rejectionFixSteps ? min(array_keys($rejectionFixSteps)) : ($applicant ? min((int) ($applicant->last_step ?? 1), 8) : 1));
         $completedSteps = $hasErrors
-            ? range(1, 6)
-            : ($applicant ? range(1, min((int) ($applicant->last_step ?? 1), 6)) : []);
+            ? range(1, 8)
+            : ($applicant ? range(1, min((int) ($applicant->last_step ?? 1), 8)) : []);
 
         $completedGradeLevel = null;
         $disabledGradeLevels = [];
@@ -104,7 +104,7 @@ class EnrollmentController extends Controller
             'marriage_contract' => [6, 'Marriage contract'],
             'medical_record' => [6, 'Medical record'],
             'affidavit' => [6, 'Affidavit'],
-            'payment_proof' => [6, 'Payment proof'],
+            'payment_proof' => [7, 'Payment proof'],
         ];
 
         $fixSteps = [];
@@ -586,13 +586,12 @@ class EnrollmentController extends Controller
 
         try {
             $notifications = app(EnrollmentNotificationService::class);
-            $notifications->sendSubmissionConfirmation($user->email, $applicant);
-            if (!empty($applicant->parent_email) && $applicant->parent_email !== $user->email) {
-                $notifications->sendSubmissionConfirmation($applicant->parent_email, $applicant);
-            }
+            $notifications->sendSubmissionConfirmationToAll($applicant, $user->email);
             try {
                 app(WorkflowEngineService::class)->fire('enrollment.submitted', $applicant);
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+                Log::error('Workflow fire error [enrollment.submitted]: ' . $e->getMessage());
+            }
         } catch (\Throwable $e) {
             Log::error('Failed to send submission confirmation: ' . $e->getMessage());
         }
@@ -654,13 +653,9 @@ class EnrollmentController extends Controller
         $submittedApplications = $this->applications->finalizeReadyApplications($user);
 
         foreach ($submittedApplications as $submittedApplication) {
-            $notifications->sendSubmissionConfirmation($user->email, $submittedApplication);
+            $notifications->sendSubmissionConfirmationToAll($submittedApplication, $user->email);
 
-            if (!empty($submittedApplication->parent_email) && $submittedApplication->parent_email !== $user->email) {
-                $notifications->sendSubmissionConfirmation($submittedApplication->parent_email, $submittedApplication);
-            }
-
-            // 🔥 Fire workflow: enrollment.submitted
+            // Fire workflow: enrollment.submitted
             try {
                 app(WorkflowEngineService::class)->fire('enrollment.submitted', $submittedApplication);
             } catch (\Throwable $e) {
@@ -869,8 +864,10 @@ class EnrollmentController extends Controller
         ];
 
         if ($receiptPath) {
-            $applicant->proof_of_payment = $receiptPath;
-            $applicant->save();
+            if (Schema::hasColumn('enrollment_applicants', 'enrollment_fee_receipt_url')) {
+                $applicant->enrollment_fee_receipt_url = $receiptPath;
+                $applicant->save();
+            }
         }
 
         if (Schema::hasColumn('payments', 'reference_no')) {
@@ -901,17 +898,14 @@ class EnrollmentController extends Controller
                 $notifications = app(EnrollmentNotificationService::class);
                 $freshApplicants = $user->enrollmentApplicants()->whereIn('status', ['pending', 'submitted', 'under_review'])->get();
                 foreach ($freshApplicants as $submittedApplication) {
-                    $notifications->sendSubmissionConfirmation($user->email, $submittedApplication);
-                    if (!empty($submittedApplication->parent_email) && $submittedApplication->parent_email !== $user->email) {
-                        $notifications->sendSubmissionConfirmation($submittedApplication->parent_email, $submittedApplication);
-                    }
+                    $notifications->sendSubmissionConfirmationToAll($submittedApplication, $user->email);
                 }
             } catch (\Throwable $e) {
                 Log::error('Failed to send finalization emails from payment submit: ' . $e->getMessage());
             }
         }
 
-        // 🔥 Fire workflow: enrollment.payment_submitted
+        // Fire workflow: enrollment.payment_submitted
         try {
             app(WorkflowEngineService::class)->fire('enrollment.payment_submitted', $applicant->fresh());
         } catch (\Throwable $e) {

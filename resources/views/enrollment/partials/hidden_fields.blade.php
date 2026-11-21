@@ -14,6 +14,8 @@
 <input type="hidden" name="religion" :value="form.religion">
 <input type="hidden" name="ethnicity" :value="form.ethnicity">
 <input type="hidden" name="country" :value="form.country">
+<input type="hidden" name="state_province" :value="form.state_province">
+<input type="hidden" name="city" :value="form.city">
 <input type="hidden" name="street_address" :value="form.street_address">
 <input type="hidden" name="postal_code" :value="form.postal_code">
 <input type="hidden" name="address" :value="compiledPresentAddress">
@@ -28,8 +30,10 @@
 <input type="hidden" name="mother_middle_name" :value="form.mother_middle_name">
 <input type="hidden" name="mother_occupation" :value="form.mother_occupation">
 <input type="hidden" name="home_address" :value="compiledHomeAddress">
-<input type="hidden" name="home_street_address" :value="form.home_street_address">
-<input type="hidden" name="home_postal_code" :value="form.home_postal_code">
+<input type="hidden" name="home_state_province" :value="form.same_as_permanent ? form.state_province : form.home_state_province">
+<input type="hidden" name="home_city" :value="form.same_as_permanent ? form.city : form.home_city">
+<input type="hidden" name="home_street_address" :value="form.same_as_permanent ? form.street_address : form.home_street_address">
+<input type="hidden" name="home_postal_code" :value="form.same_as_permanent ? form.postal_code : form.home_postal_code">
 <input type="hidden" name="parent_country_code" :value="form.parent_country_code">
 <input type="hidden" name="parent_mobile" :value="form.parent_mobile">
 <input type="hidden" name="parent_email" :value="form.parent_email">

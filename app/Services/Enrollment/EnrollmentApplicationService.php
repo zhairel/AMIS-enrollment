@@ -59,7 +59,9 @@ class EnrollmentApplicationService
                 ->whereIn('status', self::EDITABLE_STATUSES)
                 ->latest()
                 ->first()
-                ?? $user->enrollmentApplicants()->where('school_year', $activeYear)->latest()->first();
+                ?? $user->enrollmentApplicants()->whereIn('status', self::EDITABLE_STATUSES)->latest()->first()
+                ?? $user->enrollmentApplicants()->where('school_year', $activeYear)->latest()->first()
+                ?? $user->enrollmentApplicants()->latest()->first();
         }
 
         return null;
@@ -173,6 +175,53 @@ class EnrollmentApplicationService
         $this->discounts->apply($user, $applicant);
         session(['current_enrollment_applicant_id' => $applicant->id]);
         $this->uploads->storeEnrollmentDocuments($applicant, $request);
+
+        // Save payment draft details if provided during autosave
+        $paymentMethod = $request->input('payment_method') ?? $request->input('method');
+        $hasPaymentDetails = $request->filled('reference_no') || $request->filled('remarks') || $request->filled('amount') || $request->hasFile('payment_receipt');
+        if ($paymentMethod || $hasPaymentDetails) {
+            $existingPayment = $applicant->payment;
+            $receiptPath = $existingPayment ? ($existingPayment->getRawOriginal('receipt_url') ?? $existingPayment->receipt_url) : $applicant->enrollment_fee_receipt_url;
+
+            if ($request->hasFile('payment_receipt')) {
+                $yearFallback = GradeShiftService::activeSchoolYear();
+                $familyFolder = 'family_' . strtolower(trim($applicant->last_name ?: 'draft')) . '_' . str_replace(' ', '_', strtolower(trim($applicant->school_year ?? $yearFallback)));
+                $familyFolder = preg_replace('/[^a-z0-9_\-]+/', '', $familyFolder);
+                $lastnameSlug = preg_replace('/[^a-z0-9]+/', '_', strtolower(trim($applicant->last_name ?: 'draft')));
+                $file = $request->file('payment_receipt');
+                $ext = $file->getClientOriginalExtension() ?: $file->guessExtension() ?: 'bin';
+                $filename = 'payment_receipt_' . $lastnameSlug . '_' . time() . '_0.' . $ext;
+                $stored = $file->storeAs('documents/' . $familyFolder, $filename, 'public');
+                if ($stored) {
+                    $receiptPath = $stored;
+                    if (\Illuminate\Support\Facades\Schema::hasColumn('enrollment_applicants', 'enrollment_fee_receipt_url')) {
+                        $applicant->enrollment_fee_receipt_url = $receiptPath;
+                        $applicant->save();
+                    }
+                }
+            }
+
+            if ($existingPayment || $request->filled('reference_no') || $request->filled('remarks') || $request->hasFile('payment_receipt')) {
+                $method = in_array($paymentMethod, ['bdo', 'gcash', 'maya', 'remittance', 'other'], true) ? $paymentMethod : ($existingPayment?->method ?? 'gcash');
+                $paymentDraft = [
+                    'user_id' => $user->id,
+                    'enrollment_applicant_id' => $applicant->id,
+                    'method' => $method,
+                    'payment_provider' => $paymentMethod ?: $method,
+                    'amount' => $request->filled('amount') ? (float) $request->input('amount') : ($existingPayment?->amount ?? 4000.00),
+                    'reference_no' => $request->input('reference_no', $existingPayment?->reference_no),
+                    'reference_number' => $request->input('reference_no', $existingPayment?->reference_number),
+                    'receipt_url' => $receiptPath,
+                    'status' => $existingPayment?->status ?? 'pending',
+                    'remarks' => $request->input('remarks', $existingPayment?->remarks),
+                ];
+                if ($existingPayment) {
+                    $existingPayment->update($paymentDraft);
+                } else {
+                    $applicant->payment()->create($paymentDraft);
+                }
+            }
+        }
 
         return $applicant->refresh();
     }
@@ -364,7 +413,7 @@ class EnrollmentApplicationService
         }
 
         $this->uploads->deleteEnrollmentDocuments($applicant);
-        $applicant->delete();
+        $applicant->forceDelete();
 
         if ((int) session('current_enrollment_applicant_id') === (int) $applicant->id) {
             session()->forget('current_enrollment_applicant_id');
@@ -562,11 +611,20 @@ class EnrollmentApplicationService
             return null;
         }
 
+        $middleInitial = $middleName !== '' ? (rtrim(mb_substr(strtolower($middleName), 0, 1, 'UTF-8'), '.') . '.') : '';
+
         return EnrollmentApplicant::query()
             ->when($currentApplicant, fn ($q) => $q->where('id', '!=', $currentApplicant->id))
             ->whereRaw('LOWER(TRIM(last_name)) = ?', [strtolower($lastName)])
             ->whereRaw('LOWER(TRIM(first_name)) = ?', [strtolower($firstName)])
-            ->whereRaw('LOWER(TRIM(COALESCE(middle_name, \'\'))) = ?', [strtolower($middleName)])
+            ->where(function ($q) use ($middleName, $middleInitial) {
+                if ($middleName === '') {
+                    $q->whereNull('middle_name')
+                        ->orWhereRaw('LOWER(TRIM(middle_name)) = \'\'');
+                } else {
+                    $q->whereRaw('LOWER(TRIM(middle_name)) IN (?, ?)', [strtolower($middleName), $middleInitial]);
+                }
+            })
             ->whereDate('date_of_birth', $dob)
             ->first();
     }

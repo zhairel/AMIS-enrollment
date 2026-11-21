@@ -48,6 +48,7 @@ class EnrollmentApplicant extends Model
         'first_name',
         'last_name',
         'middle_name',
+        'suffix',
         'gender',
         'date_of_birth',
         'place_of_birth',

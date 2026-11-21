@@ -17,7 +17,9 @@ class TrustCloudflareHeaders
     {
         if ($request->headers->has('CF-Connecting-IP')) {
             $realIp = $request->header('CF-Connecting-IP');
-            $request->server->set('REMOTE_ADDR', $realIp);
+            if (is_string($realIp) && trim($realIp) !== '' && filter_var(trim($realIp), FILTER_VALIDATE_IP)) {
+                $request->server->set('REMOTE_ADDR', trim($realIp));
+            }
         }
 
         return $next($request);

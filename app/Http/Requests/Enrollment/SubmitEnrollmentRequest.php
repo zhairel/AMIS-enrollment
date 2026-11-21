@@ -28,6 +28,7 @@ class SubmitEnrollmentRequest extends FormRequest
             'last_name'               => 'required|string|max:255',
             'first_name'              => 'required|string|max:255',
             'middle_name'             => 'nullable|string|max:255',
+            'suffix'                  => 'nullable|string|max:50',
             'gender'                  => 'required|in:Male,Female',
             'date_of_birth'           => 'required|date|before:today',
             'place_of_birth'          => 'required|string|max:255',

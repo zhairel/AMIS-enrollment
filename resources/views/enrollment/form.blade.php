@@ -709,6 +709,34 @@
                 <div class="enrollment-progress-track" role="progressbar" :aria-valuenow="Math.round((step / totalSteps) * 100)" aria-valuemin="0" aria-valuemax="100">
                     <div class="enrollment-progress-fill" :style="`width: ${Math.round((step / totalSteps) * 100)}%`"></div>
                 </div>
+
+                <!-- Interactive 8-Step Philippine School Enrollment Stepper -->
+                <nav class="enrollment-stepper-nav" aria-label="Enrollment form steps">
+                    <template x-for="(label, idx) in ['Setup', 'Learner Info', 'Address', 'Parent/Guardian', 'Health', 'Credentials', 'Payment', 'Review']" :key="idx">
+                        <button
+                            type="button"
+                            class="enrollment-stepper-btn"
+                            :class="{
+                                'is-active': step === (idx + 1),
+                                'is-done': completedSteps.includes(idx + 1) && step !== (idx + 1),
+                                'needs-fix': stepNeedsFix(idx + 1)
+                            }"
+                            :disabled="stepSaving || ((idx + 1) > step && !completedSteps.includes(idx + 1) && !completedSteps.includes(idx))"
+                            @click="goToStep(idx + 1)"
+                            :aria-current="step === (idx + 1) ? 'step' : null"
+                        >
+                            <span class="enrollment-stepper-num">
+                                <template x-if="completedSteps.includes(idx + 1) && step !== (idx + 1) && !stepNeedsFix(idx + 1)">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                </template>
+                                <template x-if="!completedSteps.includes(idx + 1) || step === (idx + 1) || stepNeedsFix(idx + 1)">
+                                    <span x-text="idx + 1"></span>
+                                </template>
+                            </span>
+                            <span class="enrollment-stepper-text" x-text="label"></span>
+                        </button>
+                    </template>
+                </nav>
             </div>
         </div>
 

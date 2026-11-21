@@ -51,7 +51,8 @@ class EnrollmentDuplicateChecker
                     $query->whereNull('middle_name')
                         ->orWhereRaw('LOWER(TRIM(middle_name)) = \'\'');
                 } else {
-                    $query->whereRaw('LOWER(TRIM(middle_name)) = ?', [$middleName]);
+                    $middleInitial = rtrim(mb_substr($middleName, 0, 1, 'UTF-8'), '.') . '.';
+                    $query->whereRaw('LOWER(TRIM(middle_name)) IN (?, ?)', [$middleName, $middleInitial]);
                 }
             })
             ->where(function ($query) use ($gradeLevel) {

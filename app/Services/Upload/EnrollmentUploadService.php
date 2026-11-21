@@ -179,18 +179,22 @@ class EnrollmentUploadService
                 $resultCode = $convertedWithGd ? 0 : -1;
                 if (!$convertedWithGd && function_exists('exec')) {
                     try {
-                        static $imBinary = null;
-                        if ($imBinary === null) {
-                            $imBinary = 'magick';
-                            @exec('which magick 2>&1', $test1, $code1);
-                            if ($code1 !== 0) {
-                                @exec('which convert 2>&1', $test2, $code2);
-                                if ($code2 === 0) {
+                        static $imBinary = false;
+                        if ($imBinary === false) {
+                            $imBinary = null;
+                            @exec('command -v magick 2>/dev/null', $test1, $code1);
+                            if ($code1 === 0 && !empty($test1)) {
+                                $imBinary = 'magick';
+                            } else {
+                                @exec('command -v convert 2>/dev/null', $test2, $code2);
+                                if ($code2 === 0 && !empty($test2)) {
                                     $imBinary = 'convert';
                                 }
                             }
                         }
-                        @exec($imBinary . ' ' . escapeshellarg($absoluteOriginal) . ' -quality 85 ' . escapeshellarg($absoluteOptimized) . ' 2>&1', $output, $resultCode);
+                        if ($imBinary !== null) {
+                            @exec($imBinary . ' ' . escapeshellarg($absoluteOriginal) . ' -quality 85 ' . escapeshellarg($absoluteOptimized) . ' 2>&1', $output, $resultCode);
+                        }
                     } catch (\Throwable $e) {
                         \Illuminate\Support\Facades\Log::error("Failed to run ImageMagick command in EnrollmentUploadService: " . $e->getMessage());
                     }

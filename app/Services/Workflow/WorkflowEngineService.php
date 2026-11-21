@@ -6,6 +6,8 @@ use App\Models\Workflow;
 use App\Models\WorkflowRun;
 use App\Models\WorkflowRunLog;
 use App\Models\EnrollmentApplicant;
+use App\Services\System\SmartSmtpRotatorService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -123,9 +125,9 @@ class WorkflowEngineService
 
     protected function actionSendEmail(array $config, EnrollmentApplicant $applicant): array
     {
-        // TEST MODE: If WORKFLOW_TEST_EMAIL is set, ALL emails go to that address only
-        $testEmail  = env('WORKFLOW_TEST_EMAIL');
-        $realTo     = $applicant->email ?? ($applicant->user->email ?? null);
+        // Only honor WORKFLOW_TEST_EMAIL outside production so live applicants always receive their emails
+        $testEmail  = app()->environment('production') ? null : env('WORKFLOW_TEST_EMAIL');
+        $realTo     = $applicant->email ?: ($applicant->parent_email ?: ($applicant->user->email ?? null));
         $to         = $testEmail ?: $realTo;
         $subject    = $this->interpolate($config['subject'] ?? 'AMIS Enrollment Update', $applicant);
         $body       = $this->interpolate($config['body'] ?? '', $applicant);
@@ -134,14 +136,36 @@ class WorkflowEngineService
             return ['status' => 'failed', 'message' => 'No email address for applicant'];
         }
 
+        $normalizedTo = strtolower(trim((string) $to));
+        $dedupeKey = "enrollment_confirm_sent_{$applicant->id}_" . sha1($normalizedTo);
+        if (!$testEmail && Cache::has($dedupeKey)) {
+            return [
+                'status' => 'success',
+                'message' => "Rich HTML registration confirmation already sent to {$normalizedTo}",
+                'output' => ['to' => $normalizedTo, 'subject' => $subject, 'deduped' => true],
+            ];
+        }
+
         $testNote = $testEmail ? "[TEST MODE — originally for: {$realTo}]\n\n" : '';
+        $finalSubject = ($testEmail ? '[TEST] ' : '') . $subject;
+        $htmlBody = '<div style="font-family:Inter,Arial,sans-serif;font-size:14px;line-height:1.7;color:#1e293b;max-width:600px;margin:0 auto;padding:24px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;">'
+            . nl2br(e($testNote . $body))
+            . '</div>';
 
-        Mail::raw($testNote . $body, function ($msg) use ($to, $subject, $testEmail) {
-            $msg->to($to)->subject(($testEmail ? '[TEST] ' : '') . $subject);
-        });
+        $delivery = app(SmartSmtpRotatorService::class)->sendHtml(
+            to: $normalizedTo,
+            subject: $finalSubject,
+            html: $htmlBody,
+            fromName: 'Al Munawwara Islamic School Admissions',
+            replyTo: 'noreply@amis.edu.ph',
+        );
 
-        $sentTo = $testEmail ? "{$testEmail} (TEST MODE)" : $to;
-        return ['status' => 'success', 'message' => "Email sent to {$sentTo}", 'output' => ['to' => $sentTo, 'subject' => $subject]];
+        $sentTo = $testEmail ? "{$testEmail} (TEST MODE)" : $normalizedTo;
+        return [
+            'status' => 'success',
+            'message' => "Email sent to {$sentTo} via " . ($delivery['mailer_used'] ?? 'rotator'),
+            'output' => ['to' => $sentTo, 'subject' => $finalSubject, 'mailer' => $delivery['mailer_used'] ?? null],
+        ];
     }
 
     protected function actionChangeStatus(array $config, EnrollmentApplicant $applicant): array
@@ -182,18 +206,29 @@ class WorkflowEngineService
 
     protected function actionNotifyAdmin(array $config, EnrollmentApplicant $applicant): array
     {
-        // TEST MODE: override admin email too
-        $testEmail  = env('WORKFLOW_TEST_EMAIL');
+        $testEmail  = app()->environment('production') ? null : env('WORKFLOW_TEST_EMAIL');
         $adminEmail = $testEmail ?: ($config['admin_email'] ?? config('mail.from.address'));
         $subject    = $this->interpolate($config['subject'] ?? 'AMIS Admin Notification', $applicant);
         $body       = $this->interpolate($config['body'] ?? 'A workflow action was triggered for applicant {{student_name}}.', $applicant);
 
-        Mail::raw($body, function ($msg) use ($adminEmail, $subject, $testEmail) {
-            $msg->to($adminEmail)->subject(($testEmail ? '[TEST] ' : '') . $subject);
-        });
+        $finalSubject = ($testEmail ? '[TEST] ' : '') . $subject;
+        $htmlBody = '<div style="font-family:Inter,Arial,sans-serif;font-size:14px;line-height:1.7;color:#1e293b;max-width:600px;margin:0 auto;padding:24px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;">'
+            . nl2br(e($body))
+            . '</div>';
+
+        $delivery = app(SmartSmtpRotatorService::class)->sendHtml(
+            to: (string) $adminEmail,
+            subject: $finalSubject,
+            html: $htmlBody,
+            fromName: 'AMIS Enrollment Workflow',
+        );
 
         $sentTo = $testEmail ? "{$testEmail} (TEST MODE)" : $adminEmail;
-        return ['status' => 'success', 'message' => "Admin notified at {$sentTo}", 'output' => ['to' => $sentTo]];
+        return [
+            'status' => 'success',
+            'message' => "Admin notified at {$sentTo} via " . ($delivery['mailer_used'] ?? 'rotator'),
+            'output' => ['to' => $sentTo, 'mailer' => $delivery['mailer_used'] ?? null],
+        ];
     }
 
     // ─── Helpers ──────────────────────────────────────────

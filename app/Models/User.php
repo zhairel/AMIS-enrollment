@@ -80,7 +80,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification(): void
     {
-        $this->notify(new AmisVerifyEmail);
+        app(\App\Services\System\SmartSmtpRotatorService::class)
+            ->sendNotification($this->email, new AmisVerifyEmail, $this);
     }
 
     public static function makeUniqueUsername(string $email): string

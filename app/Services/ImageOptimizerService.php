@@ -137,8 +137,16 @@ class ImageOptimizerService
                 IMAGETYPE_JPEG => @imagecreatefromjpeg($sourcePath),
                 IMAGETYPE_PNG => @imagecreatefrompng($sourcePath),
                 IMAGETYPE_WEBP => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($sourcePath) : null,
+                IMAGETYPE_GIF => function_exists('imagecreatefromgif') ? @imagecreatefromgif($sourcePath) : null,
+                IMAGETYPE_BMP => function_exists('imagecreatefrombmp') ? @imagecreatefrombmp($sourcePath) : null,
                 default => null,
             };
+            if (!$src && function_exists('imagecreatefromstring')) {
+                $rawBytes = @file_get_contents($sourcePath);
+                if ($rawBytes !== false) {
+                    $src = @imagecreatefromstring($rawBytes);
+                }
+            }
 
             if (!$src) {
                 return false;
@@ -207,16 +215,21 @@ class ImageOptimizerService
         try {
             // Support both ImageMagick 7 ('magick') and ImageMagick 6 ('convert')
             if ($args[0] === 'magick') {
-                static $binary = null;
-                if ($binary === null) {
-                    $binary = 'magick';
-                    @exec('which magick 2>&1', $testOut, $testCode);
-                    if ($testCode !== 0) {
-                        @exec('which convert 2>&1', $testOut2, $testCode2);
-                        if ($testCode2 === 0) {
+                static $binary = false;
+                if ($binary === false) {
+                    $binary = null;
+                    @exec('command -v magick 2>/dev/null', $testOut, $testCode);
+                    if ($testCode === 0 && !empty($testOut)) {
+                        $binary = 'magick';
+                    } else {
+                        @exec('command -v convert 2>/dev/null', $testOut2, $testCode2);
+                        if ($testCode2 === 0 && !empty($testOut2)) {
                             $binary = 'convert';
                         }
                     }
+                }
+                if ($binary === null) {
+                    return false;
                 }
                 $args[0] = $binary;
             }

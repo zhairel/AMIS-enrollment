@@ -48,6 +48,14 @@
                     <span class="text-[10px] font-black uppercase text-slate-400 block">Learning Modality</span>
                     <strong class="text-emerald-700 block" x-text="form.learning_mode || 'N/A'"></strong>
                 </div>
+                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-150 col-span-2 md:col-span-3">
+                    <span class="text-[10px] font-black uppercase text-slate-400 block">Student Present Address</span>
+                    <strong class="text-slate-900 block" x-text="compiledPresentAddress || 'N/A'"></strong>
+                </div>
+                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-150">
+                    <span class="text-[10px] font-black uppercase text-slate-400 block">Student Contact Mobile</span>
+                    <strong class="text-slate-900 block" x-text="`${form.mobile_country_code || '+63'} ${form.mobile_number || ''}`.trim() || 'N/A'"></strong>
+                </div>
             </div>
         </div>
 
@@ -86,6 +94,10 @@
                     <span class="text-[10px] font-black uppercase text-slate-400 block">WhatsApp</span>
                     <strong class="text-slate-900 block" x-text="form.whatsapp"></strong>
                 </div>
+                <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-150 md:col-span-3">
+                    <span class="text-[10px] font-black uppercase text-slate-400 block">Parent / Permanent Home Address</span>
+                    <strong class="text-slate-900 block" x-text="compiledHomeAddress || 'Same as Student Present Address'"></strong>
+                </div>
             </div>
         </div>
 
@@ -104,25 +116,25 @@
                     @if ($applicant?->photo_2x2_url)
                         <img src="{{ asset('storage/' . $applicant->photo_2x2_url) }}" alt="2x2 Student Photo" class="h-10 w-10 rounded-lg object-cover border border-emerald-500 flex-shrink-0">
                     @else
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" :stroke="uploadedFiles.photo_2x2 ? '#059669' : '#d97706'" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     @endif
                     <div>
-                        <strong class="text-xs font-bold text-slate-900 block">2x2 Student Photo</strong>
-                        <span class="text-[10px] text-emerald-700 font-bold">Attached & Verified</span>
+                        <strong class="text-xs font-bold text-slate-900 block">2x2 Learner ID Photo</strong>
+                        <span class="text-[10px] font-bold" :class="uploadedFiles.photo_2x2 ? 'text-emerald-700' : 'text-amber-700'" x-text="uploadedFiles.photo_2x2 ? 'Attached & Ready' : 'Not yet attached'"></span>
                     </div>
                 </div>
                 <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 flex items-center gap-2.5">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" :stroke="uploadedFiles.birth_cert ? '#059669' : '#64748b'" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     <div>
-                        <strong class="text-xs font-bold text-slate-900 block">Birth Certificate</strong>
-                        <span class="text-[10px] text-emerald-700 font-bold">Attached</span>
+                        <strong class="text-xs font-bold text-slate-900 block">PSA / NSO Birth Certificate</strong>
+                        <span class="text-[10px] font-bold" :class="uploadedFiles.birth_cert ? 'text-emerald-700' : 'text-slate-500'" x-text="uploadedFiles.birth_cert ? 'Attached' : (uploadedFiles.affidavit ? 'Covered by Affidavit' : 'Optional / Follow-up')"></span>
                     </div>
                 </div>
                 <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 flex items-center gap-2.5">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" :stroke="(uploadedFiles.report_card || uploadedFiles.affidavit) ? '#059669' : '#64748b'" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     <div>
-                        <strong class="text-xs font-bold text-slate-900 block">Report Card / Affidavit</strong>
-                        <span class="text-[10px] text-emerald-700 font-bold">Attached</span>
+                        <strong class="text-xs font-bold text-slate-900 block">SF9 Report Card / Affidavit</strong>
+                        <span class="text-[10px] font-bold" :class="(uploadedFiles.report_card || uploadedFiles.affidavit) ? 'text-emerald-700' : 'text-slate-500'" x-text="uploadedFiles.report_card ? 'Report Card Attached' : (uploadedFiles.affidavit ? 'Affidavit of Undertaking Attached' : 'To Follow / Continuing')"></span>
                     </div>
                 </div>
             </div>
@@ -142,11 +154,15 @@
                 <div class="space-y-2 text-xs">
                     <div class="bg-white p-3 rounded-xl border border-indigo-150 space-y-1">
                         <span class="text-[10px] font-black uppercase text-slate-400 block">Payment Method</span>
-                        <strong class="text-indigo-900 text-sm block uppercase" x-text="form.payment_method === 'bdo' ? 'BDO Bank Deposit' : 'GCash / Maya'"></strong>
+                        <strong class="text-indigo-900 text-sm block uppercase" x-text="({ bdo: 'BDO Bank Deposit / Transfer', gcash: 'GCash / Maya E-Wallet', maya: 'Maya E-Wallet', remittance: 'Remittance Center', other: 'Other Payment Channel' })[form.payment_method] || 'GCash / Maya'"></strong>
                     </div>
                     <div class="bg-white p-3 rounded-xl border border-indigo-150 space-y-1">
                         <span class="text-[10px] font-black uppercase text-slate-400 block">Amount Paid</span>
                         <strong class="text-emerald-700 text-sm block font-black" x-text="'PHP ' + (parseFloat(form.amount) || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})"></strong>
+                    </div>
+                    <div class="bg-white p-3 rounded-xl border border-indigo-150 space-y-1" x-show="form.reference_no">
+                        <span class="text-[10px] font-black uppercase text-slate-400 block">Reference / Transaction No.</span>
+                        <strong class="text-slate-800 text-xs block font-bold" x-text="form.reference_no"></strong>
                     </div>
                     <div class="bg-white p-3 rounded-xl border border-indigo-150 space-y-1" x-show="form.remarks">
                         <span class="text-[10px] font-black uppercase text-slate-400 block">Remarks / Notes</span>

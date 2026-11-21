@@ -5,9 +5,9 @@
                 <img src="{{ asset('images/AMIS_Logo.png') }}" alt="AMIS Logo" class="success-logo">
             </div>
 
-            <h1>Enrollment Submitted!</h1>
+            <h1>Thank You for Registering!</h1>
             <p class="success-subtitle">
-                Your enrollment application has been submitted successfully. Please wait for the school/admin review. You will be notified once your application has been checked.
+                Your online enrollment application has been submitted completely. A confirmation email has been automatically sent to your inbox. Please wait while the AMIS Administration &amp; Office of the School Registrar verify your credentials and payment proof.
             </p>
 
             <div class="success-info-box">
@@ -15,9 +15,12 @@
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary); flex-shrink: 0;">
                         <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                     </svg>
-                    <span>Your application is now <span class="badge-pending">Pending Review</span></span>
+                    <span>
+                        Application Reference:
+                        <strong>{{ isset($applicant) && $applicant?->id ? 'AMIS-' . str_pad((string) $applicant->id, 5, '0', STR_PAD_LEFT) : 'Submitted' }}</strong>
+                        &bull; Status: <span class="badge-pending">Pending Administration Review</span>
+                    </span>
                 </div>
-
             </div>
 
             <!-- Processing Time Notice -->
